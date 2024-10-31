@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "142535748223",
+    "project_id": "booking-fcec5",
+    "storage_bucket": "booking-fcec5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:142535748223:android:e1cdde0cd82f438c26ed4a",
+        "android_client_info": {
+          "package_name": "com.example.booking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGGZXQx8iy0kNo5c7_VoG3ihhd8ojJHJU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
