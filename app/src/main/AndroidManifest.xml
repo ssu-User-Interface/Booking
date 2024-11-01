@@ -13,6 +13,18 @@
         android:theme="@style/Theme.Booking"
         tools:targetApi="31">
         <activity
+            android:name=".MyFragment"
+            android:exported="false" />
+        <activity
+            android:name=".RecordFragment"
+            android:exported="false" />
+        <activity
+            android:name=".MapFragment"
+            android:exported="false" />
+        <activity
+            android:name=".HomeFragment"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
