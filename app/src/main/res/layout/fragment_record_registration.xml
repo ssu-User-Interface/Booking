@@ -33,6 +33,7 @@
                 android:layout_gravity="center"
                 android:gravity="center_horizontal"
                 android:layout_weight="8"
+                android:fontFamily="@font/pretendard_regular"
                 android:text="기록 작성하기"/>
 
             <Space
@@ -44,7 +45,7 @@
         </LinearLayout>
 
         <ImageView
-            android:paddingTop="10dp"
+            android:paddingTop="7dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_line_long"
