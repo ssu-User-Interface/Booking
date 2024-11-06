@@ -1,14 +1,366 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#EFEBE0"
     tools:context=".presentation.home.HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="home fragment" />
+        android:id="@+id/tv_home_title_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="110px"
+        android:layout_marginTop="100px"
+        android:fontFamily="@font/pretendard_extrabold"
+        android:text="이수민님,"
+        android:textSize="33dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-</FrameLayout>
+    <TextView
+        android:id="@+id/tv_home_title_hello"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="110px"
+        android:fontFamily="@font/pretendard_regular"
+        android:lineHeight="60dp"
+        android:text="오늘은 무슨 책을 읽으셨나요?"
+        android:textSize="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_title_name" />
+
+    <EditText
+        android:id="@+id/et_home_search"
+        android:layout_width="310dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/ic_home_search_round_box"
+        android:hint="    검색할 책을 입력하세요"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_title_hello" />
+
+    <ImageView
+        android:id="@+id/iv_home_search_ic"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_marginEnd="15dp"
+        android:src="@drawable/ic_home_search"
+        app:layout_constraintBottom_toBottomOf="@id/et_home_search"
+        app:layout_constraintEnd_toEndOf="@id/et_home_search"
+        app:layout_constraintTop_toTopOf="@id/et_home_search" />
+
+    <View
+        android:id="@+id/view_home_first_widget_bg"
+        android:layout_width="310dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/ic_home_fisrt_widget"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/et_home_search" />
+
+    <View
+        android:id="@+id/iv_home_book"
+        android:layout_width="80dp"
+        android:layout_height="115.8dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/img_book"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toStartOf="@id/view_home_first_widget_bg"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_home_first_widget_book_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="모순"
+        android:textSize="33sp"
+        android:textColor="#FFFF"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book"
+        android:layout_marginTop="15dp"
+        android:layout_marginStart="15dp"
+        android:visibility="visible"/>
+
+
+    <View
+        android:id="@+id/view_home_line"
+        android:layout_width="135dp"
+        android:layout_height="3px"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_book_title"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book"
+        app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_home_first_widget_reading_period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_light"
+        android:text="2024.11.17 ~"
+        android:textSize="15sp"
+        android:textColor="#FFFF"
+        app:layout_constraintTop_toBottomOf="@id/view_home_line"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book"
+        android:layout_marginTop="5dp"
+        android:layout_marginStart="15dp"
+        android:visibility="visible"/>
+
+    <TextView
+        android:id="@+id/tv_home_first_widget_reading_page"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_light"
+        android:text="127/300p"
+        android:textSize="15sp"
+        android:textColor="#FFFF"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_reading_period"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book"
+        android:layout_marginStart="15dp"
+        android:visibility="visible"/>
+
+    <ProgressBar
+        android:id="@+id/prg"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="0dp"
+        android:layout_height="7dp"
+        android:max="1000"
+        android:progress="350"
+        android:progressDrawable="@drawable/progressbar_color"
+        app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_reading_page"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book"
+        app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="17dp"
+        android:visibility="visible"/>
+
+    <View
+        android:id="@+id/view_home_first_widget_right_bg"
+        android:layout_width="60dp"
+        android:layout_height="150dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/ic_home_fisrt_widget_right"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg" />
+
+    <View
+        android:id="@+id/view_home_first_widget_right_to_timer"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_home_move_to_timer"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toStartOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintEnd_toEndOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+        android:visibility="visible"/>
+
+    <View
+        android:id="@+id/iv_home_book_ic"
+        android:layout_width="90dp"
+        android:layout_height="95dp"
+        android:layout_marginStart="20dp"
+        android:background="@drawable/ic_home_book"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toStartOf="@id/view_home_first_widget_bg"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg" />
+
+    <TextView
+        android:id="@+id/tv_home_first_widget_no_book"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_bold"
+        android:text="어떤 책을 \n읽을까요?"
+        android:textSize="25sp"
+        android:textColor="#FFFF"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="30dp"
+        app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toEndOf="@id/iv_home_book_ic"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        android:visibility="gone"/>
+
+    <View
+        android:id="@+id/view_home_first_widget_right_add_book"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/ic_home_add_book"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_first_widget_bg"
+        app:layout_constraintStart_toStartOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintEnd_toEndOf="@id/view_home_first_widget_right_bg"
+        app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+        android:visibility="gone"/>
+
+
+    <View
+        android:id="@+id/view_home_second_widget_bg"
+        android:layout_width="310dp"
+        android:layout_height="240dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/ic_home_second_widget"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/view_home_first_widget_bg" />
+
+    <LinearLayout
+        android:id="@+id/layout_home_d_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/view_home_second_widget_bg"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_second_widget_bg"
+        app:layout_constraintStart_toStartOf="@id/view_home_second_widget_bg"
+        android:layout_marginStart="20dp"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="NOV"
+            android:textSize="45sp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_d_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="D+15"
+            android:textSize="25sp"
+            android:textColor="#FFFF"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_second_widget_month" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_home_rank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/view_home_second_widget_bg"
+        app:layout_constraintBottom_toBottomOf="@id/view_home_second_widget_bg"
+        app:layout_constraintStart_toEndOf="@id/layout_home_d_day"
+        android:layout_marginStart="25dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_book_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="Book"
+            android:textColor="#FFFF"
+            android:textSize="23sp"
+            app:layout_constraintStart_toEndOf="@id/iv_home_book"
+            app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg" />
+
+        <View
+            android:id="@+id/view_home_line2"
+            android:layout_width="135dp"
+            android:layout_height="3px"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_book_title"
+            app:layout_constraintStart_toEndOf="@id/iv_home_book"
+            app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_book_rank_list1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="1. 흰"
+            android:textSize="13sp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_book_rank_list2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="2. 모순"
+            android:textSize="13sp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_book_rank_list3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="3. 채식주의자"
+            android:textSize="13sp"
+            android:textColor="#FFFF"
+            android:layout_marginBottom="8dp"/>
+
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_place_rank"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="Place"
+            android:textSize="23sp"
+            android:textColor="#FFFF"
+            app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
+            app:layout_constraintStart_toEndOf="@id/iv_home_book" />
+
+        <View
+            android:id="@+id/view_home_line3"
+            android:layout_width="135dp"
+            android:layout_height="3px"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_book_title"
+            app:layout_constraintStart_toEndOf="@id/iv_home_book"
+            app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_place_rank_list1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="1. 집"
+            android:textSize="13sp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_place_rank_list2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="2. 도서관"
+            android:textSize="13sp"
+            android:textColor="#FFFF" />
+
+        <TextView
+            android:id="@+id/tv_home_second_widget_place_rank_list3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="3. 투썸 플레이스"
+            android:textColor="#FFFF"
+            android:textSize="13sp" />
+
+
+    </LinearLayout>
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
