@@ -4,9 +4,8 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <LinearLayout
-        android:id="@+id/record_registration_top"
+        android:id="@+id/fragment_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
@@ -34,7 +33,9 @@
                 android:gravity="center_horizontal"
                 android:layout_weight="8"
                 android:fontFamily="@font/pretendard_regular"
-                android:text="기록 작성하기"/>
+                android:textSize="16sp"
+                android:text="기록 작성하기"
+                android:textColor="@color/black"/>
 
             <Space
                 android:layout_width="0dp"
@@ -50,9 +51,6 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_line_long"
             android:layout_gravity="center"/>
-
     </LinearLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

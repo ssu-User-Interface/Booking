@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FBFAF7">
+
+    <LinearLayout
+        android:id="@+id/fragment_top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="13dp">
+
+            <ImageView
+                android:id="@+id/iv_back_arrow"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:src="@drawable/ic_arrow_back" />
+
+            <TextView
+                android:id="@+id/tv_record_registration"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="8"
+                android:fontFamily="@font/pretendard_regular"
+                android:gravity="center_horizontal"
+                android:text="기록 작성하기"
+                android:textSize="16sp"
+                android:textColor="@color/black"/>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="right"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingTop="7dp"
+            android:src="@drawable/ic_line_long" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/record_book"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/fragment_top">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:src="@drawable/iv_book_dummy"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/fragment_top" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/book_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:text="책 제목, "
+                    android:textColor="@color/black"
+                    android:textSize="29sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/pretendard_semibold"
+                    android:text="5번째 기록"
+                    android:textColor="@color/black"
+                    android:textSize="39sp" />
+
+                <EditText
+                    android:id="@+id/record_book_title"
+                    android:layout_width="200dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/iv_record_title_background"
+                    android:hint="기록 제목을 작성해 주세요."
+                    android:paddingStart="5dp"
+                    android:layout_marginTop="10dp"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="23dp"
+            android:layout_marginTop="22dp"
+            android:text="2024.10.11_오전 11:33"
+            android:textSize="13sp"/>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/iv_record_read_time_background"
+            android:padding="8dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/read_time_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="읽은 시간"
+                android:textSize="10sp"
+                android:layout_gravity="left"
+                android:layout_marginEnd="8dp"/>
+
+            <EditText
+                android:id="@+id/reading_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:inputType="time"
+                android:hint="00:00:00"
+                android:background="@android:color/transparent"
+                android:gravity="center_vertical|end"
+                android:paddingEnd="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/iv_record_read_page_background"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/read_page_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="읽은 페이지"
+                android:textSize="10sp"
+                android:layout_gravity="left"
+                android:layout_marginEnd="8dp"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="12p / 365p"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:gravity="center_vertical|end"
+                android:paddingEnd="10dp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:background="@drawable/iv_record_read_place_background"
+            android:padding="8dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/read_location_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="장소"
+                android:textSize="10sp"
+                android:layout_gravity="left"
+                android:layout_marginEnd="8dp"/>
+
+            <EditText
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="장소를 검색하세요"
+                android:background="@android:color/transparent"
+                android:layout_gravity="center"
+                android:gravity="center_vertical|end"
+                android:paddingEnd="10dp"/>
+        </LinearLayout>
+
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="120dp"
+            android:layout_marginTop="10dp"
+            android:padding="8dp"
+            android:background="@drawable/iv_record_like_phrase_background"
+            android:text="마음에 드는 구절"
+            android:textSize="10sp"
+            android:gravity="left"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:layout_width="350dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/iv_record_memo_background"
+            android:text="메모"
+            android:padding="8dp"
+            android:textSize="10sp"
+            android:gravity="left"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="15dp"
+        app:layout_constraintTop_toBottomOf="@id/record_book">
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1" />
+
+        <Button
+            android:id="@+id/save_record_btn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="9"
+            android:background="@drawable/iv_record_button"
+            android:text="기록 저장"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="@font/pretendard_bold"
+            android:gravity="center"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1" />
+        <Button
+            android:id="@+id/complete_reading_btn"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="9"
+            android:background="@drawable/iv_record_button"
+            android:text="독서종료"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="@font/pretendard_bold"
+            android:layout_gravity="center" />
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:layout_weight="1"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
