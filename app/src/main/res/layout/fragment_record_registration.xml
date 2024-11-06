@@ -104,7 +104,7 @@
                 <EditText
                     android:id="@+id/record_book_title"
                     android:layout_width="200dp"
-                    android:layout_height="20dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/iv_record_title_background"
                     android:hint="기록 제목을 작성해 주세요."
                     android:paddingStart="5dp"
@@ -124,7 +124,7 @@
 
         <LinearLayout
             android:layout_width="350dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/iv_record_read_time_background"
             android:padding="8dp"
@@ -154,11 +154,11 @@
 
         <LinearLayout
             android:layout_width="350dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/iv_record_read_page_background"
             android:padding="8dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:gravity="center_vertical"
             android:layout_gravity="center">
 
@@ -184,11 +184,11 @@
 
         <LinearLayout
             android:layout_width="350dp"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@drawable/iv_record_read_place_background"
             android:padding="8dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="15dp"
             android:gravity="center_vertical"
             android:layout_gravity="center">
 
@@ -214,8 +214,8 @@
 
         <EditText
             android:layout_width="350dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:padding="8dp"
             android:background="@drawable/iv_record_like_phrase_background"
             android:text="마음에 드는 구절"
@@ -225,8 +225,8 @@
 
         <EditText
             android:layout_width="350dp"
-            android:layout_height="140dp"
-            android:layout_marginTop="10dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
             android:background="@drawable/iv_record_memo_background"
             android:text="메모"
             android:padding="8dp"
@@ -240,19 +240,18 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center"
-        android:layout_marginTop="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/record_book">
 
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
             android:layout_weight="1" />
 
         <Button
             android:id="@+id/save_record_btn"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
             android:text="기록 저장"
@@ -263,12 +262,11 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
             android:layout_weight="1" />
         <Button
             android:id="@+id/complete_reading_btn"
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="70dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
             android:text="독서 종료"
@@ -279,7 +277,6 @@
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_gravity="right"
             android:layout_weight="1"/>
 
     </LinearLayout>
