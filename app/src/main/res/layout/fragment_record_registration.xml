@@ -120,6 +120,7 @@
             android:layout_marginStart="23dp"
             android:layout_marginTop="22dp"
             android:text="2024.10.11_오전 11:33"
+            android:fontFamily="@font/pretendard_light"
             android:textSize="13sp"/>
 
         <LinearLayout
@@ -136,6 +137,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="읽은 시간"
+                android:fontFamily="@font/pretendard_light"
                 android:textSize="10sp"
                 android:layout_gravity="left"
                 android:layout_marginEnd="8dp"/>
@@ -168,6 +170,7 @@
                 android:layout_height="wrap_content"
                 android:text="읽은 페이지"
                 android:textSize="10sp"
+                android:fontFamily="@font/pretendard_light"
                 android:layout_gravity="left"
                 android:layout_marginEnd="8dp"/>
 
@@ -198,6 +201,7 @@
                 android:layout_height="wrap_content"
                 android:text="장소"
                 android:textSize="10sp"
+                android:fontFamily="@font/pretendard_light"
                 android:layout_gravity="left"
                 android:layout_marginEnd="8dp"/>
 
@@ -220,6 +224,7 @@
             android:background="@drawable/iv_record_like_phrase_background"
             android:text="마음에 드는 구절"
             android:textSize="10sp"
+            android:fontFamily="@font/pretendard_light"
             android:gravity="left"
             android:layout_gravity="center"/>
 
@@ -231,6 +236,7 @@
             android:text="메모"
             android:padding="8dp"
             android:textSize="10sp"
+            android:fontFamily="@font/pretendard_light"
             android:gravity="left"
             android:layout_gravity="center"/>
     </LinearLayout>
