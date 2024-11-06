@@ -271,11 +271,11 @@
             android:layout_height="60dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
-            android:text="독서종료"
+            android:text="독서 종료"
             android:textColor="@color/white"
             android:textSize="20sp"
             android:fontFamily="@font/pretendard_bold"
-            android:layout_gravity="center" />
+            android:gravity="center" />
         <Space
             android:layout_width="0dp"
             android:layout_height="match_parent"
