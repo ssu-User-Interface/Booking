@@ -29,7 +29,9 @@
         app:itemIconSize="30dp"
         app:labelVisibilityMode="labeled"
         android:background="@color/white"
-        app:itemTextColor="@color/black"
+        app:itemBackground="@color/white"
+        app:itemTextColor="@drawable/bottom_navigation_color"
+        app:itemIconTint="@drawable/bottom_navigation_color"
         app:itemActiveIndicatorStyle="@android:color/transparent"/>
 
 
