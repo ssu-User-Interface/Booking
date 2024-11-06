@@ -21,19 +21,19 @@
         android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="75dp"
+        android:background="@color/white"
+        android:paddingTop="5dp"
+        app:itemActiveIndicatorStyle="@android:color/transparent"
+        app:itemBackground="@color/white"
+        app:itemIconSize="25dp"
+        app:itemIconTint="@drawable/bottom_navigation_color"
+        app:itemTextColor="@drawable/bottom_navigation_color"
+        app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        android:paddingTop="5dp"
-        app:menu="@menu/bottom_nav_menu"
-        app:itemIconSize="30dp"
-        app:labelVisibilityMode="labeled"
-        android:background="@color/white"
-        app:itemBackground="@color/white"
-        app:itemTextColor="@drawable/bottom_navigation_color"
-        app:itemIconTint="@drawable/bottom_navigation_color"
-        app:itemActiveIndicatorStyle="@android:color/transparent"/>
-
+        app:menu="@menu/bottom_nav_menu" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
