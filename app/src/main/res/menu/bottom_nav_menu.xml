@@ -14,7 +14,7 @@
         android:icon="@drawable/ic_bottom_map"/>
     <item
         android:id="@+id/recordFragment"
-        android:title="Recod"
+        android:title="Record"
         app:showAsAction="always"
         android:icon="@drawable/ic_bottom_record"/>
     <item

@@ -28,6 +28,7 @@
         app:menu="@menu/bottom_nav_menu"
         app:itemIconSize="30dp"
         app:labelVisibilityMode="labeled"
+        android:background="@color/white"
         app:itemTextColor="@color/black"/>
 
 
