@@ -60,4 +60,7 @@ dependencies {
     // When using the BoM, you don't specify versions in Firebase library dependencies
     //implementation ("com.google.firebase:firebase-auth")
 
+    //리사이클러 뷰
+    implementation ("androidx.recyclerview:recyclerview:1.2.1")
+
 }
