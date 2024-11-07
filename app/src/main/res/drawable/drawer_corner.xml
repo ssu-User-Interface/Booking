@@ -1,0 +1,8 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@android:color/white" />
+    <corners android:topLeftRadius="24dp" android:topRightRadius="24dp" />
+    <shadowColor android:color="#000000"/>
+    <shadowDx android:value="0"/>
+    <shadowDy android:value="-4"/>
+    <shadowRadius android:value="8"/>
+</shape>
