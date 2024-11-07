@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/drawer_item_outline"
+    android:layout_gravity="center_horizontal"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/tv_item_map_book_record_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="이 책은 정말 재미지다"
+        android:textSize="14sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="-5dp"/>
+
+    <TextView
+        android:id="@+id/tv_like_phrase"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="안진진, 나와 결혼 해줄거지요?안진진, 나와 결혼 해줄거지요?"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginTop="1.5dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_map_book_record_title"/>
+    <TextView
+        android:id="@+id/tv_record_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/pretendard_light"
+        android:text="2024.11.02"
+        android:textSize="10sp"
+        android:layout_marginTop="1.5dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_like_phrase"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

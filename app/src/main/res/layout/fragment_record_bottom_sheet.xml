@@ -4,12 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_final_record_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:background="@drawable/drawer_corner"
         android:layout_margin="1dp"
         android:elevation="10dp">
+
         <LinearLayout
             android:id="@+id/fragment_top"
             android:layout_width="match_parent"
@@ -64,7 +66,7 @@
                 android:background="@color/black" />
 
             <TextView
-                android:id="@+id/tv_final_record_memo"
+                android:id="@+id/tv_final_record_review"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="한줄평"
@@ -75,7 +77,7 @@
                 android:layout_marginTop="2dp"/>
 
             <ImageView
-                android:id="@+id/iv_final_record_memo"
+                android:id="@+id/iv_final_record_review"
                 android:layout_width="330dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/iv_record_read_page_background"
@@ -83,6 +85,7 @@
                 android:layout_marginTop="1dp"/>
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_final_record_score"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="7dp">
@@ -102,7 +105,7 @@
                     tools:ignore="NotSibling" />
 
                 <LinearLayout
-                    android:id="@+id/layout_final_record_score"
+                    android:id="@+id/layout_final_record_score_star"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="13dp"

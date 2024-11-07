@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- ConstraintLayout 내부의 개별 아이템 -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_item_map_book_top"
+        android:layout_width="320dp"
+        android:layout_height="70dp"
+        android:background="@drawable/drawer_little_corner"
+        android:backgroundTint="#5B5443"
+        android:padding="8dp"
+        android:layout_marginVertical="8dp"
+        android:layout_gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- 책 이미지 -->
+        <ImageView
+            android:id="@+id/iv_book_image"
+            android:layout_width="41dp"
+            android:layout_height="51dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/iv_book_dummy"
+            android:paddingTop="2dp"
+            android:layout_marginStart="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+        <!-- 제목 텍스트 -->
+        <TextView
+            android:id="@+id/tv_book_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="채식주의자"
+            android:layout_marginTop="3dp"
+            android:textStyle="bold"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:paddingStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/iv_book_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp" />
+
+        <!-- 저자 텍스트 -->
+        <TextView
+            android:id="@+id/tv_book_author"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="한강"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:paddingStart="5dp"
+            app:layout_constraintStart_toEndOf="@id/iv_book_image"
+            app:layout_constraintTop_toBottomOf="@id/tv_book_title"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- RecyclerView 설정 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_map_book_phrase_list"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/layout_item_map_book_top"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:listitem="@layout/item_map_book_record_list"
+        tools:itemCount="2" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
