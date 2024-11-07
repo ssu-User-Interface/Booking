@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_marginTop="10dp">
+
+        <ImageView
+            android:id="@+id/view_record_book_bg1"
+            android:layout_width="160dp"
+            android:layout_height="125dp"
+            android:src="@drawable/ic_record_book_bg"
+            android:background="@drawable/shadow_test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/view_record_book_bg1"
+        app:layout_constraintBottom_toBottomOf="@id/view_record_book_bg1"
+        app:layout_constraintStart_toStartOf="@id/view_record_book_bg1"
+        app:layout_constraintEnd_toEndOf="@id/view_record_book_bg1">
+
+        <ImageView
+            android:id="@+id/iv_record_main_book"
+            android:layout_width="60dp"
+            android:layout_height="85dp"
+            android:background="@drawable/img_book"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_record_registration_book_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/pretendard_bold"
+            android:text="책 제목"
+            android:textColor="#000000"
+            android:textSize="15sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/iv_record_main_book"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_record_main_book_author"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="저자"
+            android:textColor="#000000"
+            android:textSize="10sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/iv_record_main_book"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_registration_book_title" />
+
+        <TextView
+            android:id="@+id/tv_record_main_book_publisher"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="40dp"
+            android:fontFamily="@font/pretendard_thin"
+            android:text="출판사 명"
+            android:textColor="#000000"
+            android:textSize="7sp"
+            android:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/iv_record_main_book"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+

@@ -72,7 +72,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/iv_record_book"
+                android:id="@+id/iv_record_main_book"
                 android:layout_width="wrap_content"
                 android:layout_height="140dp"
                 android:layout_marginStart="12dp"
@@ -88,8 +88,8 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_record_book_title"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_record_registration_book_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_medium"
                     android:text="책 제목, "

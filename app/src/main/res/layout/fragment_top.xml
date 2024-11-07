@@ -33,6 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="8"
+                android:layout_marginStart="-10dp"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center_horizontal"
                 android:text="기록 작성하기"

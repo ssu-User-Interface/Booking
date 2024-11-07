@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <style name="Widget.BottomNavigationView"
-        parent="Widget.Design.BottomNavigationView">
-        <item name="fontFamily">@font/pretendard_regular</item>
-        <item name="android:textSize">10sp</item>
-        <item name="android:minHeight">0dp</item>
-    </style>
-</resources>
+    <resources>
+        <style name="Widget.BottomNavigationView"
+            parent="Widget.Design.BottomNavigationView">
+            <item name="fontFamily">@font/pretendard_regular</item>
+            <item name="android:textSize">10sp</item>
+            <item name="android:minHeight">0dp</item>
+        </style>
+    </resources>

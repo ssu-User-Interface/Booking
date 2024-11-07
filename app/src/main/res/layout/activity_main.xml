@@ -26,6 +26,8 @@
         app:itemIconSize="25dp"
         app:itemIconTint="@drawable/bottom_navigation_color"
         app:itemTextColor="@drawable/bottom_navigation_color"
+        app:itemPaddingTop="13dp"
+        app:itemPaddingBottom="15dp"
         app:labelVisibilityMode="labeled"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,6 +35,5 @@
         app:menu="@menu/bottom_nav_menu"
         android:theme="@style/Widget.BottomNavigationView"
         />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
