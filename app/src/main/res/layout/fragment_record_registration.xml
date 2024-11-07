@@ -66,13 +66,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="140dp"
                 android:layout_marginStart="16dp"
                 android:src="@drawable/iv_book_dummy"
                 app:layout_constraintStart_toStartOf="parent"
@@ -117,17 +117,17 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="23dp"
-            android:layout_marginTop="22dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="12dp"
             android:text="2024.10.11_오전 11:33"
             android:fontFamily="@font/pretendard_light"
             android:textSize="13sp"/>
 
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_width="330dp"
+            android:layout_height="35dp"
             android:orientation="horizontal"
-            android:background="@drawable/iv_record_read_time_background"
+            android:background="@drawable/iv_record_read_place_background"
             android:padding="8dp"
             android:gravity="center_vertical"
             android:layout_gravity="center">
@@ -149,18 +149,19 @@
                 android:layout_weight="1"
                 android:inputType="time"
                 android:hint="00:00:00"
+                android:textSize="13sp"
                 android:background="@android:color/transparent"
                 android:gravity="center_vertical|end"
                 android:paddingEnd="10dp"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_width="330dp"
+            android:layout_height="35dp"
             android:orientation="horizontal"
-            android:background="@drawable/iv_record_read_page_background"
+            android:background="@drawable/iv_record_read_place_background"
             android:padding="8dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:layout_gravity="center">
 
@@ -179,6 +180,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="12p / 365p"
+                android:textSize="13sp"
                 android:background="@android:color/transparent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|end"
@@ -186,12 +188,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
+            android:layout_width="330dp"
+            android:layout_height="35dp"
             android:orientation="horizontal"
             android:background="@drawable/iv_record_read_place_background"
             android:padding="8dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:gravity="center_vertical"
             android:layout_gravity="center">
 
@@ -210,6 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="장소를 검색하세요"
+                android:textSize="13sp"
                 android:background="@android:color/transparent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|end"
@@ -217,9 +220,9 @@
         </LinearLayout>
 
         <EditText
-            android:layout_width="350dp"
+            android:layout_width="330dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:padding="8dp"
             android:background="@drawable/iv_record_like_phrase_background"
             android:text="마음에 드는 구절"
@@ -229,9 +232,9 @@
             android:layout_gravity="center"/>
 
         <EditText
-            android:layout_width="350dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_width="330dp"
+            android:layout_height="160dp"
+            android:layout_marginTop="5dp"
             android:background="@drawable/iv_record_memo_background"
             android:text="메모"
             android:padding="8dp"
@@ -257,7 +260,7 @@
         <Button
             android:id="@+id/save_record_btn"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
             android:text="기록 저장"
@@ -272,7 +275,7 @@
         <Button
             android:id="@+id/complete_reading_btn"
             android:layout_width="0dp"
-            android:layout_height="70dp"
+            android:layout_height="60dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
             android:text="독서 종료"
