@@ -15,6 +15,7 @@
         android:layout_marginTop="80px"
         android:fontFamily="@font/pretendard_extrabold"
         android:text="이수민님,"
+        android:textColor="#434343"
         android:textSize="33dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -209,7 +210,7 @@
     <View
         android:id="@+id/view_home_second_widget_bg"
         android:layout_width="310dp"
-        android:layout_height="240dp"
+        android:layout_height="250dp"
         android:layout_marginTop="35dp"
         android:background="@drawable/ic_home_second_widget"
         app:layout_constraintEnd_toEndOf="parent"
