@@ -17,9 +17,15 @@ import java.util.List;
 public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHolder> {
 
     private List<Book> bookList;
+    private OnItemClickListener listener;
 
-    public BookSearchRVA(List<Book> bookList) {
+    public interface OnItemClickListener {
+        void onItemClick(Book book);
+    }
+
+    public BookSearchRVA(List<Book> bookList, OnItemClickListener listener) {
         this.bookList = bookList;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,15 +38,7 @@ public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHo
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         Book book = bookList.get(position);
-        holder.bookName.setText(book.getTitle());
-        holder.bookAuthor.setText(book.getAuthor());
-        holder.bookPublisher.setText(book.getPublisher());
-        holder.bookYear.setText(book.getYear());
-
-        // URL로 이미지 로드
-        Glide.with(holder.bookCover.getContext())
-                .load(book.getCoverImageUrl())
-                .into(holder.bookCover);
+        holder.bind(book, listener);
     }
 
     @Override
@@ -59,6 +57,19 @@ public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHo
             bookPublisher = itemView.findViewById(R.id.tv_item_book_search_book_publisher);
             bookYear = itemView.findViewById(R.id.tv_item_book_search_book_publication_year);
             bookCover = itemView.findViewById(R.id.iv_item_book_search_book_cover);
+        }
+
+        public void bind(Book book, OnItemClickListener listener) {
+            bookName.setText(book.getTitle());
+            bookAuthor.setText(book.getAuthor());
+            bookPublisher.setText(book.getPublisher());
+            //bookYear.setText(book.getYear());
+
+            Glide.with(bookCover.getContext())
+                    .load(book.getCoverImageUrl())
+                    .into(bookCover);
+
+            itemView.setOnClickListener(v -> listener.onItemClick(book));
         }
     }
 }
