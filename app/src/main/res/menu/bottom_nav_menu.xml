@@ -4,23 +4,27 @@
 
     <item
         android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_bottom_home"
         android:title="Home"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_home"/>
+        />
     <item
         android:id="@+id/mapFragment"
+        android:icon="@drawable/ic_bottom_map"
         android:title="Map"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_map"/>
+        />
     <item
         android:id="@+id/recordFragment"
+        android:icon="@drawable/ic_bottom_record"
         android:title="Record"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_record"/>
+        />
     <item
         android:id="@+id/myFragment"
+        android:icon="@drawable/ic_bottom_my"
         android:title="My"
         app:showAsAction="always"
-        android:icon="@drawable/ic_bottom_my"/>
+        />
 
 </menu>
