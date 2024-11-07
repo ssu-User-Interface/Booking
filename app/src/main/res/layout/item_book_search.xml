@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/iv_item_book_search_rect"
+        android:layout_width="290dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_item_book_search_bg"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <ImageView
+        android:id="@+id/iv_item_book_search_book_cover"
+        android:layout_width="40dp"
+        android:layout_height="70dp"
+        android:src="@drawable/img_item_book_search_sample_book_1"
+        android:layout_marginStart="20dp"
+        app:layout_constraintBottom_toBottomOf="@id/iv_item_book_search_rect"
+        app:layout_constraintTop_toTopOf="@id/iv_item_book_search_rect"
+        app:layout_constraintStart_toStartOf="@id/iv_item_book_search_rect"/>
+
+    <TextView
+        android:id="@+id/tv_item_book_search_book_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="책 제목"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toTopOf="@id/iv_item_book_search_book_cover"
+        app:layout_constraintStart_toEndOf="@id/iv_item_book_search_book_cover"/>
+
+    <TextView
+        android:id="@+id/tv_item_book_search_book_author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="책 저자"
+        android:textSize="11sp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="1dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_book_search_book_name"
+        app:layout_constraintStart_toEndOf="@id/iv_item_book_search_book_cover"/>
+
+    <TextView
+        android:id="@+id/tv_item_book_search_book_publisher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="출판사"
+        android:textSize="11sp"
+        android:textColor="#4C4B4B"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_book_search_book_author"
+        app:layout_constraintStart_toEndOf="@id/iv_item_book_search_book_cover"/>
+
+    <TextView
+        android:id="@+id/tv_item_book_search_book_comma"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" , "
+        android:textSize="11sp"
+        android:textColor="#4C4B4B"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_book_search_book_author"
+        app:layout_constraintStart_toEndOf="@id/tv_item_book_search_book_publisher"/>
+
+    <TextView
+        android:id="@+id/tv_item_book_search_book_publication_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="출판년도"
+        android:textSize="11sp"
+        android:textColor="#4C4B4B"
+        android:fontFamily="@font/pretendard_regular"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_item_book_search_book_author"
+        app:layout_constraintStart_toEndOf="@id/tv_item_book_search_book_comma"/>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
