@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_record_map_search"
-        tools:itemCount="41"
+        tools:itemCount="4"
         tools:listitem="@layout/item_map_search" />
 
     <Button
