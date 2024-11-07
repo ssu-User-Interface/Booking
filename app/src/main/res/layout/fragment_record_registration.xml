@@ -88,8 +88,8 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/tv_record_main_book_title"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_record_registration_book_title"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_medium"
                     android:text="책 제목, "

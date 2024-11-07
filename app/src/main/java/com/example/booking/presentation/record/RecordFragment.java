@@ -2,11 +2,14 @@ package com.example.booking.presentation.record;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
 import com.example.booking.R;
 import com.example.booking.data.model.Book;
 import com.example.booking.presentation.record.adapter.BookAdapter;
@@ -35,6 +38,19 @@ public class RecordFragment extends Fragment {
         // 어댑터 설정
         bookAdapter = new BookAdapter(bookList);
         recyclerView.setAdapter(bookAdapter);
+
+        // 버튼 초기화 및 클릭 이벤트 설정
+        Button addButton = view.findViewById(R.id.view_timer_complete_btn);
+        /*addButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // RecordSpecificFragment로 이동
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.main_frm, new RecordSpecificFragment()); // main_frm은 프래그먼트 교체 대상의 ID입니다.
+                transaction.addToBackStack(null); // 뒤로 가기 기능을 위해 백 스택에 추가
+                transaction.commit();
+            }
+        });*/
 
         return view;
     }

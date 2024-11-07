@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layout_record_specific_item"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <ImageView
+            android:id="@+id/view_record_specific_book_bg1"
+            android:layout_width="325dp"
+            android:layout_height="150dp"
+            android:background="@drawable/shadow_test"
+            android:src="@drawable/ic_record_book_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.514"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_record_specific_item_ic"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_marginTop="18dp"
+            android:layout_marginStart="18dp"
+            android:src="@drawable/ic_record_pencil"
+            app:layout_constraintTop_toTopOf="@id/view_record_specific_book_bg1"
+            app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"/>
+
+        <TextView
+            android:id="@+id/tv_record_specific_item_title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="5dp"
+            android:text="첫 번째 기록,"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard_regular"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/iv_record_specific_item_ic"/>
+
+        <TextView
+            android:id="@+id/tv_record_specific_item_title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="5dp"
+            android:text="나의 모순"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard_bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_record_specific_item_title1"/>
+
+        <TextView
+            android:id="@+id/tv_record_specific_item_memo"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="18dp"
+            android:layout_marginEnd="18dp"
+            android:text="인생이란 때때로 우리로 하여금 기꺼이 악을 선택하게 만들고 우리는 어쩔 수 없이 그 모순과 손잡으며 살아가야 한다는 사실을 정말 조금도 눈치채지 못하고 있는 것일까."
+            android:fontFamily="@font/pretendard_regular"
+            android:textSize="13dp"
+            app:layout_constraintTop_toBottomOf="@id/iv_record_specific_item_ic"
+            app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
+            app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"/>
+
+        <TextView
+            android:id="@+id/tv_record_specific_item_address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="25dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="상도동 497-25"
+            android:textSize="10dp"
+            app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo" />
+
+        <TextView
+            android:id="@+id/tv_record_specific_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="18dp"
+            android:text="2024.10.05 / 00:30:12"
+            android:textSize="10dp"
+            android:fontFamily="@font/pretendard_regular"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo"
+            app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

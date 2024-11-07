@@ -49,7 +49,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.iv_record_main_book);
-            titleTextView = itemView.findViewById(R.id.tv_record_main_book_title);
+            titleTextView = itemView.findViewById(R.id.tv_record_registration_book_title);
             authorTextView = itemView.findViewById(R.id.tv_record_main_book_author);
         }
     }
