@@ -34,5 +34,4 @@
         android:theme="@style/Widget.BottomNavigationView"
         />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>
