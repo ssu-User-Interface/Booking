@@ -31,7 +31,7 @@ public class BookSearchDetailFragment extends Fragment {
             titleView.setText(bundle.getString("title"));
             authorView.setText(bundle.getString("author"));
             publisherView.setText(bundle.getString("publisher"));
-            pageView.setText(bundle.getString("year"));
+            //pageView.setText(bundle.getString("year"));
             String imageUrl = bundle.getString("imageUrl");
             Glide.with(this).load(imageUrl).into(coverImageView);
         }
