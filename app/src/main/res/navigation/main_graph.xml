@@ -43,12 +43,37 @@
         android:id="@+id/mapSearchFragment"
         android:name="com.example.booking.presentation.map.MapSearchFragment"
         android:label="MapSearchFragment"
-        tools:layout="@layout/fragment_map_search"/>
+        tools:layout="@layout/fragment_map_search">
+
+        <action
+            android:id="@+id/action_mapSearchFragment_to_mapFragment"
+            app:destination="@id/mapFragment"/>
+    </fragment>
 
     <!-- Record Registration Fragment -->
     <fragment
         android:id="@+id/recordRegistrationFragment"
-        android:name="com.example.booking.presentation.record.RecordSpecificFragment"
-        android:label="RecordSpecificFragment"
-        tools:layout="@layout/fragment_record_specific"/>
+        android:name="com.example.booking.presentation.registration.RecordRegistrationFragment"
+        android:label="RecordRegistrationFragment"
+        tools:layout="@layout/fragment_record_registration">
+
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment"
+            app:destination="@id/recordRegistrationMapSearchFragment"/>
+    </fragment>
+
+
+    <!-- Record Registration Map Search Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationMapSearchFragment"
+        android:name="com.example.booking.presentation.registration.RecordRegistrationMapSearchFragment"
+        android:label="RecordRegistrationMapSearchFragment"
+        tools:layout="@layout/fragment_record_registration_map_search">
+
+        <action
+            android:id="@+id/action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment"
+            app:destination="@id/recordRegistrationFragment"/>
+    </fragment>
+
+
 </navigation>
