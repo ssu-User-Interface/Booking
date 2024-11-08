@@ -17,7 +17,11 @@
         android:id="@+id/mapFragment"
         android:name="com.example.booking.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_mapSearchFragment"
+            app:destination="@id/mapSearchFragment" />
+    </fragment>
 
 
     <!-- Record Fragment -->
@@ -34,9 +38,17 @@
         android:label="MyFragment"
         tools:layout="@layout/fragment_my" />
 
+    <!-- map Search Fragment -->
+    <fragment
+        android:id="@+id/mapSearchFragment"
+        android:name="com.example.booking.presentation.map.MapSearchFragment"
+        android:label="MapSearchFragment"
+        tools:layout="@layout/fragment_map_search"/>
 
-
-
-
-
+    <!-- Record Registration Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationFragment"
+        android:name="com.example.booking.presentation.record.RecordSpecificFragment"
+        android:label="RecordSpecificFragment"
+        tools:layout="@layout/fragment_record_specific"/>
 </navigation>
