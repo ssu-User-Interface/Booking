@@ -12,6 +12,7 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home"/>
 
+
     <!-- Map Fragment -->
     <fragment
         android:id="@+id/mapFragment"
@@ -33,10 +34,6 @@
         android:name="com.example.booking.presentation.mypage.MyFragment"
         android:label="MyFragment"
         tools:layout="@layout/fragment_my" />
-
-
-
-
 
 
 </navigation>
