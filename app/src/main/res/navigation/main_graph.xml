@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_graph"
+    app:startDestination="@id/homeFragment">
+
+    <!-- Home Fragment -->
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.booking.presentation.home.HomeFragment"
+        android:label="HomeFragment"
+        tools:layout="@layout/fragment_home"/>
+
+    <!-- Map Fragment -->
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.booking.presentation.map.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map"/>
+
+
+    <!-- Record Fragment -->
+    <fragment
+        android:id="@+id/recordFragment"
+        android:name="com.example.booking.presentation.record.RecordFragment"
+        android:label="RecordFragment"
+        tools:layout="@layout/fragment_record" />
+
+    <!-- My Fragment -->
+    <fragment
+        android:id="@+id/myFragment"
+        android:name="com.example.booking.presentation.mypage.MyFragment"
+        android:label="MyFragment"
+        tools:layout="@layout/fragment_my" />
+
+
+
+
+
+
+</navigation>

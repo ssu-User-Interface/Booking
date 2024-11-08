@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.example.booking.databinding.ActivityMainBinding;
 import com.example.booking.presentation.home.HomeFragment;
@@ -24,31 +27,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigation() {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.main_frm, new HomeFragment())
-                .commitNowAllowingStateLoss();
+        // 네비게이션 호스트 프래그먼트를 찾아 NavController를 가져온다.
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.main_frm);
+        NavController navController = navHostFragment.getNavController();
 
-        binding.bottomNavigationView.setOnItemSelectedListener(item -> {
-            Fragment selectedFragment = null;
-            int itemId = item.getItemId();
-
-            if (itemId == R.id.homeFragment) {
-                selectedFragment = new HomeFragment();
-            } else if (itemId == R.id.mapFragment) {
-                selectedFragment = new MapFragment();
-            } else if (itemId == R.id.recordFragment) {
-                selectedFragment = new RecordFragment();
-            } else if (itemId == R.id.myFragment) {
-                selectedFragment = new MyFragment();
-            }
-            if(selectedFragment != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.main_frm, selectedFragment)
-                        .commitNowAllowingStateLoss();
-                return true;
-            } else {
-                return false;
-            }
-        });
+        // 바텀네비게이션 뷰와 NavController를 연결하여 메뉴 항목 선택 시 네비게이션이 동작하도록 설정
+        NavigationUI.setupWithNavController(binding.bottomNavigationView, navController);
     }
 }
