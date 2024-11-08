@@ -5,6 +5,7 @@ import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -13,6 +14,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.booking.R;
+import com.example.booking.presentation.registration.RecordRegistrationBottomSheetDialogFragment;
 
 public class RecordRegistrationFragment extends Fragment {
 
@@ -31,7 +33,12 @@ public class RecordRegistrationFragment extends Fragment {
             navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
         });
 
+        // 바텀 시트 호출 버튼 설정
+        Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading);
+        openBottomSheetButton.setOnClickListener(v -> {
+            RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
+            bottomSheetDialogFragment.show(getParentFragmentManager(),"RecordRegistrationBottomSheetDialogFragment");
+        });
         return view;
     }
-
 }
