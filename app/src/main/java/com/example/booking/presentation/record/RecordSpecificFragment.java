@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.booking.R;
@@ -30,6 +31,15 @@ public class RecordSpecificFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_record_specific, container, false);
         recyclerView = view.findViewById(R.id.recyclerView_record_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        //NavCotroller 가져오기
+        NavController navController = Navigation.findNavController(container);
+
+        // 버튼 초기화 및 클릭 이벤트 설정
+        Button addButton = view.findViewById(R.id.btn_specific_record_start_timer);
+        addButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment);
+        });
 
         Bundle args = getArguments();
         if (args != null) {
