@@ -67,12 +67,16 @@
         tools:layout="@layout/fragment_book_search" />
 
 
-    <!-- Timer Fragment -->
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.booking.presentation.record.TimerFragment"
         android:label="timerFragment"
         tools:layout="@layout/fragment_timer">
+       <action
+            android:id="@+id/action_timerFragment_to_recordRegistrationFragment"
+            app:destination="@id/recordRegistrationFragment"/>
+  </fragment>
+
     <!-- map Search Fragment -->
     <fragment
         android:id="@+id/mapSearchFragment"
@@ -100,6 +104,7 @@
             android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
 
+
     </fragment>
 
     <!-- Record Registration Map Search Fragment -->
@@ -113,6 +118,7 @@
             android:id="@+id/action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment"
             app:destination="@id/recordRegistrationFragment"/>
     </fragment>
+
     <!-- Record Registration Bottom Sheet Fragment -->
     <fragment
         android:id="@+id/recordRegistrationBottomSheetDialogFragment"
