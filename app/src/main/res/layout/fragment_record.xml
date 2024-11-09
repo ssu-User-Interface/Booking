@@ -27,10 +27,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/pretendard_bold"
-                android:paddingStart="17dp"
+                android:paddingStart="20dp"
                 android:text="책 모아보기"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
