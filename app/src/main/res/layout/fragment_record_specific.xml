@@ -206,19 +206,18 @@
         tools:listitem="@layout/fragment_record_specific_list_item" />
 
     <Button
-        android:id="@+id/view_timer_complete_btn"
+        android:id="@+id/btn_specific_record_start_timer"
         android:layout_width="120dp"
         android:layout_height="45dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/ic_timer_complete_bg"
         android:fontFamily="@font/pretendard_bold"
         android:text="독서 시작하기"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

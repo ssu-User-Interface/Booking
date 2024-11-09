@@ -2,7 +2,6 @@ package com.example.booking.presentation.record;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -45,7 +44,7 @@ public class RecordFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 버튼 초기화 및 클릭 이벤트 설정
-        Button addButton = view.findViewById(R.id.btn_specific_record_start_reading);
+        Button addButton = view.findViewById(R.id.btn_main_record_add_book);
         addButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_recordFragment_to_searchFragment);
         });
