@@ -49,6 +49,9 @@
         <action
             android:id="@+id/action_recordSpecificFragment_to_timerFragment"
             app:destination="@+id/timerFragment"/>
+        <action
+            android:id="@+id/action_recordSpecificFragment_to_recordFragment"
+            app:destination="@+id/recordFragment"/>
     </fragment>
 
 
@@ -67,15 +70,19 @@
         tools:layout="@layout/fragment_book_search" />
 
 
+    <!-- Timer Fragment -->
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.booking.presentation.record.TimerFragment"
         android:label="timerFragment"
         tools:layout="@layout/fragment_timer">
-       <action
+        <action
             android:id="@+id/action_timerFragment_to_recordRegistrationFragment"
             app:destination="@id/recordRegistrationFragment"/>
-  </fragment>
+        <action
+            android:id="@+id/action_timerFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
+    </fragment>
 
     <!-- map Search Fragment -->
     <fragment

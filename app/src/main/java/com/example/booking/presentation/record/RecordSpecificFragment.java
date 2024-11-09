@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -36,9 +37,15 @@ public class RecordSpecificFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 버튼 초기화 및 클릭 이벤트 설정
-        Button addButton = view.findViewById(R.id.btn_specific_record_start_timer);
-        addButton.setOnClickListener(v -> {
+        Button startButton = view.findViewById(R.id.btn_specific_record_start_timer);
+        startButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment);
+        });
+
+        // 버튼 초기화 및 클릭 이벤트 설정
+        ImageView backButton = view.findViewById(R.id.iv_record_specific_back_arrow);
+        backButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_recordSpecificFragment_to_recordFragment);
         });
 
         Bundle args = getArguments();
