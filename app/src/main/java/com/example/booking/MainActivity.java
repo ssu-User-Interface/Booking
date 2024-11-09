@@ -14,6 +14,8 @@ import com.example.booking.presentation.map.MapFragment;
 import com.example.booking.presentation.mypage.MyFragment;
 import com.example.booking.presentation.record.RecordFragment;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;

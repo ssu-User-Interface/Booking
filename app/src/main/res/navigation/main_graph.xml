@@ -40,13 +40,6 @@
             app:destination="@+id/recordSpecificFragment"/>
     </fragment>
 
-    <!-- Record Specific Fragment -->
-    <fragment
-        android:id="@+id/recordSpecificFragment"
-        android:name="com.example.booking.presentation.record.RecordSpecificFragment"
-        android:label="recordSpecificFragment"
-        tools:layout="@layout/fragment_my" />
-
     <!-- My Fragment -->
     <fragment
         android:id="@+id/myFragment"
