@@ -18,11 +18,7 @@
         android:id="@+id/mapFragment"
         android:name="com.example.booking.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map">
-        <action
-            android:id="@+id/action_mapFragment_to_mapSearchFragment"
-            app:destination="@id/mapSearchFragment" />
-    </fragment>
+        tools:layout="@layout/fragment_map"/>
 
 
     <!-- Record Fragment -->
