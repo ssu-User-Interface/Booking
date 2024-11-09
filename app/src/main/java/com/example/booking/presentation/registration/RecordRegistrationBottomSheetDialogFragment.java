@@ -11,6 +11,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_record_bottom_sheet, container, false);

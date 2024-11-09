@@ -39,6 +39,8 @@ public class RecordRegistrationFragment extends Fragment {
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
             bottomSheetDialogFragment.show(getParentFragmentManager(),"RecordRegistrationBottomSheetDialogFragment");
         });
+
         return view;
     }
+
 }
