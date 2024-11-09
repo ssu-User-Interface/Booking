@@ -18,7 +18,11 @@
         android:id="@+id/mapFragment"
         android:name="com.example.booking.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_mapSearchFragment"
+            app:destination="@id/mapSearchFragment" />
+    </fragment>
 
 
     <!-- Record Fragment -->
@@ -68,7 +72,7 @@
         android:id="@+id/timerFragment"
         android:name="com.example.booking.presentation.record.TimerFragment"
         android:label="timerFragment"
-        tools:layout="@layout/fragment_timer"/>
+        tools:layout="@layout/fragment_timer">
     <!-- map Search Fragment -->
     <fragment
         android:id="@+id/mapSearchFragment"
@@ -109,7 +113,6 @@
             android:id="@+id/action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment"
             app:destination="@id/recordRegistrationFragment"/>
     </fragment>
-
     <!-- Record Registration Bottom Sheet Fragment -->
     <fragment
         android:id="@+id/recordRegistrationBottomSheetDialogFragment"

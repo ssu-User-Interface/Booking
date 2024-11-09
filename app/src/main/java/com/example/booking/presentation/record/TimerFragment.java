@@ -25,7 +25,7 @@ public class TimerFragment extends Fragment {
         // 버튼 초기화 및 클릭 이벤트 설정
         Button addButton = view.findViewById(R.id.btn_timer_complete);
         addButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment);
+            navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment);
         });
 
         return view;

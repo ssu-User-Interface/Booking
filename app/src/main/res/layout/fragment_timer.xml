@@ -27,7 +27,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_arrow_back" />
+                android:src="@drawable/ic_timer_x" />
 
             <TextView
                 android:id="@+id/tv_record_registration"
