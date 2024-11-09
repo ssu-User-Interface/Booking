@@ -32,7 +32,10 @@
         android:background="@drawable/ic_map_search_round_box"
         android:hint="검색할 공간을 입력하세요"
         android:paddingStart="15dp"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:cursorVisible="false"/>
 
     <ImageView
         android:id="@+id/iv_home_search_ic"
