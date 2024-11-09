@@ -26,7 +26,22 @@
         android:id="@+id/recordFragment"
         android:name="com.example.booking.presentation.record.RecordFragment"
         android:label="RecordFragment"
-        tools:layout="@layout/fragment_record" />
+        tools:layout="@layout/fragment_record" >
+        <action
+            android:id="@+id/action_recordFragment_to_searchFragment"
+            app:destination="@+id/searchFragment"/>
+
+        <action
+            android:id="@+id/action_recordFragment_to_recordSpecificFragment"
+            app:destination="@+id/recordSpecificFragment"/>
+    </fragment>
+
+    <!-- Record Specific Fragment -->
+    <fragment
+        android:id="@+id/recordSpecificFragment"
+        android:name="com.example.booking.presentation.record.RecordSpecificFragment"
+        android:label="recordSpecificFragment"
+        tools:layout="@layout/fragment_my" />
 
     <!-- My Fragment -->
     <fragment
@@ -34,6 +49,15 @@
         android:name="com.example.booking.presentation.mypage.MyFragment"
         android:label="MyFragment"
         tools:layout="@layout/fragment_my" />
+
+    <!-- Search Fragment -->
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.example.booking.presentation.search.BookSearchFragment"
+        android:label="searchFragment"
+        tools:layout="@layout/fragment_book_search" />
+
+
 
 
 </navigation>

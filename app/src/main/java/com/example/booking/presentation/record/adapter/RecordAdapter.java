@@ -3,7 +3,6 @@ package com.example.booking.presentation.record.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,16 +28,13 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
     @Override
     public void onBindViewHolder(@NonNull RecordViewHolder holder, int position) {
         Record record = recordList.get(position);
-        holder.titleTextView.setText(record.getTitle());
-        holder.title2TextView.setText(record.getTitle2());
-        holder.reviewTextView.setText(record.getReview());
-        holder.dateTextView.setText(record.getDate());
-        holder.recordCountTextView.setText("기록 " + record.getRecordCount() + "개");
+        holder.titleTextView.setText(record.getTitle()); // String 값을 전달
+        holder.myTitleTextView.setText(record.getMyTitle());
+        holder.memoTextView.setText(record.getPhrase());
+        holder.addressTextView.setText(record.getAddress());
+        holder.dateTextView.setText(String.valueOf(record.getDate()));
+        holder.TimeTextView.setText(String.valueOf(record.getTime()));
 
-        // Set stars based on rating
-        for (int i = 0; i < holder.starImageViews.length; i++) {
-            holder.starImageViews[i].setVisibility(i < record.getRating() ? View.VISIBLE : View.GONE);
-        }
     }
 
     @Override
@@ -47,23 +43,18 @@ public class RecordAdapter extends RecyclerView.Adapter<RecordAdapter.RecordView
     }
 
     public static class RecordViewHolder extends RecyclerView.ViewHolder {
-        TextView titleTextView, title2TextView, reviewTextView, dateTextView, recordCountTextView;
-        ImageView[] starImageViews;
+        TextView titleTextView, myTitleTextView, memoTextView, addressTextView, dateTextView, TimeTextView;
 
         public RecordViewHolder(@NonNull View itemView) {
             super(itemView);
             titleTextView = itemView.findViewById(R.id.tv_record_specific_item_title1);
-            title2TextView = itemView.findViewById(R.id.tv_record_specific_item_title2);
-            reviewTextView = itemView.findViewById(R.id.tv_record_specific_review);
-            dateTextView = itemView.findViewById(R.id.tv_record_specific_date);
-            recordCountTextView = itemView.findViewById(R.id.tv_record_specific_count);
-            starImageViews = new ImageView[] {
-                    itemView.findViewById(R.id.iv_record_star1),
-                    itemView.findViewById(R.id.iv_record_star2),
-                    itemView.findViewById(R.id.iv_record_star3),
-                    itemView.findViewById(R.id.iv_record_star4),
-                    itemView.findViewById(R.id.iv_record_star5)
-            };
+            myTitleTextView = itemView.findViewById(R.id.tv_record_specific_item_myTitle);
+            memoTextView = itemView.findViewById(R.id.tv_record_specific_item_memo);
+            addressTextView = itemView.findViewById(R.id.tv_record_specific_item_address);
+            dateTextView = itemView.findViewById(R.id.tv_record_specific_item_date);
+            TimeTextView = itemView.findViewById(R.id.tv_record_specific_item_time);
         }
     }
 }
+
+
