@@ -38,6 +38,9 @@
         android:label="MyFragment"
         tools:layout="@layout/fragment_my" />
 
+
+
+
     <!-- map Search Fragment -->
     <fragment
         android:id="@+id/mapSearchFragment"
@@ -60,8 +63,12 @@
         <action
             android:id="@+id/action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment"
             app:destination="@id/recordRegistrationMapSearchFragment"/>
-    </fragment>
 
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
+
+    </fragment>
 
     <!-- Record Registration Map Search Fragment -->
     <fragment
@@ -75,5 +82,22 @@
             app:destination="@id/recordRegistrationFragment"/>
     </fragment>
 
+    <!-- Record Registration Bottom Sheet Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationBottomSheetDialogFragment"
+        android:name="com.example.booking.presentation.registration.RecordRegistrationBottomSheetDialogFragment"
+        android:label="RecordRegistrationBottomSheetDialogFragment"
+        tools:layout="@layout/fragment_record_bottom_sheet">
+        <action
+            android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
+    </fragment>
+
+    <!-- Record Specific Fragment -->
+    <fragment
+        android:id="@+id/recordSpecificFragment"
+        android:name="com.example.booking.presentation.record.RecordSpecificFragment"
+        android:label="RecordSpecificFragment"
+        tools:layout="@layout/fragment_record_specific" />
 
 </navigation>

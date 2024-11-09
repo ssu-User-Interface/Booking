@@ -40,6 +40,11 @@ public class RecordRegistrationFragment extends Fragment {
             bottomSheetDialogFragment.show(getParentFragmentManager(),"RecordRegistrationBottomSheetDialogFragment");
         });
 
+        Button saveRecordButton = view.findViewById(R.id.btn_save_record);
+        saveRecordButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment);
+        });
+
         return view;
     }
 
