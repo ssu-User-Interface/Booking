@@ -195,7 +195,9 @@
             android:padding="8dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:focusable="false"
+            android:focusableInTouchMode="false">
 
             <EditText
                 android:id="@+id/et_record_place"
@@ -206,7 +208,8 @@
                 android:background="@android:color/transparent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|start"
-                android:paddingEnd="10dp"/>
+                android:paddingEnd="10dp"
+                android:cursorVisible="false"/>
 
             <ImageView
                 android:id="@+id/iv_record_search_place"

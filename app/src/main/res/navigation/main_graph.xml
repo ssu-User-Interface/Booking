@@ -18,7 +18,11 @@
         android:id="@+id/mapFragment"
         android:name="com.example.booking.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map"/>
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_mapSearchFragment"
+            app:destination="@id/mapSearchFragment" />
+    </fragment>
 
 
     <!-- Record Fragment -->
@@ -68,7 +72,57 @@
         android:id="@+id/timerFragment"
         android:name="com.example.booking.presentation.record.TimerFragment"
         android:label="timerFragment"
-        tools:layout="@layout/fragment_timer">
+        tools:layout="@layout/fragment_timer"/>
+    <!-- map Search Fragment -->
+    <fragment
+        android:id="@+id/mapSearchFragment"
+        android:name="com.example.booking.presentation.map.MapSearchFragment"
+        android:label="MapSearchFragment"
+        tools:layout="@layout/fragment_map_search">
+
+        <action
+            android:id="@+id/action_mapSearchFragment_to_mapFragment"
+            app:destination="@id/mapFragment"/>
+    </fragment>
+
+    <!-- Record Registration Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationFragment"
+        android:name="com.example.booking.presentation.registration.RecordRegistrationFragment"
+        android:label="RecordRegistrationFragment"
+        tools:layout="@layout/fragment_record_registration">
+
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment"
+            app:destination="@id/recordRegistrationMapSearchFragment"/>
+
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
 
     </fragment>
+
+    <!-- Record Registration Map Search Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationMapSearchFragment"
+        android:name="com.example.booking.presentation.registration.RecordRegistrationMapSearchFragment"
+        android:label="RecordRegistrationMapSearchFragment"
+        tools:layout="@layout/fragment_record_registration_map_search">
+
+        <action
+            android:id="@+id/action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment"
+            app:destination="@id/recordRegistrationFragment"/>
+    </fragment>
+
+    <!-- Record Registration Bottom Sheet Fragment -->
+    <fragment
+        android:id="@+id/recordRegistrationBottomSheetDialogFragment"
+        android:name="com.example.booking.presentation.registration.RecordRegistrationBottomSheetDialogFragment"
+        android:label="RecordRegistrationBottomSheetDialogFragment"
+        tools:layout="@layout/fragment_record_bottom_sheet">
+        <action
+            android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
+    </fragment>
+
 </navigation>
