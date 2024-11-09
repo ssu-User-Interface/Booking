@@ -27,10 +27,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/pretendard_bold"
-                android:paddingStart="17dp"
+                android:paddingStart="20dp"
                 android:text="책 모아보기"
                 android:textColor="@color/black"
-                android:textSize="17sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -101,19 +101,18 @@
         tools:listitem="@layout/fragment_record_list_item" />
 
     <Button
-        android:id="@+id/view_timer_complete_btn"
+        android:id="@+id/btn_specific_record_start_reading"
         android:layout_width="120dp"
         android:layout_height="45dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/ic_timer_complete_bg"
         android:fontFamily="@font/pretendard_bold"
         android:text="도서 추가하기"
         android:textColor="@color/white"
         android:textSize="15sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"/>
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
