@@ -33,13 +33,14 @@ public class RecordRegistrationFragment extends Fragment {
             navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
         });
 
-        // 바텀 시트 호출 버튼 설정
+        // 독서 종료 버튼
         Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading);
         openBottomSheetButton.setOnClickListener(v -> {
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
             bottomSheetDialogFragment.show(getParentFragmentManager(),"RecordRegistrationBottomSheetDialogFragment");
         });
 
+        // 기록 저장 버튼
         Button saveRecordButton = view.findViewById(R.id.btn_save_record);
         saveRecordButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment);
