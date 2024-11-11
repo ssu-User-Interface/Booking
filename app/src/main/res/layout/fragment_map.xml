@@ -13,13 +13,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="15dp"
-        android:layout_marginStart="15dp"
+        android:layout_marginStart="20dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendard_semibold"
         android:text="Book Map"
         android:textColor="@color/black"
-        android:textSize="30dp" />
+        android:textSize="20sp" />
 
     <EditText
         android:id="@+id/et_home_search"
@@ -32,7 +32,10 @@
         android:background="@drawable/ic_map_search_round_box"
         android:hint="검색할 공간을 입력하세요"
         android:paddingStart="15dp"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:cursorVisible="false"/>
 
     <ImageView
         android:id="@+id/iv_home_search_ic"

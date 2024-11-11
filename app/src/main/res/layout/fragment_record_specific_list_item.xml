@@ -50,7 +50,7 @@
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_item_ic"/>
 
         <TextView
-            android:id="@+id/tv_record_specific_item_title2"
+            android:id="@+id/tv_record_specific_item_myTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
@@ -88,12 +88,24 @@
             app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo" />
 
         <TextView
+            android:id="@+id/tv_record_specific_item_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:text="2024.10.05 / "
+            android:textSize="10dp"
+            android:fontFamily="@font/pretendard_regular"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo"
+            app:layout_constraintEnd_toStartOf="@id/tv_record_specific_item_time"
+            />
+
+        <TextView
             android:id="@+id/tv_record_specific_item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
             android:layout_marginEnd="18dp"
-            android:text="2024.10.05 / 00:30:12"
+            android:text="00:30:12"
             android:textSize="10dp"
             android:fontFamily="@font/pretendard_regular"
             app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo"

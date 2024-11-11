@@ -39,6 +39,9 @@ android {
     dataBinding{
         enable = true
     }
+    buildFeatures {
+        viewBinding = true
+    }
 }
 
 dependencies {
@@ -47,6 +50,11 @@ dependencies {
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
+    //네비게이션 그래프
+    implementation(libs.navigation.fragment)
+    implementation(libs.navigation.ui)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -54,11 +62,16 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     // TODO: Add the dependencies for Firebase products you want to use
     // When using the BoM, don't specify versions in Firebase dependencies
-    implementation("com.google.firebase:firebase-analytics")
+//    implementation("com.google.firebase:firebase-analytics")
 
     // Declare the dependency for the Firebase Authentication library
     // When using the BoM, you don't specify versions in Firebase library dependencies
     //implementation ("com.google.firebase:firebase-auth")
+
+    // 파이어베이스 로그인 구현
+    implementation ("com.google.firebase:firebase-analytics-ktx")
+    implementation ("com.google.firebase:firebase-database-ktx:20.0.4")
+    implementation ("com.google.firebase:firebase-auth-ktx")
 
     //리사이클러 뷰
     implementation ("androidx.recyclerview:recyclerview:1.2.1")

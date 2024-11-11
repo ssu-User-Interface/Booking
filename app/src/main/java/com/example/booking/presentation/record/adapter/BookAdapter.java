@@ -16,6 +16,15 @@ import java.util.List;
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
     private List<Book> bookList;
+    private OnItemClickListener onItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(Book book);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.onItemClickListener = listener;
+    }
 
     public BookAdapter(List<Book> bookList) {
         this.bookList = bookList;
@@ -34,6 +43,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.imageView.setImageResource(book.getImageResId());
         holder.titleTextView.setText(book.getTitle());
         holder.authorTextView.setText(book.getAuthor());
+
+        holder.itemView.setOnClickListener(v -> {
+            if (onItemClickListener != null) {
+                onItemClickListener.onItemClick(book);
+            }
+        });
     }
 
     @Override
@@ -48,9 +63,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
-            imageView = itemView.findViewById(R.id.iv_record_main_book);
-            titleTextView = itemView.findViewById(R.id.tv_record_registration_book_title);
-            authorTextView = itemView.findViewById(R.id.tv_record_main_book_author);
+            imageView = itemView.findViewById(R.id.iv_record_list_item_book);
+            titleTextView = itemView.findViewById(R.id.tv_record_list_item_book_title);
+            authorTextView = itemView.findViewById(R.id.tv_record_list_item_book_author);
         }
     }
 }
+
