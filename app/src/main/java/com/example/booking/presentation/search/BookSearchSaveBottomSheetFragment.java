@@ -9,8 +9,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.booking.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -123,5 +127,17 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         btnRead.setSelected(false);
 
         selectedButton.setSelected(true);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        ImageView backButton = view.findViewById(R.id.iv_back_arrow);
+
+        NavController navController = NavHostFragment.findNavController(this);
+
+        backButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment);
+        });
+
     }
 }
