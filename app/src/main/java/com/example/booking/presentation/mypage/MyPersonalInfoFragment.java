@@ -12,12 +12,11 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.example.booking.R;
 
-public class MyProfileChangeFragment extends Fragment {
+public class MyPersonalInfoFragment extends Fragment {
 
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_my_profile_change, container, false);
+        return inflater.inflate(R.layout.fragment_my_personal_info, container, false);
     }
 
     @Override

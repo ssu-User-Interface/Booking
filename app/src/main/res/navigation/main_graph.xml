@@ -5,6 +5,7 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/homeFragment">
 
+
     <!-- Home Fragment -->
     <fragment
         android:id="@+id/homeFragment"
@@ -51,13 +52,33 @@
             app:destination="@+id/timerFragment"/>
     </fragment>
 
-
-    <!-- My Fragment -->
-    <fragment
-        android:id="@+id/myFragment"
-        android:name="com.example.booking.presentation.mypage.MyFragment"
-        android:label="MyFragment"
-        tools:layout="@layout/fragment_my" />
+    <navigation android:id="@+id/myPageTab"
+        app:startDestination="@+id/myFragment">
+        <fragment
+            android:id="@+id/myFragment"
+            android:name="com.example.booking.presentation.mypage.MyFragment"
+            android:label="MyFragment"
+            tools:layout="@layout/fragment_my">
+            <action
+                android:id="@+id/action_myFragment_to_myProfileChangeFragment"
+                app:destination="@id/myProfileChangeFragment"/>
+            <action
+                android:id="@+id/action_myFragment_to_myPersonalInfoFragment"
+                app:destination="@id/myPersonalInfoFragment"/>
+        </fragment>
+        <fragment
+            android:id="@+id/myPersonalInfoFragment"
+            android:name="com.example.booking.presentation.mypage.MyPersonalInfoFragment"
+            android:label="MyPersonalInfoFragment"
+            tools:layout="@layout/fragment_my_personal_info">
+        </fragment>
+        <fragment
+            android:id="@+id/myProfileChangeFragment"
+            android:name="com.example.booking.presentation.mypage.MyProfileChangeFragment"
+            android:label="MyProfileChangeFragment"
+            tools:layout="@layout/fragment_my_profile_change">
+        </fragment>
+    </navigation>
 
     <!-- Search Fragment -->
     <fragment
@@ -129,5 +150,6 @@
             android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
     </fragment>
+
 
 </navigation>
