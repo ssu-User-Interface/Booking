@@ -27,7 +27,7 @@ public class MyPersonalInfoFragment extends Fragment {
 
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
         backButton.setOnClickListener(v ->
-                navController.navigateUp()
+                navController.navigate(R.id.action_myPersonalInfoFragment_to_myFragment)
         );
     }
 }
