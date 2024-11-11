@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,6 +26,7 @@ public class BookSearchDetailFragment extends Fragment {
         TextView pageView = view.findViewById(R.id.tv_book_search_detail_page);
         ImageView coverImageView = view.findViewById(R.id.iv_book_search_detail_cover);
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
+        Button saveButton = view.findViewById(R.id.bt_book_search_detail_save);
 
         Bundle bundle = getArguments();
         if (bundle != null) {
@@ -41,6 +43,11 @@ public class BookSearchDetailFragment extends Fragment {
             transaction.replace(R.id.main_frm, new BookSearchFragment());
             transaction.addToBackStack(null);
             transaction.commit();
+        });
+
+        saveButton.setOnClickListener(v -> {
+            BookSearchSaveBottomSheetFragment bottomSheet = new BookSearchSaveBottomSheetFragment();
+            bottomSheet.show(getParentFragmentManager(), bottomSheet.getTag());
         });
 
         return view;
