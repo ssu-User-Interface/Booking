@@ -65,12 +65,14 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:src="@drawable/ic_mypage_profile"
+        android:scaleType="centerCrop"
         android:layout_marginTop="90dp"
         app:layout_constraintTop_toBottomOf="@id/fragment_top"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
     <ImageView
+        android:id="@+id/iv_my_page_profile_change_profile_icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:src="@drawable/ic_my_page_profile_change_icon"
