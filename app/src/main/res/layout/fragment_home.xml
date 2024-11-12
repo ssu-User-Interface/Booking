@@ -65,7 +65,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_home_search" />
 
-    <View
+    <ImageView
         android:id="@+id/iv_home_book"
         android:layout_width="80dp"
         android:layout_height="115.8dp"
@@ -104,17 +104,17 @@
 
     <TextView
         android:id="@+id/tv_home_first_widget_reading_period"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="73dp"
+        android:layout_height="24dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="5dp"
         android:fontFamily="@font/pretendard_light"
         android:text="2024.11.17 ~"
-        android:textSize="15sp"
         android:textColor="#FFFF"
-        app:layout_constraintTop_toBottomOf="@id/view_home_line"
+        android:textSize="15sp"
+        android:visibility="visible"
         app:layout_constraintStart_toEndOf="@id/iv_home_book"
-        android:layout_marginTop="5dp"
-        android:layout_marginStart="15dp"
-        android:visibility="visible"/>
+        app:layout_constraintTop_toBottomOf="@id/view_home_line" />
 
     <TextView
         android:id="@+id/tv_home_first_widget_reading_page"
@@ -168,7 +168,7 @@
         app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
         android:visibility="visible"/>
 
-    <View
+    <ImageView
         android:id="@+id/iv_home_book_ic"
         android:layout_width="90dp"
         android:layout_height="95dp"
