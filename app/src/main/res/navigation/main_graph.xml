@@ -11,7 +11,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.booking.presentation.home.HomeFragment"
         android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_homeFragment_to_bookSearchFragment"
+            app:destination="@id/bookSearchFragment"/>
+    </fragment>
 
 
     <!-- Map Fragment -->
@@ -80,13 +84,36 @@
         </fragment>
     </navigation>
 
-    <!-- Search Fragment -->
     <fragment
-        android:id="@+id/searchFragment"
+        android:id="@+id/bookSearchFragment"
         android:name="com.example.booking.presentation.search.BookSearchFragment"
-        android:label="searchFragment"
-        tools:layout="@layout/fragment_book_search" />
-
+        android:label="bookSearchFragment"
+        tools:layout="@layout/fragment_book_search">
+        <action
+            android:id="@+id/action_bookSearchFragment_to_bookSearchDetailFragment"
+            app:destination="@id/bookSearchDetailFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bookSearchDetailFragment"
+        android:name="com.example.booking.presentation.search.BookSearchDetailFragment"
+        android:label="Book Search Detail"
+        tools:layout="@layout/fragment_book_search_deatil">
+        <action
+            android:id="@+id/action_bookSearchDetailFragment_to_bookSearchFragment"
+            app:destination="@id/bookSearchFragment"/>
+        <action
+            android:id="@+id/action_bookSearchDetailFragment_to_bookSearchSaveBottomSheetFragment"
+            app:destination="@id/bookSearchSaveBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/bookSearchSaveBottomSheetFragment"
+        android:name="com.example.booking.presentation.search.BookSearchSaveBottomSheetFragment"
+        android:label="BookSearchSaveBottomSheetFragment"
+        tools:layout="@layout/fragment_book_search_save_bottom_sheet">
+        <action
+            android:id="@+id/action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment"
+            app:destination="@id/bookSearchDetailFragment" />
+    </dialog>
 
     <fragment
         android:id="@+id/timerFragment"
@@ -150,6 +177,5 @@
             android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
     </fragment>
-
 
 </navigation>
