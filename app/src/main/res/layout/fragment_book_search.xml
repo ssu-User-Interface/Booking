@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#EFEBE0">
+    android:background="#FBFAF7">
 
     <TextView
         android:id="@+id/tv_book_search_title"
@@ -22,7 +22,7 @@
         android:id="@+id/et_book_search"
         android:layout_width="300dp"
         android:layout_height="50dp"
-        android:background="@drawable/ic_book_search_bg"
+        android:background="@drawable/ic_book_search_detail_save"
         android:paddingStart="15dp"
         android:hint="검색할 책을 입력하세요"
         android:textColorHint="#717171"
