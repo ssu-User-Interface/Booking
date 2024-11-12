@@ -65,7 +65,7 @@
         android:layout_height="45dp"
         android:paddingStart="15dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/ic_home_search_round_box"
+        android:background="@drawable/drawer_little_corenr_outline"
         android:hint="검색할 장소를 입력하세요"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

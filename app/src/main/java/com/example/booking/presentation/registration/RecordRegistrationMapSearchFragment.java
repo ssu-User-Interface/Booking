@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -23,8 +24,8 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 버튼 설정 및 클릭 리스너 설정
-        Button button = view.findViewById(R.id.iv_back_arrow);
-        button.setOnClickListener(v -> {
+        ImageView backbutton = view.findViewById(R.id.iv_back_arrow);
+        backbutton.setOnClickListener(v -> {
             navController.navigate(R.id.action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment);
         });
         return view;
