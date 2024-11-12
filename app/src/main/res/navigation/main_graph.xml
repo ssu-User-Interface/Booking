@@ -38,6 +38,7 @@
         <action
             android:id="@+id/action_recordFragment_to_recordSpecificFragment"
             app:destination="@+id/recordSpecificFragment"/>
+
     </fragment>
 
     <!-- Record Specific Fragment -->
@@ -75,7 +76,7 @@
        <action
             android:id="@+id/action_timerFragment_to_recordRegistrationFragment"
             app:destination="@id/recordRegistrationFragment"/>
-  </fragment>
+    </fragment>
 
     <!-- map Search Fragment -->
     <fragment
@@ -103,7 +104,6 @@
         <action
             android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
-
 
     </fragment>
 

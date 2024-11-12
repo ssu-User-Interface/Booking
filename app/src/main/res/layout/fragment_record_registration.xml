@@ -181,13 +181,10 @@
                     android:gravity="center_vertical|start"
                     android:paddingEnd="10dp"/>
             </LinearLayout>
-
-
-
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layout_record_place"
+            android:id="@+id/layout_record_registration_search_place"
             android:layout_width="320dp"
             android:layout_height="40dp"
             android:orientation="horizontal"
@@ -195,21 +192,18 @@
             android:padding="8dp"
             android:layout_marginTop="10dp"
             android:gravity="center_vertical"
-            android:layout_gravity="center"
-            android:focusable="false"
-            android:focusableInTouchMode="false">
+            android:layout_gravity="center">
 
-            <EditText
-                android:id="@+id/et_record_place"
+            <TextView
+                android:id="@+id/tv_record_place"
                 android:layout_width="270dp"
                 android:layout_height="wrap_content"
-                android:hint="장소"
+                android:text="장소"
                 android:textSize="12sp"
                 android:background="@android:color/transparent"
                 android:layout_gravity="center"
                 android:gravity="center_vertical|start"
-                android:paddingEnd="10dp"
-                android:cursorVisible="false"/>
+                android:paddingEnd="10dp"/>
 
             <ImageView
                 android:id="@+id/iv_record_search_place"

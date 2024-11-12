@@ -7,14 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.booking.R;
-import com.example.booking.presentation.registration.RecordRegistrationBottomSheetDialogFragment;
+
+import org.w3c.dom.Text;
 
 public class RecordRegistrationFragment extends Fragment {
 
@@ -27,11 +30,18 @@ public class RecordRegistrationFragment extends Fragment {
         // NavControl 가져오기
         NavController navController = Navigation.findNavController(container);
 
-        // 버튼 설정 및 클릭 리스너 추가
-        LinearLayout layout = view.findViewById(R.id.layout_record_place);
-        layout.setOnClickListener(v -> {
+        // 장소 검색
+//        LinearLayout searchPlaceLayout = view.findViewById(R.id.layout_record_registration_search_place);
+//        searchPlaceLayout.setOnClickListener(v -> {
+//            navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
+//        });
+
+        // 장소 검색
+        TextView placeText = view.findViewById(R.id.tv_record_place);
+        placeText.setOnClickListener(v -> {
             navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
         });
+
 
         // 독서 종료 버튼
         Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading);
