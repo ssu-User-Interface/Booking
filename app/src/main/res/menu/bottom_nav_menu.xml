@@ -21,7 +21,7 @@
         app:showAsAction="always"
         />
     <item
-        android:id="@+id/myPageTab"
+        android:id="@+id/myFragment"
         android:icon="@drawable/ic_bottom_my"
         android:title="My"
         app:showAsAction="always"

@@ -28,7 +28,7 @@ public class MyProfileChangeFragment extends Fragment {
 
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
         backButton.setOnClickListener(v ->
-                navController.navigateUp()
+                navController.navigate(R.id.action_myProfileChangeFragment_to_myFragment)
         );
     }
 }
