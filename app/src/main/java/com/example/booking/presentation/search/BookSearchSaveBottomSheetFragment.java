@@ -28,10 +28,15 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
     private LinearLayout layoutPeriod, layoutScore;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_search_save_bottom_sheet, container, false);
 
-        // 버튼 초기화
         btnToRead = view.findViewById(R.id.bt_book_search_save_record_to_read);
         btnReading = view.findViewById(R.id.bt_book_search_save_record_reading);
         btnRead = view.findViewById(R.id.bt_book_search_save_record_read);
@@ -132,12 +137,11 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
-
         NavController navController = NavHostFragment.findNavController(this);
 
         backButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment);
         });
-
     }
+
 }
