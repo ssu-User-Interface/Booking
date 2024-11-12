@@ -13,8 +13,11 @@
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
         <action
-            android:id="@+id/action_homeFragment_to_bookSearchFragment"
-            app:destination="@id/bookSearchFragment"/>
+            android:id="@+id/action_homeFragment_to_searchFragment"
+            app:destination="@id/searchFragment"/>
+        <action
+            android:id="@+id/action_homeFragment_to_timerFragment"
+            app:destination="@id/timerFragment"/>
     </fragment>
 
 
@@ -55,6 +58,9 @@
         <action
             android:id="@+id/action_recordSpecificFragment_to_timerFragment"
             app:destination="@+id/timerFragment"/>
+        <action
+            android:id="@+id/action_recordSpecificFragment_to_recordFragment"
+            app:destination="@+id/recordFragment"/>
     </fragment>
 
     <fragment
@@ -119,14 +125,18 @@
             app:destination="@id/bookSearchDetailFragment" />
     </dialog>
 
+    <!-- Timer Fragment -->
     <fragment
         android:id="@+id/timerFragment"
         android:name="com.example.booking.presentation.record.TimerFragment"
         android:label="timerFragment"
         tools:layout="@layout/fragment_timer">
-       <action
+        <action
             android:id="@+id/action_timerFragment_to_recordRegistrationFragment"
             app:destination="@id/recordRegistrationFragment"/>
+        <action
+            android:id="@+id/action_timerFragment_to_recordSpecificFragment"
+            app:destination="@id/recordSpecificFragment"/>
     </fragment>
 
     <!-- map Search Fragment -->
@@ -155,7 +165,7 @@
         <action
             android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
-
+      
         <action
             android:id="@+id/action_recordRegistrationFragment_to_timerFragment"
             app:destination="@id/timerFragment"/>
@@ -183,6 +193,9 @@
         <action
             android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
+        <action
+            android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordFragment"
+            app:destination="@id/recordFragment"/>
     </fragment>
 
 </navigation>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.booking.R;
 import com.example.booking.data.model.Book;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
@@ -30,12 +31,21 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         this.bookList = bookList;
     }
 
+    public void updateBooks(List<Book> newBooks) {
+        bookList = newBooks;
+        notifyDataSetChanged();
+    }
+
+
+
     @NonNull
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.fragment_record_list_item, parent, false);
         return new BookViewHolder(view);
     }
+
+
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {

@@ -1,15 +1,20 @@
 package com.example.booking.presentation.registration;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.booking.R;
+import com.example.booking.presentation.record.RecordSpecificFragment;
+import com.example.booking.presentation.search.BookSearchFragment;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDialogFragment {

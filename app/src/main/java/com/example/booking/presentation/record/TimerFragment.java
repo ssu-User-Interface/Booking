@@ -5,7 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -13,6 +15,7 @@ import androidx.navigation.Navigation;
 import com.example.booking.R;
 
 public class TimerFragment extends Fragment {
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -27,6 +30,13 @@ public class TimerFragment extends Fragment {
         addButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment);
         });
+
+        // 버튼 초기화 및 클릭 이벤트 설정
+        ImageView quitButton = view.findViewById(R.id.iv_timer_back_arrow);
+        quitButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_timerFragment_to_recordSpecificFragment);
+        });
+
 
         return view;
     }
