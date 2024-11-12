@@ -21,27 +21,24 @@ import android.widget.ProgressBar;
 
 public class HomeFragment extends Fragment {
 
-    private boolean hasReadingBook = false; // 읽고 있는 책 유무를 확인하는 변수
+    private boolean hasReadingBook = true; // 읽고 있는 책 유무를 확인하는 변수
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        return view;
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // NavController 초기화
         NavController navController = Navigation.findNavController(view);
 
         // EditText를 클릭 시 검색 Fragment로 이동
         EditText openBookSearchEditText = view.findViewById(R.id.et_home_search);
         openBookSearchEditText.setFocusable(false);
-      
         openBookSearchEditText.setOnClickListener(v -> {
-            NavController navController = Navigation.findNavController(container);
             navController.navigate(R.id.action_homeFragment_to_searchFragment);
         });
 
@@ -74,7 +71,6 @@ public class HomeFragment extends Fragment {
 
             // 타이머 버튼 클릭 시 fragment_timer로 이동
             toTimerButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(container);
                 navController.navigate(R.id.action_homeFragment_to_timerFragment);
             });
 
@@ -94,11 +90,9 @@ public class HomeFragment extends Fragment {
 
             // 책 추가 버튼 클릭 시 fragment_book_search로 이동
             addBookButton.setOnClickListener(v -> {
-                NavController navController = Navigation.findNavController(container);
                 navController.navigate(R.id.action_homeFragment_to_searchFragment);
             });
         }
-
-
     }
 }
+
