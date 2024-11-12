@@ -92,6 +92,17 @@ public class RecordFragment extends Fragment {
             setFont(tvRecordPast);
         });
 
+        // NavController 가져오기
+        NavController navController = Navigation.findNavController(container);
+
+        // BookAdapter에서 아이템 클릭 리스너 설정
+        bookAdapter.setOnItemClickListener(book -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("bookTitle", book.getTitle());
+            bundle.putString("bookAuthor", book.getAuthor());
+            navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
+        });
+
         return view;
     }
 
