@@ -4,6 +4,8 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,11 +27,8 @@ public class HomeFragment extends Fragment {
         openBookSearchEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // BookSearchFragment로 전환
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.main_frm, new BookSearchFragment());
-                transaction.addToBackStack(null);
-                transaction.commit();
+                NavController navController = Navigation.findNavController(container);
+                navController.navigate(R.id.action_homeFragment_to_searchFragment);
             }
         });
 
