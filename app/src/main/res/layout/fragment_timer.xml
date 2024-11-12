@@ -27,14 +27,15 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_timer_x" />
+                android:src="@drawable/ic_arrow_back" />
 
             <TextView
-                android:id="@+id/tv_record_registration"
+                android:id="@+id/tv_timer_registration"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="8"
+                android:layout_marginStart="-10dp"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center_horizontal"
                 android:text="독서 타이머"
@@ -57,6 +58,7 @@
             android:layout_marginTop="15dp"
             android:layout_marginBottom="5dp"
             android:background="@color/black" />
+
     </LinearLayout>
 
     <TextView

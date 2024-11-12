@@ -14,7 +14,7 @@
         tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment"/>
+            app:destination="@+id/bookSearchFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_timerFragment"
             app:destination="@id/timerFragment"/>
@@ -41,7 +41,7 @@
         tools:layout="@layout/fragment_record" >
         <action
             android:id="@+id/action_recordFragment_to_searchFragment"
-            app:destination="@+id/searchFragment"/>
+            app:destination="@+id/bookSearchFragment"/>
 
         <action
             android:id="@+id/action_recordFragment_to_recordSpecificFragment"
