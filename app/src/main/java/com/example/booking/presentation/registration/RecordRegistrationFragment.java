@@ -56,6 +56,12 @@ public class RecordRegistrationFragment extends Fragment {
             navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment);
         });
 
+        // 뒤로가기 이미지
+        ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
+        backArrow.setOnClickListener(v -> {
+            navController.navigate(R.id.action_recordRegistrationFragment_to_timerFragment);
+        });
+
         return view;
     }
 

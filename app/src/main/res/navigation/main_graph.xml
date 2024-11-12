@@ -105,6 +105,10 @@
             android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
 
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_timerFragment"
+            app:destination="@id/timerFragment"/>
+
     </fragment>
 
     <!-- Record Registration Map Search Fragment -->
