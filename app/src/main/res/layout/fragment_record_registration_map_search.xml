@@ -25,6 +25,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:src="@drawable/ic_arrow_back" />
 
@@ -34,9 +35,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_weight="8"
+                android:layout_marginStart="-10dp"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center_horizontal"
-                android:text="장소 검색하기"
+                android:text="장소 검색하"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
