@@ -5,6 +5,7 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/homeFragment">
 
+
     <!-- Home Fragment -->
     <fragment
         android:id="@+id/homeFragment"
@@ -45,6 +46,7 @@
         <action
             android:id="@+id/action_recordFragment_to_recordSpecificFragment"
             app:destination="@+id/recordSpecificFragment"/>
+
     </fragment>
 
     <!-- Record Specific Fragment -->
@@ -61,21 +63,67 @@
             app:destination="@+id/recordFragment"/>
     </fragment>
 
-
-    <!-- My Fragment -->
     <fragment
         android:id="@+id/myFragment"
         android:name="com.example.booking.presentation.mypage.MyFragment"
         android:label="MyFragment"
-        tools:layout="@layout/fragment_my" />
-
-    <!-- Search Fragment -->
+        tools:layout="@layout/fragment_my">
+        <action
+            android:id="@+id/action_myFragment_to_myProfileChangeFragment"
+            app:destination="@id/myProfileChangeFragment"/>
+        <action
+            android:id="@+id/action_myFragment_to_myPersonalInfoFragment"
+            app:destination="@id/myPersonalInfoFragment"/>
+    </fragment>
     <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.booking.presentation.search.BookSearchFragment"
-        android:label="searchFragment"
-        tools:layout="@layout/fragment_book_search" />
+        android:id="@+id/myPersonalInfoFragment"
+        android:name="com.example.booking.presentation.mypage.MyPersonalInfoFragment"
+        android:label="MyPersonalInfoFragment"
+        tools:layout="@layout/fragment_my_personal_info">
+        <action
+            android:id="@+id/action_myPersonalInfoFragment_to_myFragment"
+            app:destination="@id/myFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/myProfileChangeFragment"
+        android:name="com.example.booking.presentation.mypage.MyProfileChangeFragment"
+        android:label="MyProfileChangeFragment"
+        tools:layout="@layout/fragment_my_profile_change">
+        <action
+            android:id="@+id/action_myProfileChangeFragment_to_myFragment"
+            app:destination="@id/myFragment"/>
+    </fragment>
 
+    <fragment
+        android:id="@+id/bookSearchFragment"
+        android:name="com.example.booking.presentation.search.BookSearchFragment"
+        android:label="bookSearchFragment"
+        tools:layout="@layout/fragment_book_search">
+        <action
+            android:id="@+id/action_bookSearchFragment_to_bookSearchDetailFragment"
+            app:destination="@id/bookSearchDetailFragment"/>
+    </fragment>
+    <fragment
+        android:id="@+id/bookSearchDetailFragment"
+        android:name="com.example.booking.presentation.search.BookSearchDetailFragment"
+        android:label="Book Search Detail"
+        tools:layout="@layout/fragment_book_search_deatil">
+        <action
+            android:id="@+id/action_bookSearchDetailFragment_to_bookSearchFragment"
+            app:destination="@id/bookSearchFragment"/>
+        <action
+            android:id="@+id/action_bookSearchDetailFragment_to_bookSearchSaveBottomSheetFragment"
+            app:destination="@id/bookSearchSaveBottomSheetFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/bookSearchSaveBottomSheetFragment"
+        android:name="com.example.booking.presentation.search.BookSearchSaveBottomSheetFragment"
+        android:label="BookSearchSaveBottomSheetFragment"
+        tools:layout="@layout/fragment_book_search_save_bottom_sheet">
+        <action
+            android:id="@+id/action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment"
+            app:destination="@id/bookSearchDetailFragment" />
+    </dialog>
 
     <!-- Timer Fragment -->
     <fragment
@@ -121,7 +169,10 @@
         <action
             android:id="@+id/action_recordRegistrationFragment_to_recordRegistrationBottomSheetDialogFragment"
             app:destination="@id/recordRegistrationBottomSheetDialogFragment" />
-
+      
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_timerFragment"
+            app:destination="@id/timerFragment"/>
 
     </fragment>
 

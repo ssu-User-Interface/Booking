@@ -25,20 +25,23 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
         setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
     }
 
+
+    // 바텀시트 저장하기 버튼
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // inflater 설정
         View view = inflater.inflate(R.layout.fragment_record_bottom_sheet, container, false);
 
-        // navigation 가져오기
-        NavController navController = Navigation.findNavController(container);
 
-        // 버튼 및 클릭 리스너 설정
         Button saveButton = view.findViewById(R.id.btn_save_record);
-        saveButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment);
-        });
+        saveButton.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+              NavController navController = Navigation.findNavController(requireActivity(), R.id.main_frm);
+              navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment);
+              dismiss();
+          }
+      });
 
         return view;
     }

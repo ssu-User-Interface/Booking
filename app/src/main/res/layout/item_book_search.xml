@@ -8,9 +8,9 @@
     <ImageView
         android:id="@+id/iv_item_book_search_rect"
         android:layout_width="290dp"
-        android:layout_height="80dp"
+        android:layout_height="75dp"
         android:src="@drawable/ic_item_book_search_bg"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="13dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
