@@ -6,14 +6,14 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_marginTop="10dp">
 
-        <ImageView
-            android:id="@+id/view_record_book_bg1"
-            android:layout_width="160dp"
-            android:layout_height="125dp"
-            android:src="@drawable/ic_record_book_bg"
-            android:background="@drawable/shadow_test"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+    <ImageView
+        android:id="@+id/view_record_book_bg1"
+        android:layout_width="160dp"
+        android:layout_height="125dp"
+        android:src="@drawable/ic_record_book_bg"
+        android:background="@drawable/shadow_test"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -34,14 +34,17 @@
 
         <TextView
             android:id="@+id/tv_record_list_item_book_title"
-            android:layout_width="wrap_content"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/pretendard_bold"
             android:text="책 제목"
             android:textColor="#000000"
-            android:textSize="15sp"
+            android:textSize="13sp"
+            android:maxEms="5"
+            android:maxLines="2"
             android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_record_list_item_book"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +52,7 @@
             android:id="@+id/tv_record_list_item_book_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:fontFamily="@font/pretendard_regular"
             android:text="저자"
             android:textColor="#000000"

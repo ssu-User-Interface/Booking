@@ -111,6 +111,10 @@
             android:id="@+id/action_recordRegistrationFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
 
+        <action
+            android:id="@+id/action_recordRegistrationFragment_to_recordRegistrationBottomSheetDialogFragment"
+            app:destination="@id/recordRegistrationBottomSheetDialogFragment" />
+
 
     </fragment>
 
@@ -135,6 +139,9 @@
         <action
             android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordSpecificFragment"
             app:destination="@id/recordSpecificFragment"/>
+        <action
+            android:id="@+id/action_recordRegistrationBottomSheetDialogFragment_to_recordFragment"
+            app:destination="@id/recordFragment"/>
     </fragment>
 
 </navigation>

@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.booking.R;
 import com.example.booking.data.model.Book;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
@@ -29,6 +30,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     public BookAdapter(List<Book> bookList) {
         this.bookList = bookList;
     }
+
+    public void updateBooks(List<Book> newBooks) {
+        bookList = newBooks;
+        notifyDataSetChanged();
+    }
+
+
 
     @NonNull
     @Override
