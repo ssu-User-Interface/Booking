@@ -21,7 +21,7 @@ import android.widget.ProgressBar;
 
 public class HomeFragment extends Fragment {
 
-    private boolean hasReadingBook = true; // 읽고 있는 책 유무를 확인하는 변수
+    private boolean hasReadingBook = false; // 읽고 있는 책 유무를 확인하는 변수
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

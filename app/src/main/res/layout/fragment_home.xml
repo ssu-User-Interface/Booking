@@ -15,7 +15,7 @@
         android:layout_marginTop="80px"
         android:fontFamily="@font/pretendard_extrabold"
         android:text="이수민님,"
-        android:textColor="#434343"
+        android:textColor="#000000"
         android:textSize="33dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +38,7 @@
         android:layout_height="40dp"
         android:paddingStart="15dp"
         android:layout_marginTop="30dp"
-        android:background="@drawable/ic_home_search_round_box"
+        android:background="@drawable/drawer_little_corenr_outline"
         android:hint="검색할 책을 입력하세요"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"

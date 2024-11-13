@@ -29,7 +29,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="330dp"
         android:layout_height="45dp"
-        android:background="@drawable/ic_map_search_round_box"
+        android:background="@drawable/drawer_little_corenr_outline"
         android:hint="검색할 공간을 입력하세요"
         android:paddingStart="15dp"
         android:textSize="14sp"
