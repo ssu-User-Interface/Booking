@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:text="책을 검색합니다"
         android:textSize="28sp"
-        android:fontFamily="@font/pretendard_medium"
+        android:fontFamily="@font/pretendard_bold"
         android:textColor="@color/black"
         android:layout_marginStart="25dp"
         android:layout_marginTop="60dp"
