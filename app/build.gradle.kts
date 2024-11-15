@@ -79,6 +79,9 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
-
+    // 카카오 맵 불러오기
     implementation ("com.kakao.maps.open:android:2.6.0")
+
+    // 현재 위치 가져오기
+    implementation ("com.google.android.gms:play-services-location:21.1.0")
 }
