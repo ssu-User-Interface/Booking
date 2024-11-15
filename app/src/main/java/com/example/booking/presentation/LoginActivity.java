@@ -4,23 +4,33 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.booking.MainActivity;
 import com.example.booking.R;
 import com.example.booking.databinding.ActivityLoginBinding;
-import com.example.booking.presentation.search.BookSearchFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 public class LoginActivity extends AppCompatActivity {
-
     private ActivityLoginBinding binding;
+    private GoogleSignInClient googleSignInClient;
+    private FirebaseAuth mAuth; // Firebase 인증 객체
+    private static final int RC_SIGN_IN = 9001;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +38,28 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        // FirebaseAuth 객체 초기화
+        mAuth = FirebaseAuth.getInstance();
+
         // Initialize views
-        EditText usernameInput = binding.etLoginEmail;
-        EditText passwordInput = binding.etLoginPw;
         View loginButton = binding.tvLoginLogin;
         View signUpButton = binding.tvLoginSignup;
+        View googleSignInButton = binding.btnGoogleSignIn;
+
+        // Configure Google Sign-In options
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.web_client_id)) // Firebase에 등록된 웹 클라이언트 ID
+                .requestEmail()
+                .build();
+
+        // Build a GoogleSignInClient with the options specified
+        googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
+
+        // Google Sign-In 버튼 클릭 리스너
+        googleSignInButton.setOnClickListener(v -> signInWithGoogle());
+
+        // 이메일 로그인 버튼 클릭 리스너
+        loginButton.setOnClickListener(v -> emailSignIn());
 
         // Set up the signup button click listener
         signUpButton.setOnClickListener(new View.OnClickListener() {
@@ -45,25 +72,96 @@ public class LoginActivity extends AppCompatActivity {
                         .commit();
             }
         });
+    }
 
-        // Set up the login button click listener
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String username = usernameInput.getText().toString();
-                String password = passwordInput.getText().toString();
+    private void signInWithGoogle() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
 
-                if (username.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Handle successful login
-                    Toast.makeText(LoginActivity.this, "Login successful", Toast.LENGTH_SHORT).show();
-                    // Navigate to MainActivity after login
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    startActivity(intent);
-                }
-            }
-        });
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Check if the result is from Google Sign-In
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            handleSignInResult(task);
+        }
+    }
+
+    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
+        try {
+            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
+
+            // Google Sign-In 성공
+            Toast.makeText(LoginActivity.this, "Google Sign-In successful", Toast.LENGTH_SHORT).show();
+
+            // Firebase로 인증
+            firebaseAuthWithGoogle(account.getIdToken());
+
+        } catch (ApiException e) {
+            // Sign in 실패
+            int statusCode = e.getStatusCode();
+            Log.e(TAG, "Google Sign-In failed. Status Code: " + statusCode);
+            Toast.makeText(LoginActivity.this, "Google Sign-In failed: " + statusCode, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in 성공, MainActivity로 이동
+                        Log.d(TAG, "signInWithCredential:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // Sign in 실패
+                        Log.w(TAG, "signInWithCredential:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Firebase Authentication failed.", Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                    }
+                });
+    }
+
+    private void emailSignIn() {
+        String email = binding.etLoginEmail.getText().toString().trim();
+        String password = binding.etLoginPw.getText().toString().trim();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            Toast.makeText(this, "Please enter email and password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Email Sign-In 성공
+                        Log.d(TAG, "signInWithEmail:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        updateUI(user);
+                    } else {
+                        // Email Sign-In 실패
+                        Log.w(TAG, "signInWithEmail:failure", task.getException());
+                        Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                Toast.LENGTH_SHORT).show();
+                        updateUI(null);
+                    }
+                });
+    }
+
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            // Firebase 인증 성공 시 MainActivity로 이동
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish(); // LoginActivity 종료
+        } else {
+            // 인증 실패 시 현재 Activity 유지
+            Log.w(TAG, "No user signed in");
+        }
     }
 
     @Override

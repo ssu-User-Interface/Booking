@@ -1,8 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
-
-    // Add the Google services Gradle plugin
-    id("com.google.gms.google-services")
+    id("com.android.application")
+    id("com.google.gms.google-services")  // Google Services 플러그인 적용
 }
 
 android {
@@ -33,10 +31,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    viewBinding{
+    viewBinding {
         enable = true
     }
-    dataBinding{
+    dataBinding {
         enable = true
     }
     buildFeatures {
@@ -45,13 +43,12 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    //네비게이션 그래프
+    // 네비게이션 그래프
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
@@ -59,20 +56,21 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    // Import the Firebase
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
     // Google Play services library
-    implementation ("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
 
-    // 파이어베이스 로그인 구현
-    implementation ("com.google.firebase:firebase-analytics-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx:20.0.4")
-    implementation ("com.google.firebase:firebase-auth-ktx")
+    // Firebase 로그인 구현
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-database-ktx:20.0.4")
+    implementation("com.google.firebase:firebase-auth-ktx")
 
-    //리사이클러 뷰
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-    //Glide
+    // 리사이클러 뷰
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 }
