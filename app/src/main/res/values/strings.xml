@@ -7,4 +7,13 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_fullscreen">FullscreenActivity</string>
+
+    <string name="success_login">구글 로그인 성공</string>
+    <string name="failed_login">구글 로그인 실패</string>
+    <string name="success_logout">로그아웃 되었습니다</string>
+    <string name="status_login">이미 로그인 되어있습니다</string>
+
+    // 이 부분은 Gcp를 들어가서
+    //내 Auth2.0의 클라이언트 id에서 default_web_client_id를 확인해서 가져오면 됩니다!
+    <string name="web_client_id">1070006202286-ecrpjne5lqgnfb0u5j5slmr6e20f5rlb.apps.googleusercontent.com</string>
 </resources>
