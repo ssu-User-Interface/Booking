@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Booking"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.kakao.vectormap.APP_KEY"
+            android:value="b63be1425b99b7dbff4882da8ab988fa"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
