@@ -103,6 +103,16 @@ public class RecordFragment extends Fragment {
             navController.navigate(R.id.action_recordFragment_to_searchFragment);
         });
 
+        // **아이템 클릭 이벤트 복원**
+        NavController navController = Navigation.findNavController(container);
+        bookAdapter.setOnItemClickListener(book -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("bookTitle", book.getTitle());
+            bundle.putString("bookAuthor", book.getAuthor());
+            bundle.putString("bookImage", book.getImage());
+            navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
+        });
+
         return view;
     }
 
