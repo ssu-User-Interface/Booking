@@ -24,8 +24,8 @@ public class NetworkModule {
         return new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
                     return chain.proceed(chain.request().newBuilder()
-                            .addHeader("X-Naver-Client-Id", "")
-                            .addHeader("X-Naver-Client-Secret", "")
+                            .addHeader("X-Naver-Client-Id", "ArlTo44hRSd3aCikV7EV")
+                            .addHeader("X-Naver-Client-Secret", "pbvLP90Nuy")
                             .build());
                 }).build();
     }

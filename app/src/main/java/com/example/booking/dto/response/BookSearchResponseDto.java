@@ -77,6 +77,12 @@ public class BookSearchResponseDto {
         public void setDescription(String description) {
             this.description = description;
         }
+
+        public BookItemDto() {
+            // Firebase에서 객체 변환 시 필요
+        }
     }
+
+
 }
 

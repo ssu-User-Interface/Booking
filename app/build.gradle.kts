@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services") // Google Services 플러그인 적용\
+    id("com.google.gms.google-services") // Google Services 플러그인 적용
     id("dagger.hilt.android.plugin")
 }
 
@@ -60,6 +60,7 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
+    //
     // Google Play services library
     implementation("com.google.android.gms:play-services-auth:20.5.0")
     implementation("com.google.firebase:firebase-auth:22.3.0")
