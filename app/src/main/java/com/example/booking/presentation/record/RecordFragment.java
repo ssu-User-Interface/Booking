@@ -2,6 +2,7 @@ package com.example.booking.presentation.record;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
@@ -13,10 +14,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.booking.R;
 import com.example.booking.dto.response.BookSearchResponseDto;
 import com.example.booking.presentation.record.adapter.BookAdapter;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,13 +32,19 @@ public class RecordFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private BookAdapter bookAdapter;
-    private List<BookSearchResponseDto.BookItemDto> bookList;
+    private List<BookSearchResponseDto.BookItemDto> booksWillRead, booksReading, booksRead; // 각 카테고리별 리스트
     private Typeface boldFont, regularFont;
-    private TextView tvRecordWill, tvRecordIng, tvRecordPast;
+    private TextView tvRecordWill, tvRecordIng, tvRecordPast, tvRecordRegistration;
+    private DatabaseReference dbWillRead, dbReading, dbRead; // Firebase 노드 참조
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
+
+        // Firebase Database 참조 초기화
+        dbWillRead = FirebaseDatabase.getInstance().getReference("will_read_books");
+        dbReading = FirebaseDatabase.getInstance().getReference("reading_books");
+        dbRead = FirebaseDatabase.getInstance().getReference("read_books");
 
         // RecyclerView 초기화
         recyclerView = view.findViewById(R.id.recyclerView_book_list);
@@ -45,34 +58,42 @@ public class RecordFragment extends Fragment {
         tvRecordWill = view.findViewById(R.id.tv_record_will);
         tvRecordIng = view.findViewById(R.id.tv_record_ing);
         tvRecordPast = view.findViewById(R.id.tv_record_past);
+        tvRecordRegistration = view.findViewById(R.id.tv_record_registration);
 
-        // 기본 데이터 준비
-        bookList = getBooksByCategory("읽는 책");
+        // 카테고리별 데이터 리스트 초기화
+        booksWillRead = new ArrayList<>();
+        booksReading = new ArrayList<>();
+        booksRead = new ArrayList<>();
 
-        // 어댑터 설정
-        bookAdapter = new BookAdapter(bookList);
+        // 어댑터 설정 (기본: "읽을 책" 카테고리)
+        bookAdapter = new BookAdapter(booksWillRead);
         recyclerView.setAdapter(bookAdapter);
 
+        // Firebase 데이터 로드
+        loadBooksFromFirebase(dbWillRead, booksWillRead);
+
         // 기본 선택된 카테고리 폰트 설정
-        setFont(tvRecordIng);
+        setFont(tvRecordWill);
 
         // 카테고리별 버튼 클릭 이벤트 설정
-        view.findViewById(R.id.tv_record_will).setOnClickListener(v -> {
-            List<BookSearchResponseDto.BookItemDto> willReadBooks = getBooksByCategory("읽을 책");
-            bookAdapter.updateBooks(willReadBooks);
+        tvRecordWill.setOnClickListener(v -> {
+            loadBooksFromFirebase(dbWillRead, booksWillRead);
             setFont(tvRecordWill);
         });
 
-        view.findViewById(R.id.tv_record_ing).setOnClickListener(v -> {
-            List<BookSearchResponseDto.BookItemDto> readingBooks = getBooksByCategory("읽는 책");
-            bookAdapter.updateBooks(readingBooks);
+        tvRecordIng.setOnClickListener(v -> {
+            loadBooksFromFirebase(dbReading, booksReading);
             setFont(tvRecordIng);
         });
 
-        view.findViewById(R.id.tv_record_past).setOnClickListener(v -> {
-            List<BookSearchResponseDto.BookItemDto> readBooks = getBooksByCategory("읽은 책");
-            bookAdapter.updateBooks(readBooks);
+        tvRecordPast.setOnClickListener(v -> {
+            loadBooksFromFirebase(dbRead, booksRead);
             setFont(tvRecordPast);
+        });
+
+        // "책 모아보기" 버튼 클릭 이벤트 설정
+        tvRecordRegistration.setOnClickListener(v -> {
+            addRandomBookToReadBooks();
         });
 
         // 책 추가 버튼 클릭 이벤트 설정
@@ -82,48 +103,43 @@ public class RecordFragment extends Fragment {
             navController.navigate(R.id.action_recordFragment_to_searchFragment);
         });
 
-        // 아이템 클릭 이벤트 설정
-        NavController navController = Navigation.findNavController(container);
-        bookAdapter.setOnItemClickListener(book -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("bookTitle", book.getTitle());
-            bundle.putString("bookAuthor", book.getAuthor());
-            navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
-        });
-
         return view;
     }
 
-    // 카테고리별 샘플 데이터를 가져오는 메서드
-    private List<BookSearchResponseDto.BookItemDto> getBooksByCategory(String category) {
-        List<BookSearchResponseDto.BookItemDto> books = new ArrayList<>();
-        switch (category) {
-            case "읽을 책":
-                books.add(createBookItem("읽을 책 1", "저자 A", "https://example.com/image1.jpg"));
-                books.add(createBookItem("읽을 책 2", "저자 B", "https://example.com/image2.jpg"));
-                books.add(createBookItem("읽을 책 3", "백종원", "https://example.com/image3.jpg"));
-                books.add(createBookItem("읽을 책 4", "이수민", "https://example.com/image4.jpg"));
-                break;
-            case "읽는 책":
-                books.add(createBookItem("읽는 책 1", "저자 C", "https://example.com/image5.jpg"));
-                books.add(createBookItem("읽는 책 2", "저자 D", "https://example.com/image6.jpg"));
-                break;
-            case "읽은 책":
-                books.add(createBookItem("읽은 책 1", "저자 E", "https://example.com/image7.jpg"));
-                books.add(createBookItem("읽은 책 2", "저자 F", "https://example.com/image8.jpg"));
-                books.add(createBookItem("읽은 책 3", "장효원", "https://example.com/image9.jpg"));
-                break;
-        }
-        return books;
+    // Firebase에서 데이터 로드
+    private void loadBooksFromFirebase(DatabaseReference dbRef, List<BookSearchResponseDto.BookItemDto> bookList) {
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                bookList.clear();
+                for (DataSnapshot data : snapshot.getChildren()) {
+                    BookSearchResponseDto.BookItemDto book = data.getValue(BookSearchResponseDto.BookItemDto.class);
+                    if (book != null) {
+                        bookList.add(book);
+                    }
+                }
+                bookAdapter.updateBooks(bookList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "데이터 로드 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    // BookItemDto 객체 생성 헬퍼 메서드
-    private BookSearchResponseDto.BookItemDto createBookItem(String title, String author, String imageUrl) {
-        BookSearchResponseDto.BookItemDto book = new BookSearchResponseDto.BookItemDto();
-        book.setTitle(title);
-        book.setAuthor(author);
-        book.setImage(imageUrl);
-        return book;
+    // "read_books"에 임의의 책 추가
+    private void addRandomBookToReadBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("임의의 책 제목");
+        newBook.setAuthor("임의의 작가");
+        newBook.setImage("https://example.com/randombook.jpg");
+
+        dbRead.push().setValue(newBook).addOnSuccessListener(aVoid -> {
+            Toast.makeText(getContext(), "새 책이 '읽은 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     // 선택된 TextView에만 폰트를 변경하는 메서드
@@ -135,4 +151,3 @@ public class RecordFragment extends Fragment {
         selectedTextView.setTypeface(boldFont);
     }
 }
-
