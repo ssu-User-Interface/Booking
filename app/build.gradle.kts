@@ -1,8 +1,7 @@
 plugins {
-    alias(libs.plugins.android.application)
-
-    // Add the Google services Gradle plugin
-    id("com.google.gms.google-services")
+    id("com.android.application")
+    id("com.google.gms.google-services") // Google Services 플러그인 적용\
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -33,10 +32,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    viewBinding {
+    viewBinding{
         enable = true
     }
-    dataBinding {
+    dataBinding{
         enable = true
     }
     buildFeatures {
@@ -45,12 +44,13 @@ android {
 }
 
 dependencies {
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    // 네비게이션 그래프
+    //네비게이션 그래프
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
@@ -85,4 +85,13 @@ dependencies {
     // 카카오 검색 api
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //Gson
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //코루틴
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.48")
 }

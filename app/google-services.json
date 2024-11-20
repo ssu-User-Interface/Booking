@@ -30,14 +30,6 @@
           }
         },
         {
-          "client_id": "1070006202286-vngtnrt7ep3dga502timv6no6np51e5r.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.booking",
-            "certificate_hash": "a1dfa27a2e8566cd9f04d010713a562889850551"
-          }
-        },
-        {
           "client_id": "1070006202286-ecrpjne5lqgnfb0u5j5slmr6e20f5rlb.apps.googleusercontent.com",
           "client_type": 3
         }
