@@ -76,6 +76,7 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
+    //
     // 카카오 맵 불러오기
     implementation ("com.kakao.maps.open:android:2.6.0")
 
