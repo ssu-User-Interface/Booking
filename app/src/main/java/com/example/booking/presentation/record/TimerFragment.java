@@ -50,6 +50,13 @@ public class TimerFragment extends Fragment {
         // NavController 가져오기
         NavController navController = Navigation.findNavController(container);
 
+        // Bundle에서 데이터 복원
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            timeElapsedInMillis = bundle.getLong("elapsedTime", 0);
+            updateTimerText();
+        }
+
         // 타이머 시작 버튼 동작
         viewTimerRound.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -62,12 +69,9 @@ public class TimerFragment extends Fragment {
         // 독서 완료 버튼 동작
         btnTimerComplete.setOnClickListener(v -> {
             pauseStopwatch();
-
-            // 결과값 전달
-            Bundle bundle = new Bundle();
-            bundle.putLong("elapsedTime", timeElapsedInMillis);
-
-            navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundle);
+            Bundle bundleToNext = new Bundle();
+            bundleToNext.putLong("elapsedTime", timeElapsedInMillis);
+            navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundleToNext);
         });
 
         // 뒤로가기 버튼 동작
@@ -76,38 +80,31 @@ public class TimerFragment extends Fragment {
             navController.navigate(R.id.action_timerFragment_to_recordSpecificFragment);
         });
 
-        // 타이머 초기화
-        updateTimerText();
-
         return view;
     }
 
-    // 스톱워치 시작
     private void startStopwatch() {
         isTimerRunning = true;
         startTimeInMillis = System.currentTimeMillis() - timeElapsedInMillis;
         handler.post(timerRunnable);
     }
 
-    // 스톱워치 일시정지
     private void pauseStopwatch() {
         isTimerRunning = false;
         handler.removeCallbacks(timerRunnable);
     }
 
-    // 스톱워치 업데이트 작업
     private final Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             if (isTimerRunning) {
                 timeElapsedInMillis = System.currentTimeMillis() - startTimeInMillis;
                 updateTimerText();
-                handler.postDelayed(this, 1000); // 1초마다 갱신
+                handler.postDelayed(this, 1000);
             }
         }
     };
 
-    // 타이머 텍스트 업데이트
     private void updateTimerText() {
         int hours = (int) (timeElapsedInMillis / 1000) / 3600;
         int minutes = (int) ((timeElapsedInMillis / 1000) % 3600) / 60;
@@ -120,6 +117,6 @@ public class TimerFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        pauseStopwatch(); // Fragment 종료 시 스톱워치 정지
+        pauseStopwatch();
     }
 }

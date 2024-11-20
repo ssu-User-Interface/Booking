@@ -9,6 +9,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -22,19 +24,20 @@ public class RecordRegistrationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // inflate the layout for this fragment
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_record_registration, container, false);
 
-        // NavControl 가져오기
+        // NavController 가져오기
         NavController navController = Navigation.findNavController(container);
 
         // 전달받은 타이머 값 설정
         EditText etRecordTime = view.findViewById(R.id.et_record_time);
         Bundle bundle = getArguments();
+        long elapsedTimeInMillis = 0;
         if (bundle != null) {
-            long elapsedTimeInMillis = bundle.getLong("elapsedTime", 0);
+            elapsedTimeInMillis = bundle.getLong("elapsedTime", 0);
 
-            // 시간을 hh:mm:ss 형식으로 변환
+            // 시간을 hh:mm:ss 형식으로 변환하여 EditText에 표시
             int hours = (int) (elapsedTimeInMillis / 1000) / 3600;
             int minutes = (int) ((elapsedTimeInMillis / 1000) % 3600) / 60;
             int seconds = (int) (elapsedTimeInMillis / 1000) % 60;
@@ -64,8 +67,13 @@ public class RecordRegistrationFragment extends Fragment {
 
         // 뒤로가기 이미지
         ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
+        long finalElapsedTimeInMillis = elapsedTimeInMillis; // effectively final로 사용
         backArrow.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordRegistrationFragment_to_timerFragment);
+            // 현재 데이터를 Bundle에 저장하여 다시 TimerFragment로 전달
+            Bundle backBundle = new Bundle();
+            backBundle.putLong("elapsedTime", finalElapsedTimeInMillis);
+
+            navController.navigate(R.id.action_recordRegistrationFragment_to_timerFragment, backBundle);
         });
 
         return view;
