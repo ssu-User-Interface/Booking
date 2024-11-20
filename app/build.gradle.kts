@@ -1,6 +1,7 @@
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services")  // Google Services 플러그인 적용
+    id("com.google.gms.google-services") // Google Services 플러그인 적용\
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -73,4 +74,13 @@ dependencies {
     // Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    //Gson
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    //코루틴
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0")
+    //hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    annotationProcessor("com.google.dagger:hilt-compiler:2.48")
 }

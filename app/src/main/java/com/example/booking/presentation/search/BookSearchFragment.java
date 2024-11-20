@@ -4,8 +4,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -15,33 +19,59 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.booking.R;
 
 import java.util.ArrayList;
-import java.util.List;
+import dagger.hilt.android.AndroidEntryPoint;
 
+@AndroidEntryPoint
 public class BookSearchFragment extends Fragment {
+
     private RecyclerView recyclerView;
     private BookSearchRVA adapter;
-    private List<Book> bookList;
+    private BookSearchViewModel viewModel;
+
+    private EditText etBookSearch;
+    private ImageView ivSearchButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_search, container, false);
 
-        recyclerView = view.findViewById(R.id.rv_book_search);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        viewModel = new ViewModelProvider(this).get(BookSearchViewModel.class);
 
-        initializeData();
-        adapter = new BookSearchRVA(bookList, book -> openBookDetailFragment(view));
-        recyclerView.setAdapter(adapter);
+        initView(view);
+        initObserver();
 
         return view;
     }
 
-    private void initializeData() {
-        bookList = new ArrayList<>();
-        bookList.add(new Book("책 제목 1", "저자 1", "출판사 1", "2021", "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg"));
-        bookList.add(new Book("책 제목 2", "저자 2", "출판사 2", "2020", "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg"));
-        bookList.add(new Book("책 제목 3", "저자 3", "출판사 3", "2019", "https://images.pexels.com/photos/414612/pexels-photo-414612.jpeg"));
+    private void initView(View view) {
+        recyclerView = view.findViewById(R.id.rv_book_search);
+        etBookSearch = view.findViewById(R.id.et_book_search);
+        ivSearchButton = view.findViewById(R.id.iv_book_search_icon);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new BookSearchRVA(new ArrayList<>(), book -> openBookDetailFragment(view));
+        recyclerView.setAdapter(adapter);
+
+        ivSearchButton.setOnClickListener(v -> performSearch());
+    }
+
+    private void initObserver() {
+        viewModel.getBooks().observe(getViewLifecycleOwner(), books -> {
+            if (books != null && !books.isEmpty()) {
+                adapter.updateBooks(books);
+            } else {
+                Toast.makeText(getContext(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void performSearch() {
+        String query = etBookSearch.getText().toString().trim();
+        if (query.isEmpty()) {
+            Toast.makeText(getContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        viewModel.searchBooks(query);
     }
 
     private void openBookDetailFragment(View view) {

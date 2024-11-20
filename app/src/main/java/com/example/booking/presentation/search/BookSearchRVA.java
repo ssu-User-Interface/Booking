@@ -11,23 +11,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.booking.R;
+import com.example.booking.dto.response.BookSearchResponseDto;
 
 import java.util.List;
 
 public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHolder> {
 
-    private List<Book> bookList;
-    private OnItemClickListener listener;
+    private List<BookSearchResponseDto.BookItemDto> books;
+    private final OnBookClickListener listener;
 
-    public interface OnItemClickListener {
-        void onItemClick(Book book);
+    public interface OnBookClickListener {
+        void onBookClick(BookSearchResponseDto.BookItemDto book);
     }
 
-    public BookSearchRVA(List<Book> bookList, OnItemClickListener listener) {
-        this.bookList = bookList;
+    public BookSearchRVA(List<BookSearchResponseDto.BookItemDto> books, OnBookClickListener listener) {
+        this.books = books;
         this.listener = listener;
     }
 
+    public void updateBooks(List<BookSearchResponseDto.BookItemDto> books) {
+        this.books = books;
+        notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public BookViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -37,39 +42,39 @@ public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHo
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        Book book = bookList.get(position);
+        BookSearchResponseDto.BookItemDto book = books.get(position);
         holder.bind(book, listener);
     }
 
     @Override
     public int getItemCount() {
-        return bookList != null ? bookList.size() : 0;
+        return books != null ? books.size() : 0;
     }
 
-    public static class BookViewHolder extends RecyclerView.ViewHolder {
-        TextView bookName, bookAuthor, bookPublisher, bookYear;
-        ImageView bookCover;
+    static class BookViewHolder extends RecyclerView.ViewHolder {
+        private final TextView title;
+        private final TextView author;
+        private final TextView publisher;
+        private final TextView publishDate;
+        private final ImageView thumbnail;
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
-            bookName = itemView.findViewById(R.id.tv_item_book_search_book_name);
-            bookAuthor = itemView.findViewById(R.id.tv_item_book_search_book_author);
-            bookPublisher = itemView.findViewById(R.id.tv_item_book_search_book_publisher);
-            bookYear = itemView.findViewById(R.id.tv_item_book_search_book_publication_year);
-            bookCover = itemView.findViewById(R.id.iv_item_book_search_book_cover);
+            title = itemView.findViewById(R.id.tv_item_book_search_book_name);
+            author = itemView.findViewById(R.id.tv_item_book_search_book_author);
+            publisher = itemView.findViewById(R.id.tv_item_book_search_book_publisher);
+            publishDate = itemView.findViewById(R.id.tv_item_book_search_book_publication_year);
+            thumbnail = itemView.findViewById(R.id.iv_item_book_search_book_cover);
         }
 
-        public void bind(Book book, OnItemClickListener listener) {
-            bookName.setText(book.getTitle());
-            bookAuthor.setText(book.getAuthor());
-            bookPublisher.setText(book.getPublisher());
-            //bookYear.setText(book.getYear());
+        public void bind(BookSearchResponseDto.BookItemDto book, OnBookClickListener listener) {
+            title.setText(book.getTitle());
+            author.setText(book.getAuthor());
+            publisher.setText(book.getPublisher());
+            publishDate.setText(book.getPubdate());
+            Glide.with(thumbnail.getContext()).load(book.getImage()).into(thumbnail);
 
-            Glide.with(bookCover.getContext())
-                    .load(book.getCoverImageUrl())
-                    .into(bookCover);
-
-            itemView.setOnClickListener(v -> listener.onItemClick(book));
+            itemView.setOnClickListener(v -> listener.onBookClick(book));
         }
     }
 }
