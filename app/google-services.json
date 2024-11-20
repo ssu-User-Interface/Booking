@@ -1,26 +1,60 @@
 {
   "project_info": {
-    "project_number": "142535748223",
-    "project_id": "booking-fcec5",
-    "storage_bucket": "booking-fcec5.appspot.com"
+    "project_number": "1070006202286",
+    "project_id": "booking-1c069",
+    "storage_bucket": "booking-1c069.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:142535748223:android:e1cdde0cd82f438c26ed4a",
+        "mobilesdk_app_id": "1:1070006202286:android:52c7a45d8ebd3430b1223f",
         "android_client_info": {
           "package_name": "com.example.booking"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "1070006202286-2jac04vofpnfsqkb8oa2gkbpfbqohbn6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.booking",
+            "certificate_hash": "1c5aa9121ec4a9eaa8295b6d928108d00bed3bfa"
+          }
+        },
+        {
+          "client_id": "1070006202286-9bpmuk8m9s7g27iieaglmg2jtt25519o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.booking",
+            "certificate_hash": "f7ad98579a006545be9faf3a3f83b6d587c1338c"
+          }
+        },
+        {
+          "client_id": "1070006202286-vngtnrt7ep3dga502timv6no6np51e5r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.booking",
+            "certificate_hash": "a1dfa27a2e8566cd9f04d010713a562889850551"
+          }
+        },
+        {
+          "client_id": "1070006202286-ecrpjne5lqgnfb0u5j5slmr6e20f5rlb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyBGGZXQx8iy0kNo5c7_VoG3ihhd8ojJHJU"
+          "current_key": "AIzaSyDI3YplrbowyfIP7Igs-qkqi5fbyVZ70-U"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1070006202286-ecrpjne5lqgnfb0u5j5slmr6e20f5rlb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

@@ -33,10 +33,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    viewBinding{
+    viewBinding {
         enable = true
     }
-    dataBinding{
+    dataBinding {
         enable = true
     }
     buildFeatures {
@@ -45,37 +45,34 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    //네비게이션 그래프
+    // 네비게이션 그래프
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    // Import the Firebase BoM
+
+    // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-//    implementation("com.google.firebase:firebase-analytics")
 
-    // Declare the dependency for the Firebase Authentication library
-    // When using the BoM, you don't specify versions in Firebase library dependencies
-    //implementation ("com.google.firebase:firebase-auth")
+    // Google Play services library
+    implementation("com.google.android.gms:play-services-auth:20.5.0")
+    implementation("com.google.firebase:firebase-auth:22.3.0")
 
-    // 파이어베이스 로그인 구현
-    implementation ("com.google.firebase:firebase-analytics-ktx")
-    implementation ("com.google.firebase:firebase-database-ktx:20.0.4")
-    implementation ("com.google.firebase:firebase-auth-ktx")
+    // Firebase 로그인 구현
+    implementation("com.google.firebase:firebase-analytics-ktx")
+    implementation("com.google.firebase:firebase-database-ktx:20.0.4")
+    implementation("com.google.firebase:firebase-auth-ktx")
 
-    //리사이클러 뷰
-    implementation ("androidx.recyclerview:recyclerview:1.2.1")
-    //Glide
+    // 리사이클러 뷰
+    implementation("androidx.recyclerview:recyclerview:1.2.1")
+    // Glide
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
@@ -84,4 +81,8 @@ dependencies {
 
     // 현재 위치 가져오기
     implementation ("com.google.android.gms:play-services-location:21.1.0")
+
+    // 카카오 검색 api
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
 }

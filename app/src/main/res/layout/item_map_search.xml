@@ -70,6 +70,7 @@
                     android:textColor="@color/black"
                     android:textFontWeight="600"
                     android:textSize="20dp"
+                    android:maxLines="1"
                     app:layout_constraintBottom_toTopOf="@id/item_address_1"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
