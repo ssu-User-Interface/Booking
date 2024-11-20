@@ -62,7 +62,12 @@ public class TimerFragment extends Fragment {
         // 독서 완료 버튼 동작
         btnTimerComplete.setOnClickListener(v -> {
             pauseStopwatch();
-            navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment);
+
+            // 결과값 전달
+            Bundle bundle = new Bundle();
+            bundle.putLong("elapsedTime", timeElapsedInMillis);
+
+            navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundle);
         });
 
         // 뒤로가기 버튼 동작
