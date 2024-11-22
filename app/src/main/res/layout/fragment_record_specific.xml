@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
     android:background="#FBFAF7">
 
     <LinearLayout
@@ -35,8 +34,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="8"
                 android:layout_marginStart="-10dp"
+                android:layout_weight="8"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center_horizontal"
                 android:text="기록 모아보기"
@@ -66,10 +65,10 @@
         android:id="@+id/layout_book"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/fragment_top"
-        app:layout_constraintStart_toStartOf="parent"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/fragment_top">
 
 
         <ImageView
@@ -88,7 +87,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text="책 제목"
+            android:text=""
             android:textColor="#000000"
             android:textSize="30sp"
             android:visibility="visible"
@@ -102,7 +101,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-5dp"
             android:fontFamily="@font/pretendard_regular"
-            android:text="저자"
+            android:text=""
             android:textColor="#000000"
             android:textSize="20sp"
             android:visibility="visible"
@@ -110,61 +109,69 @@
             app:layout_constraintTop_toBottomOf="@id/tv_record_specific_book_title" />
 
         <ImageView
-            android:id="@+id/iv_record_specific_ic"
+            android:id="@+id/iv_record_specific_note_ic"
             android:layout_width="10dp"
             android:layout_height="10dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="11dp"
             android:src="@drawable/ic_record_pencil"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            android:layout_marginStart="20dp"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author" />
 
         <TextView
-            android:id="@+id/tv_record_specific_count"
+            android:id="@+id/tv_record_specific_note_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="10dp"
+            android:fontFamily="@font/pretendard_regular"
             android:text="기록 5개"
             android:textSize="8dp"
-            android:fontFamily="@font/pretendard_regular"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="3dp"
-            app:layout_constraintStart_toEndOf="@id/iv_record_specific_ic"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"/>
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/iv_record_specific_note_ic"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author" />
 
         <LinearLayout
+            android:id="@+id/llayout_record_specific_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@id/tv_record_specific_count"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"
-            android:layout_marginTop="10dp"
             android:layout_marginStart="4dp"
-            >
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/tv_record_specific_note_count"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author">
+
             <ImageView
                 android:id="@+id/iv_record_star1"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star"/>
+                android:src="@drawable/ic_record_specific_star" />
+
             <ImageView
                 android:id="@+id/iv_record_star2"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star"/>
+                android:src="@drawable/ic_record_specific_star" />
+
             <ImageView
                 android:id="@+id/iv_record_star3"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star"/>
+                android:src="@drawable/ic_record_specific_star" />
+
             <ImageView
                 android:id="@+id/iv_record_star4"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star"/>
+                android:src="@drawable/ic_record_specific_star" />
+
             <ImageView
                 android:id="@+id/iv_record_star5"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star"/>
+                android:src="@drawable/ic_record_specific_star" />
 
         </LinearLayout>
 
@@ -173,35 +180,76 @@
             android:id="@+id/tv_record_specific_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="2024.10.20 ~ 2024.11.15"
-            android:textSize="8dp"
-            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="20dp"
             android:layout_marginTop="3dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="2024.10.20 ~ 2024.11.15"
+            android:textSize="8dp"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_count"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_note_count" />
 
         <TextView
             android:id="@+id/tv_record_specific_review"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="오늘의 기분을 좋게 해 주는 현실적인 책"
-            android:textSize="8dp"
-            android:fontFamily="@font/pretendard_regular"
             android:layout_marginStart="20dp"
             android:layout_marginTop="3dp"
+            android:fontFamily="@font/pretendard_regular"
+            android:text="오늘의 기분을 좋게 해 주는 현실적인 책"
+            android:textSize="8dp"
+            android:visibility="gone"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_date"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_date" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <View
+        android:id="@+id/view_line_2"
+        android:layout_width="330dp"
+        android:layout_height="2px"
+        android:layout_marginTop="16dp"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/layout_book"
+        android:visibility="gone"/>
+
+    <ImageView
+        android:id="@+id/iv_record_specific_logo"
+        android:layout_width="75.6dp"
+        android:layout_height="101.4dp"
+        app:layout_constraintTop_toBottomOf="@id/view_line_2"
+        app:layout_constraintBottom_toTopOf="@id/tv_record_specific_status"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="10dp"
+        android:fontFamily="@font/pretendard_regular"
+        android:background="@drawable/ic_booking_logo"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/tv_record_specific_status"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_record_specific_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="독서를 시작하세요!"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:fontFamily="@font/pretendard_regular"
+        android:textSize="15sp"
+        android:visibility="gone"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_record_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
         android:layout_marginTop="3dp"
+        android:layout_marginEnd="15dp"
         app:layout_constraintTop_toBottomOf="@id/layout_book"
         tools:listitem="@layout/fragment_record_specific_list_item" />
 

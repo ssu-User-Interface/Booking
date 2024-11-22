@@ -1,6 +1,5 @@
 package com.example.booking.presentation.record.adapter;
 
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,35 +7,33 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.bumptech.glide.Glide;
 import com.example.booking.R;
-import com.example.booking.data.model.Book;
+import com.example.booking.dto.response.BookSearchResponseDto;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
-    private List<Book> bookList;
+    private List<BookSearchResponseDto.BookItemDto> bookList;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
-        void onItemClick(Book book);
+        void onItemClick(BookSearchResponseDto.BookItemDto book);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
     }
 
-    public BookAdapter(List<Book> bookList) {
+    public BookAdapter(List<BookSearchResponseDto.BookItemDto> bookList) {
         this.bookList = bookList;
     }
 
-    public void updateBooks(List<Book> newBooks) {
+    public void updateBooks(List<BookSearchResponseDto.BookItemDto> newBooks) {
         bookList = newBooks;
         notifyDataSetChanged();
     }
-
-
 
     @NonNull
     @Override
@@ -45,38 +42,38 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         return new BookViewHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        Book book = bookList.get(position);
-        holder.imageView.setImageResource(book.getImageResId());
-        holder.titleTextView.setText(book.getTitle());
-        holder.authorTextView.setText(book.getAuthor());
-
-        holder.itemView.setOnClickListener(v -> {
-            if (onItemClickListener != null) {
-                onItemClickListener.onItemClick(book);
-            }
-        });
+        BookSearchResponseDto.BookItemDto book = bookList.get(position);
+        holder.bind(book);
     }
 
     @Override
     public int getItemCount() {
-        return bookList.size();
+        return bookList != null ? bookList.size() : 0;
     }
 
-    public static class BookViewHolder extends RecyclerView.ViewHolder {
+    public class BookViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView titleTextView;
-        TextView authorTextView;
+        TextView titleTextView, authorTextView;
 
         public BookViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.iv_record_list_item_book);
             titleTextView = itemView.findViewById(R.id.tv_record_list_item_book_title);
             authorTextView = itemView.findViewById(R.id.tv_record_list_item_book_author);
+
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(bookList.get(getAdapterPosition()));
+                }
+            });
+        }
+
+        public void bind(BookSearchResponseDto.BookItemDto book) {
+            titleTextView.setText(book.getTitle());
+            authorTextView.setText(book.getAuthor());
+            Glide.with(imageView.getContext()).load(book.getImage()).into(imageView);
         }
     }
 }
-

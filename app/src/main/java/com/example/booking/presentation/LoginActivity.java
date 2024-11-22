@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.Toast;
+import android.window.SplashScreen;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.example.booking.MainActivity;
 import com.example.booking.R;
@@ -37,6 +41,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+
 
         // FirebaseAuth 객체 초기화
         mAuth = FirebaseAuth.getInstance();
@@ -73,6 +79,19 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // 이미 로그인된 사용자 확인
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // 사용자가 이미 로그인되어 있으면 MainActivity로 이동
+            updateUI(currentUser);
+        }
+    }
+
 
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
