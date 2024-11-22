@@ -1,5 +1,6 @@
 package com.example.booking.adapter;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 public class MapSearchAdapter extends RecyclerView.Adapter<MapSearchAdapter.MapSearchViewHolder> {
 
     private final List<PlaceSearchKeyword.Place> places; // 검색 결과 리스트
+    private int selectedPosition = -1;
 
     // 클릭 리스너 인터페이스 정의
     public interface OnItemClickListener {
@@ -36,6 +38,7 @@ public class MapSearchAdapter extends RecyclerView.Adapter<MapSearchAdapter.MapS
     public void updateData(List<PlaceSearchKeyword.Place> newPlaces) {
         this.places.clear();
         this.places.addAll(newPlaces);
+        selectedPosition = -1; // 데이터 변경 시 선택 초기화
         notifyDataSetChanged();
     }
 
@@ -53,9 +56,24 @@ public class MapSearchAdapter extends RecyclerView.Adapter<MapSearchAdapter.MapS
         holder.title.setText(place.getName()); // 장소 이름 설정
         holder.address.setText(place.getAddress()); // 주소 설정
 
+        if (position == selectedPosition) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#8E8E8E")); // 선택된 색상
+        } else {
+            holder.itemView.setBackgroundColor(Color.parseColor("#EFEBE0")); // 기본 색상
+        }
+
+
         // 아이템 클릭 리스너 설정
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
+                // 선택된 위치 변경
+                int previousPosition = selectedPosition;
+                selectedPosition = holder.getAdapterPosition();
+
+                // 이전 선택된 아이템과 현재 선택된 아이템 업데이트
+                notifyItemChanged(previousPosition);
+                notifyItemChanged(selectedPosition);
+
                 listener.onItemClick(place); // 클릭된 장소 객체 전달
             }
         });

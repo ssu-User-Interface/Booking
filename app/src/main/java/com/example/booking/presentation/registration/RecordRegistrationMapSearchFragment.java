@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.appcompat.view.menu.MenuView;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -82,6 +83,7 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         etSearchPlace.setOnClickListener(v-> {
             btnAddPlace.setVisibility(View.GONE);
         });
+
 
 
         return view;

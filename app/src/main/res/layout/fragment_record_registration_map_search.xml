@@ -38,7 +38,7 @@
                 android:layout_marginStart="-10dp"
                 android:fontFamily="@font/pretendard_regular"
                 android:gravity="center_horizontal"
-                android:text="장소 검색하"
+                android:text="장소 검색하기"
                 android:textColor="@color/black"
                 android:textSize="17sp" />
 
@@ -86,11 +86,12 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_record_map_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_record_map_search"
-        tools:itemCount="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:itemCount="10"
         tools:listitem="@layout/item_map_search" />
 
     <Button
