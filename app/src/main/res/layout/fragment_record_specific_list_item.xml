@@ -19,7 +19,7 @@
         <ImageView
             android:id="@+id/view_record_specific_book_bg1"
             android:layout_width="325dp"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:background="@drawable/shadow_test"
             android:src="@drawable/ic_record_book_bg"
             app:layout_constraintEnd_toEndOf="parent"
@@ -64,15 +64,18 @@
         <TextView
             android:id="@+id/tv_record_specific_item_memo"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
-            android:text="인생이란 때때로 우리로 하여금 기꺼이 악을 선택하게 만들고 우리는 어쩔 수 없이 그 모순과 손잡으며 살아가야 한다는 사실을 정말 조금도 눈치채지 못하고 있는 것일까."
+            android:layout_marginBottom="10dp"
+            android:text="인생이란 때때로 우리로 하여금 기꺼이 악을 선택하게 만들고 만들고만들고만들고만들고만들고만들고만들고만들고만들고 우리는 어쩔 수 없이 그 모순과 손잡으며 살아가야 한다는 사실을 정말 조금도 눈치채지 못하고 있는 것일까.가야 한다는 사실을 정말 조금도 눈치채지 못하고 있는"
             android:fontFamily="@font/pretendard_regular"
             android:textSize="13dp"
+            android:maxLength="150"
             app:layout_constraintTop_toBottomOf="@id/iv_record_specific_item_ic"
             app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
+            app:layout_constraintBottom_toTopOf="@id/tv_record_specific_item_address"
             app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"/>
 
         <TextView
@@ -80,35 +83,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
             android:fontFamily="@font/pretendard_regular"
             android:text="상도동 497-25"
             android:textSize="10dp"
+            app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
             app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo" />
+            />
 
         <TextView
             android:id="@+id/tv_record_specific_item_date"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
             android:text="2024.10.05 / "
             android:textSize="10dp"
             android:fontFamily="@font/pretendard_regular"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo"
             app:layout_constraintEnd_toStartOf="@id/tv_record_specific_item_time"
+            app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
+
             />
 
         <TextView
             android:id="@+id/tv_record_specific_item_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginBottom="15dp"
             android:layout_marginEnd="18dp"
             android:text="00:30:12"
             android:textSize="10dp"
             android:fontFamily="@font/pretendard_regular"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_item_memo"
+            app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
             app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
             />
 

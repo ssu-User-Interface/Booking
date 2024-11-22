@@ -37,9 +37,10 @@ public class RecordSpecificFragment extends Fragment {
     private RecordAdapter recordAdapter;
     private List<Record> recordList;
 
-    private ImageView icNote;
-    private TextView tvNote, tvDate, tvReview;
+    private ImageView icNote, Logo;
+    private TextView tvNote, tvDate, tvReview, status;
     private LinearLayout score;
+    private View line;
 
     @Nullable
     @Override
@@ -59,6 +60,10 @@ public class RecordSpecificFragment extends Fragment {
         score = view.findViewById(R.id.llayout_record_specific_score);
         tvDate = view.findViewById(R.id.tv_record_specific_date);
         tvReview = view.findViewById(R.id.tv_record_specific_review);
+
+        Logo = view.findViewById(R.id.iv_record_specific_logo);
+        status = view.findViewById(R.id.tv_record_specific_status);
+        line = view.findViewById(R.id.view_line_2);
 
 
         // UI 요소 초기화
@@ -133,6 +138,18 @@ public class RecordSpecificFragment extends Fragment {
                     }
                 }
                 adapter.notifyDataSetChanged();
+
+                // 기록이 비어 있는 경우 처리
+                if (recordList.isEmpty()) {
+                    emptyRecordList();
+                    if ("will_read_books".equals(category)) {
+                        status.setText("독서를 시작하세요!");
+                    } if ("reading_books".equals(category)) {
+                        status.setText("기록이 비어있어요.");
+                    } else if("read_books".equals(category)) {
+                        status.setText("기록을 추가하시겠어요?");
+                    }
+                }
             }
 
             @Override
@@ -149,5 +166,12 @@ public class RecordSpecificFragment extends Fragment {
         tvDate.setVisibility(View.VISIBLE);
         tvReview.setVisibility(View.VISIBLE);
         score.setVisibility(View.VISIBLE);
+    }
+
+    public void emptyRecordList()
+    {
+        Logo.setVisibility(View.VISIBLE);
+        status.setVisibility(View.VISIBLE);
+        line.setVisibility(View.VISIBLE);
     }
 }

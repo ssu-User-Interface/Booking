@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,12 +38,14 @@ public class RecordFragment extends Fragment {
     private DatabaseReference dbWillRead, dbReading, dbRead; // Firebase 노드 참조
     private String currentCategory = "will_read_books"; // 기본 선택 카테고리
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
+
+        // 이전 상태 복원
+        if (savedInstanceState != null) {
+            currentCategory = savedInstanceState.getString("currentCategory", "will_read_books");
+        }
 
         // Firebase Database 참조 초기화
         dbWillRead = FirebaseDatabase.getInstance().getReference("will_read_books");
@@ -66,21 +66,16 @@ public class RecordFragment extends Fragment {
         tvRecordPast = view.findViewById(R.id.tv_record_past);
         tvRecordRegistration = view.findViewById(R.id.tv_record_registration);
 
-
         // 카테고리별 데이터 리스트 초기화
         booksWillRead = new ArrayList<>();
         booksReading = new ArrayList<>();
         booksRead = new ArrayList<>();
 
-        // 어댑터 설정 (기본: "읽을 책" 카테고리)
-        bookAdapter = new BookAdapter(booksWillRead);
+        // 어댑터 설정
+        bookAdapter = new BookAdapter(getCurrentBookList());
         recyclerView.setAdapter(bookAdapter);
-
-        // 기본 데이터 로드
         loadBooksByCategory(currentCategory);
-
-        // 기본 선택된 카테고리 폰트 설정
-        setFont(tvRecordWill);
+        setFont(getCurrentCategoryTextView());
 
         // 카테고리별 버튼 클릭 이벤트 설정
         tvRecordWill.setOnClickListener(v -> {
@@ -102,9 +97,7 @@ public class RecordFragment extends Fragment {
         });
 
         // "책 모아보기" 버튼 클릭 이벤트 설정
-        tvRecordRegistration.setOnClickListener(v -> {
-            addRandomBookToReadBooks();
-        });
+        tvRecordRegistration.setOnClickListener(v -> addRandomBookToReadBooks());
 
         // 책 추가 버튼 클릭 이벤트 설정
         Button addButton = view.findViewById(R.id.btn_main_record_add_book);
@@ -116,7 +109,6 @@ public class RecordFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 어댑터 클릭 리스너 설정
-        // RecordFragment의 bookAdapter.setOnItemClickListener 내부
         bookAdapter.setOnItemClickListener(book -> {
             String category = currentCategory; // 현재 선택된 카테고리 사용
             DatabaseReference bookRef = FirebaseDatabase.getInstance().getReference(category).child(book.getId());
@@ -134,17 +126,10 @@ public class RecordFragment extends Fragment {
                         bundle.putString("bookTitle", title);
                         bundle.putString("bookAuthor", author);
                         bundle.putString("bookImage", image);
-                        bundle.putString("category", category); // 현재 카테고리 전달
+                        bundle.putString("category", category);
 
-                        NavController navController = Navigation.findNavController(requireView());
-
-                        // 카테고리가 "read_books"인 경우 플래그 추가
-                        if ("read_books".equals(category)) {
-                            bundle.putBoolean("showReadBooksUI", true);
-                        } else {
-                            bundle.putBoolean("showReadBooksUI", false);
-                        }
-
+                        // 카테고리 플래그 전달
+                        bundle.putBoolean("showReadBooksUI", "read_books".equals(category));
                         navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
                     } else {
                         Toast.makeText(getContext(), "책 정보를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -159,6 +144,35 @@ public class RecordFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // 현재 카테고리 저장
+        outState.putString("currentCategory", currentCategory);
+    }
+
+    private List<BookSearchResponseDto.BookItemDto> getCurrentBookList() {
+        switch (currentCategory) {
+            case "reading_books":
+                return booksReading;
+            case "read_books":
+                return booksRead;
+            default:
+                return booksWillRead;
+        }
+    }
+
+    private TextView getCurrentCategoryTextView() {
+        switch (currentCategory) {
+            case "reading_books":
+                return tvRecordIng;
+            case "read_books":
+                return tvRecordPast;
+            default:
+                return tvRecordWill;
+        }
     }
 
     private void loadBooksFromFirebase(DatabaseReference dbRef, List<BookSearchResponseDto.BookItemDto> bookList) {
