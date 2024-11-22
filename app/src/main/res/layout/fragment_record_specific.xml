@@ -88,7 +88,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text="책 제목"
+            android:text=""
             android:textColor="#000000"
             android:textSize="30sp"
             android:visibility="visible"
@@ -102,7 +102,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="-5dp"
             android:fontFamily="@font/pretendard_regular"
-            android:text="저자"
+            android:text=""
             android:textColor="#000000"
             android:textSize="20sp"
             android:visibility="visible"
@@ -110,17 +110,18 @@
             app:layout_constraintTop_toBottomOf="@id/tv_record_specific_book_title" />
 
         <ImageView
-            android:id="@+id/iv_record_specific_ic"
+            android:id="@+id/iv_record_specific_note_ic"
             android:layout_width="10dp"
             android:layout_height="10dp"
             android:layout_marginTop="11dp"
             android:src="@drawable/ic_record_pencil"
             app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            android:layout_marginStart="20dp"/>
+            android:layout_marginStart="20dp"
+            android:visibility="gone"/>
 
         <TextView
-            android:id="@+id/tv_record_specific_count"
+            android:id="@+id/tv_record_specific_note_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="기록 5개"
@@ -128,17 +129,20 @@
             android:fontFamily="@font/pretendard_regular"
             android:layout_marginTop="10dp"
             android:layout_marginStart="3dp"
-            app:layout_constraintStart_toEndOf="@id/iv_record_specific_ic"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"/>
+            app:layout_constraintStart_toEndOf="@id/iv_record_specific_note_ic"
+            app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"
+            android:visibility="gone"/>
 
         <LinearLayout
+            android:id="@+id/llayout_record_specific_score"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintStart_toEndOf="@id/tv_record_specific_count"
+            app:layout_constraintStart_toEndOf="@id/tv_record_specific_note_count"
             app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author"
             android:layout_marginTop="10dp"
             android:layout_marginStart="4dp"
+            android:visibility="gone"
             >
             <ImageView
                 android:id="@+id/iv_record_star1"
@@ -179,7 +183,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="3dp"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_count"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_note_count"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/tv_record_specific_review"
@@ -191,7 +196,8 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="3dp"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
-            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_date"/>
+            app:layout_constraintTop_toBottomOf="@id/tv_record_specific_date"
+            android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

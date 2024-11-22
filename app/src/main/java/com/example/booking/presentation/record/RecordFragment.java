@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,10 @@ public class RecordFragment extends Fragment {
     private Typeface boldFont, regularFont;
     private TextView tvRecordWill, tvRecordIng, tvRecordPast, tvRecordRegistration;
     private DatabaseReference dbWillRead, dbReading, dbRead; // Firebase 노드 참조
+    private String currentCategory = "will_read_books"; // 기본 선택 카테고리
+
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,6 +66,7 @@ public class RecordFragment extends Fragment {
         tvRecordPast = view.findViewById(R.id.tv_record_past);
         tvRecordRegistration = view.findViewById(R.id.tv_record_registration);
 
+
         // 카테고리별 데이터 리스트 초기화
         booksWillRead = new ArrayList<>();
         booksReading = new ArrayList<>();
@@ -69,25 +76,28 @@ public class RecordFragment extends Fragment {
         bookAdapter = new BookAdapter(booksWillRead);
         recyclerView.setAdapter(bookAdapter);
 
-        // Firebase 데이터 로드
-        loadBooksFromFirebase(dbWillRead, booksWillRead);
+        // 기본 데이터 로드
+        loadBooksByCategory(currentCategory);
 
         // 기본 선택된 카테고리 폰트 설정
         setFont(tvRecordWill);
 
         // 카테고리별 버튼 클릭 이벤트 설정
         tvRecordWill.setOnClickListener(v -> {
-            loadBooksFromFirebase(dbWillRead, booksWillRead);
+            currentCategory = "will_read_books";
+            loadBooksByCategory(currentCategory);
             setFont(tvRecordWill);
         });
 
         tvRecordIng.setOnClickListener(v -> {
-            loadBooksFromFirebase(dbReading, booksReading);
+            currentCategory = "reading_books";
+            loadBooksByCategory(currentCategory);
             setFont(tvRecordIng);
         });
 
         tvRecordPast.setOnClickListener(v -> {
-            loadBooksFromFirebase(dbRead, booksRead);
+            currentCategory = "read_books";
+            loadBooksByCategory(currentCategory);
             setFont(tvRecordPast);
         });
 
@@ -103,20 +113,54 @@ public class RecordFragment extends Fragment {
             navController.navigate(R.id.action_recordFragment_to_searchFragment);
         });
 
-        // **아이템 클릭 이벤트 복원**
         NavController navController = Navigation.findNavController(container);
+
+        // 어댑터 클릭 리스너 설정
+        // RecordFragment의 bookAdapter.setOnItemClickListener 내부
         bookAdapter.setOnItemClickListener(book -> {
-            Bundle bundle = new Bundle();
-            bundle.putString("bookTitle", book.getTitle());
-            bundle.putString("bookAuthor", book.getAuthor());
-            bundle.putString("bookImage", book.getImage());
-            navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
+            String category = currentCategory; // 현재 선택된 카테고리 사용
+            DatabaseReference bookRef = FirebaseDatabase.getInstance().getReference(category).child(book.getId());
+
+            bookRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    String title = snapshot.child("title").getValue(String.class);
+                    String author = snapshot.child("author").getValue(String.class);
+                    String image = snapshot.child("image").getValue(String.class);
+
+                    if (title != null && author != null) {
+                        Bundle bundle = new Bundle();
+                        bundle.putString("bookId", book.getId());
+                        bundle.putString("bookTitle", title);
+                        bundle.putString("bookAuthor", author);
+                        bundle.putString("bookImage", image);
+                        bundle.putString("category", category); // 현재 카테고리 전달
+
+                        NavController navController = Navigation.findNavController(requireView());
+
+                        // 카테고리가 "read_books"인 경우 플래그 추가
+                        if ("read_books".equals(category)) {
+                            bundle.putBoolean("showReadBooksUI", true);
+                        } else {
+                            bundle.putBoolean("showReadBooksUI", false);
+                        }
+
+                        navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
+                    } else {
+                        Toast.makeText(getContext(), "책 정보를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Toast.makeText(getContext(), "데이터베이스 오류: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
         });
 
         return view;
     }
 
-    // Firebase에서 데이터 로드
     private void loadBooksFromFirebase(DatabaseReference dbRef, List<BookSearchResponseDto.BookItemDto> bookList) {
         dbRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -125,6 +169,7 @@ public class RecordFragment extends Fragment {
                 for (DataSnapshot data : snapshot.getChildren()) {
                     BookSearchResponseDto.BookItemDto book = data.getValue(BookSearchResponseDto.BookItemDto.class);
                     if (book != null) {
+                        book.setId(data.getKey()); // Firebase 키를 ID로 설정
                         bookList.add(book);
                     }
                 }
@@ -138,7 +183,27 @@ public class RecordFragment extends Fragment {
         });
     }
 
-    // "read_books"에 임의의 책 추가
+    private void loadBooksByCategory(String category) {
+        DatabaseReference dbRef;
+        List<BookSearchResponseDto.BookItemDto> bookList;
+
+        switch (category) {
+            case "reading_books":
+                dbRef = dbReading;
+                bookList = booksReading;
+                break;
+            case "read_books":
+                dbRef = dbRead;
+                bookList = booksRead;
+                break;
+            default:
+                dbRef = dbWillRead;
+                bookList = booksWillRead;
+        }
+
+        loadBooksFromFirebase(dbRef, bookList);
+    }
+
     private void addRandomBookToReadBooks() {
         BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
         newBook.setTitle("임의의 책 제목");
@@ -152,7 +217,6 @@ public class RecordFragment extends Fragment {
         });
     }
 
-    // 선택된 TextView에만 폰트를 변경하는 메서드
     private void setFont(TextView selectedTextView) {
         tvRecordWill.setTypeface(regularFont);
         tvRecordIng.setTypeface(regularFont);
