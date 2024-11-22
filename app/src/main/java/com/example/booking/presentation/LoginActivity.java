@@ -80,6 +80,19 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        // 이미 로그인된 사용자 확인
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            // 사용자가 이미 로그인되어 있으면 MainActivity로 이동
+            updateUI(currentUser);
+        }
+    }
+
+
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
