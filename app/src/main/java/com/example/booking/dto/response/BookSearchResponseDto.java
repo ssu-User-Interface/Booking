@@ -22,6 +22,8 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
+        private String  readingStatus;
+
 
         public void setId(String id) {
             this.id = id;
@@ -30,6 +32,11 @@ public class BookSearchResponseDto {
         public String getId() {
             return id;
         }
+
+        public String getReadingStatus() {
+            return readingStatus;
+        }
+
 
 
         public String getTitle() {
@@ -90,6 +97,10 @@ public class BookSearchResponseDto {
 
         public BookItemDto() {
             // Firebase에서 객체 변환 시 필요
+        }
+
+        public void setReadingStatus(String readingStatus) {
+            this.readingStatus = readingStatus;
         }
     }
 

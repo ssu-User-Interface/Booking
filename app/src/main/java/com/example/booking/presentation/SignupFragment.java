@@ -16,10 +16,16 @@ import androidx.fragment.app.Fragment;
 import com.example.booking.MainActivity;
 import com.example.booking.R;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupFragment extends Fragment {
 
     private FirebaseAuth mAuth; // Firebase 인증 객체
+    private FirebaseFirestore db; // Firestore 객체
     private static final String TAG = "SignupFragment";
 
     @Override
@@ -27,8 +33,9 @@ public class SignupFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
 
-        // FirebaseAuth 초기화
+        // FirebaseAuth 및 Firestore 초기화
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         // Initialize views
         EditText emailInput = view.findViewById(R.id.et_signup_email);
@@ -58,8 +65,13 @@ public class SignupFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(requireContext(), "Signup successful!", Toast.LENGTH_SHORT).show();
 
-                            // 회원가입 후 다른 화면으로 이동 (예: 로그인 화면 또는 메인 화면)
-                            // Navigate to HomeFragment using NavController
+                            // Firestore에 사용자 정보 저장
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            if (user != null) {
+                                saveUserToFirestore(user);
+                            }
+
+                            // 회원가입 후 메인 화면으로 이동
                             Intent intent = new Intent(requireContext(), MainActivity.class);
                             startActivity(intent);
                         } else {
@@ -72,5 +84,24 @@ public class SignupFragment extends Fragment {
         });
 
         return view;
+    }
+
+    /**
+     * Firestore에 사용자 정보 저장
+     * @param user FirebaseUser 객체
+     */
+    private void saveUserToFirestore(FirebaseUser user) {
+        String email = user.getEmail();
+        String nickname = email != null ? email.split("@")[0] : "Default Nickname";
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("nickname", nickname);
+        userData.put("uid", user.getUid());
+
+        db.collection("users").document(user.getUid())
+                .set(userData)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "사용자 정보 저장 성공"))
+                .addOnFailureListener(e -> Log.e(TAG, "사용자 정보 저장 실패", e));
     }
 }

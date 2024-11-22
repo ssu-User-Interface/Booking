@@ -45,8 +45,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
         BookSearchResponseDto.BookItemDto book = bookList.get(position);
-        holder.bind(book);
+        holder.titleTextView.setText(book.getTitle());
+        holder.authorTextView.setText(book.getAuthor());
+        Glide.with(holder.imageView.getContext()).load(book.getImage()).into(holder.imageView);
     }
+
 
     @Override
     public int getItemCount() {

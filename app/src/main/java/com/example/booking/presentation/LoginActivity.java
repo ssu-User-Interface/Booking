@@ -4,15 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
-import android.window.SplashScreen;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import com.example.booking.MainActivity;
 import com.example.booking.R;
@@ -28,8 +24,13 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
+
     private ActivityLoginBinding binding;
     private GoogleSignInClient googleSignInClient;
     private FirebaseAuth mAuth; // Firebase 인증 객체
@@ -42,15 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-
-
         // FirebaseAuth 객체 초기화
         mAuth = FirebaseAuth.getInstance();
-
-        // Initialize views
-        View loginButton = binding.tvLoginLogin;
-        View signUpButton = binding.tvLoginSignup;
-        View googleSignInButton = binding.btnGoogleSignIn;
 
         // Configure Google Sign-In options
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -62,21 +56,18 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         // Google Sign-In 버튼 클릭 리스너
-        googleSignInButton.setOnClickListener(v -> signInWithGoogle());
+        binding.btnGoogleSignIn.setOnClickListener(v -> signInWithGoogle());
 
         // 이메일 로그인 버튼 클릭 리스너
-        loginButton.setOnClickListener(v -> emailSignIn());
+        binding.tvLoginLogin.setOnClickListener(v -> emailSignIn());
 
-        // Set up the signup button click listener
-        signUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.login_fragment, new SignupFragment())
-                        .addToBackStack(null)
-                        .commit();
-            }
+        // 회원가입 버튼 클릭 리스너
+        binding.tvLoginSignup.setOnClickListener(v -> {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.login_fragment, new SignupFragment())
+                    .addToBackStack(null)
+                    .commit();
         });
     }
 
@@ -91,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
             updateUI(currentUser);
         }
     }
-
 
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
@@ -132,14 +122,13 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Sign in 성공, MainActivity로 이동
-                        Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
-                        updateUI(user);
+                        if (user != null) {
+                            saveUserToFirestore(user);
+                            updateUI(user);
+                        }
                     } else {
-                        // Sign in 실패
-                        Log.w(TAG, "signInWithCredential:failure", task.getException());
-                        Toast.makeText(LoginActivity.this, "Firebase Authentication failed.", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "Google sign in failed", task.getException());
                         updateUI(null);
                     }
                 });
@@ -157,13 +146,10 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Email Sign-In 성공
-                        Log.d(TAG, "signInWithEmail:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+                        saveUserToFirestore(user); // Firestore에 사용자 정보 저장
                         updateUI(user);
                     } else {
-                        // Email Sign-In 실패
-                        Log.w(TAG, "signInWithEmail:failure", task.getException());
                         Toast.makeText(LoginActivity.this, "Authentication failed.",
                                 Toast.LENGTH_SHORT).show();
                         updateUI(null);
@@ -171,14 +157,27 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    private void saveUserToFirestore(FirebaseUser user) {
+        String email = user.getEmail();
+        String nickname = email != null ? email.split("@")[0] : "Default Nickname";
+
+        Map<String, Object> userData = new HashMap<>();
+        userData.put("email", email);
+        userData.put("nickname", nickname);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(user.getUid())
+                .set(userData)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "사용자 정보 저장 성공"))
+                .addOnFailureListener(e -> Log.e(TAG, "사용자 정보 저장 실패", e));
+    }
+
     private void updateUI(FirebaseUser user) {
         if (user != null) {
-            // Firebase 인증 성공 시 MainActivity로 이동
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             startActivity(intent);
             finish(); // LoginActivity 종료
         } else {
-            // 인증 실패 시 현재 Activity 유지
             Log.w(TAG, "No user signed in");
         }
     }
