@@ -88,21 +88,18 @@ public class RecordFragment extends Fragment {
             currentCategory = "will_read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordWill);
-            addRandomBookToWillReadBooks();
         });
 
         tvRecordIng.setOnClickListener(v -> {
             currentCategory = "reading_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordIng);
-            addRandomBookToReadingBooks();
         });
 
         tvRecordPast.setOnClickListener(v -> {
             currentCategory = "read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordPast);
-            addRandomBookToReadBooks();
         });
 
         // 책 추가 버튼 클릭 이벤트 설정
