@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +89,7 @@ public class RecordFragment extends Fragment {
             currentCategory = "will_read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordWill);
+            addRandomBookToReadBooks();
         });
 
         tvRecordIng.setOnClickListener(v -> {
@@ -201,6 +203,16 @@ public class RecordFragment extends Fragment {
         newBook.setDescription("읽을 책 설명");
         newBook.setPubdate("2024");
         newBook.setReadingStatus("will_read_books");
+
+        // 추가된 필드
+        newBook.setId("book_id_1234"); // 책 ID (Firestore에서 자동 생성될 수도 있음)
+        newBook.setCreatedAt(new Date()); // 현재 시간으로 설정
+        newBook.setStartDate(new Date()); // 책 읽기 시작 날짜
+        newBook.setEndDate(null); // 책 읽기 종료 날짜 (아직 종료되지 않은 경우 null)
+        newBook.setTotalPages(300); // 총 페이지 수
+        newBook.setReadingPage(50); // 현재 읽고 있는 페이지
+        newBook.setRating(4); // 평점 (1~5)
+        newBook.setReview("흥미로운 스토리 전개와 깔끔한 문체가 돋보이는 책입니다."); // 리뷰
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("users").document(userId).collection("books")
