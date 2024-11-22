@@ -60,7 +60,6 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
-    //
     // Google Play services library
     implementation("com.google.android.gms:play-services-auth:20.5.0")
     implementation("com.google.firebase:firebase-auth:22.3.0")
@@ -84,4 +83,6 @@ dependencies {
     //hilt
     implementation("com.google.dagger:hilt-android:2.48")
     annotationProcessor("com.google.dagger:hilt-compiler:2.48")
+    //splash
+    implementation ("androidx.core:core-splashscreen:1.0.1")
 }

@@ -1,0 +1,6 @@
+<inset xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_booking_logo"
+    android:insetLeft="42dp"
+    android:insetRight="42dp"
+    android:insetTop="32dp"
+    android:insetBottom="32dp"/>
