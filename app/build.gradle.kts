@@ -1,6 +1,6 @@
 plugins {
     id("com.android.application")
-    id("com.google.gms.google-services") // Google Services 플러그인 적용\
+    id("com.google.gms.google-services") // Google Services 플러그인 적용
     id("dagger.hilt.android.plugin")
 }
 
@@ -32,10 +32,10 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
-    viewBinding{
+    viewBinding {
         enable = true
     }
-    dataBinding{
+    dataBinding {
         enable = true
     }
     buildFeatures {
@@ -44,13 +44,12 @@ android {
 }
 
 dependencies {
-
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
 
-    //네비게이션 그래프
+    // 네비게이션 그래프
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
@@ -95,4 +94,6 @@ dependencies {
     //hilt
     implementation("com.google.dagger:hilt-android:2.48")
     annotationProcessor("com.google.dagger:hilt-compiler:2.48")
+    //splash
+    implementation ("androidx.core:core-splashscreen:1.0.1")
 }

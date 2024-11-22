@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         android:fontFamily="@font/pretendard_extrabold"
-        android:text="01:42:00"
+        android:text="00:00:00"
         android:textColor="#555555"
         android:textSize="65dp"
         app:layout_constraintEnd_toEndOf="parent"

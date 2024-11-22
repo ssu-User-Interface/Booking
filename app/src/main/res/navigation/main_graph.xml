@@ -5,14 +5,20 @@
     android:id="@+id/main_graph"
     app:startDestination="@id/homeFragment">
 
+    <fragment
+        android:id="@+id/SignupFragment"
+        android:name="com.example.booking.presentation.SignupFragment"
+        android:label="SignupFragment"
+        tools:layout="@layout/fragment_signup">
 
+    </fragment>
     <!-- Home Fragment -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.booking.presentation.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
-        <action
+        <actions
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@+id/bookSearchFragment"/>
         <action

@@ -14,6 +14,7 @@ public class BookSearchResponseDto {
     }
 
     public static class BookItemDto {
+        private String id;
         private String title;
         private String link;
         private String image;
@@ -21,6 +22,15 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
 
         public String getTitle() {
             return title;
@@ -77,6 +87,12 @@ public class BookSearchResponseDto {
         public void setDescription(String description) {
             this.description = description;
         }
+
+        public BookItemDto() {
+            // Firebase에서 객체 변환 시 필요
+        }
     }
+
+
 }
 

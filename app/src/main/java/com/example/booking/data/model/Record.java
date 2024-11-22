@@ -5,7 +5,7 @@ public class Record {
     private String myTitle;
     private String phrase;
     private String address;
-    private int date;
+    private String date; // String 타입
     private int time;
 
     // Constructor
@@ -14,7 +14,7 @@ public class Record {
         this.myTitle = myTitle;
         this.phrase = memo;
         this.address = address;
-        this.date = date;
+        this.date = String.valueOf(date);
         this.time = time;
     }
 
@@ -35,7 +35,7 @@ public class Record {
         return address;
     }
 
-    public int getDate() {
+    public String getDate() {
         return date;
     }
 
@@ -43,5 +43,7 @@ public class Record {
         return time;
     }
 
-   //Setter
+    public Record() {
+        // Firebase에서 객체 변환 시 필요
+    }
 }
