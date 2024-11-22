@@ -9,6 +9,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecordFragment extends Fragment {
 
@@ -84,22 +88,22 @@ public class RecordFragment extends Fragment {
             currentCategory = "will_read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordWill);
+            addRandomBookToWillReadBooks();
         });
 
         tvRecordIng.setOnClickListener(v -> {
             currentCategory = "reading_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordIng);
+            addRandomBookToReadingBooks();
         });
 
         tvRecordPast.setOnClickListener(v -> {
             currentCategory = "read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordPast);
+            addRandomBookToReadBooks();
         });
-
-        // "책 모아보기" 버튼 클릭 이벤트 설정
-        tvRecordRegistration.setOnClickListener(v -> addRandomBookToReadBooks());
 
         // 책 추가 버튼 클릭 이벤트 설정
         Button addButton = view.findViewById(R.id.btn_main_record_add_book);
@@ -167,26 +171,6 @@ public class RecordFragment extends Fragment {
     }
 
 
-    private void addRandomBookToReadBooks() {
-        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
-        newBook.setTitle("임의의 책 제목");
-        newBook.setAuthor("임의의 작가");
-        newBook.setImage("https://example.com/randombook.jpg");
-        newBook.setPublisher("임의의 출판사");
-        newBook.setDescription("임의의 책 설명");
-        newBook.setPubdate("2024");
-        newBook.setReadingStatus("read_books");
-
-        db.collection("users").document(userId).collection("books")
-                .add(newBook)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(getContext(), "새 책이 '읽은 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-    }
-
     private void setFont(TextView selectedTextView) {
         tvRecordWill.setTypeface(regularFont);
         tvRecordIng.setTypeface(regularFont);
@@ -194,4 +178,103 @@ public class RecordFragment extends Fragment {
 
         selectedTextView.setTypeface(boldFont);
     }
+
+    private void addBookToFirestore(String userId, BookSearchResponseDto.BookItemDto book) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> bookData = new HashMap<>();
+        bookData.put("title", book.getTitle());
+        bookData.put("author", book.getAuthor());
+        bookData.put("publisher", book.getPublisher());
+        bookData.put("image", book.getImage());
+        bookData.put("description", book.getDescription());
+        bookData.put("readingStatus", book.getReadingStatus());
+
+        db.collection("users").document(userId).collection("books")
+                .add(bookData)
+                .addOnSuccessListener(documentReference -> Log.d("Firestore", "책 정보 저장 성공"))
+                .addOnFailureListener(e -> Log.e("Firestore", "책 정보 저장 실패", e));
+    }
+
+    private void addRandomBookToWillReadBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽을 책 제목");
+        newBook.setAuthor("읽을 작가");
+        newBook.setPublisher("읽을 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽을 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("will_read_books");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void addRandomBookToReadBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽는 중 책 제목");
+        newBook.setAuthor("읽는 중 작가");
+        newBook.setPublisher("읽는 중 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽는 중 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("read_books");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+    private void addRandomBookToReadingBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽는 중 책 제목");
+        newBook.setAuthor("읽는 중 작가");
+        newBook.setPublisher("읽는 중 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽는 중 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("reading_books");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }
