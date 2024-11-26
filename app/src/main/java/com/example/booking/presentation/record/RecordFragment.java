@@ -9,6 +9,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,14 +21,16 @@ import android.widget.Toast;
 import com.example.booking.R;
 import com.example.booking.dto.response.BookSearchResponseDto;
 import com.example.booking.presentation.record.adapter.BookAdapter;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecordFragment extends Fragment {
 
@@ -35,22 +39,25 @@ public class RecordFragment extends Fragment {
     private List<BookSearchResponseDto.BookItemDto> booksWillRead, booksReading, booksRead; // 각 카테고리별 리스트
     private Typeface boldFont, regularFont;
     private TextView tvRecordWill, tvRecordIng, tvRecordPast, tvRecordRegistration;
-    private DatabaseReference dbWillRead, dbReading, dbRead; // Firebase 노드 참조
     private String currentCategory = "will_read_books"; // 기본 선택 카테고리
+    private FirebaseFirestore db; // Firestore 인스턴스
+    private String userId; // 현재 로그인한 사용자 ID
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
 
-        // 이전 상태 복원
-        if (savedInstanceState != null) {
-            currentCategory = savedInstanceState.getString("currentCategory", "will_read_books");
+        // Firebase Auth로 사용자 ID 가져오기
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            userId = currentUser.getUid();
+        } else {
+            Toast.makeText(getContext(), "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show();
+            return view;
         }
 
-        // Firebase Database 참조 초기화
-        dbWillRead = FirebaseDatabase.getInstance().getReference("will_read_books");
-        dbReading = FirebaseDatabase.getInstance().getReference("reading_books");
-        dbRead = FirebaseDatabase.getInstance().getReference("read_books");
+        // Firestore 초기화
+        db = FirebaseFirestore.getInstance();
 
         // RecyclerView 초기화
         recyclerView = view.findViewById(R.id.recyclerView_book_list);
@@ -82,6 +89,7 @@ public class RecordFragment extends Fragment {
             currentCategory = "will_read_books";
             loadBooksByCategory(currentCategory);
             setFont(tvRecordWill);
+            addRandomBookToReadBooks();
         });
 
         tvRecordIng.setOnClickListener(v -> {
@@ -96,9 +104,6 @@ public class RecordFragment extends Fragment {
             setFont(tvRecordPast);
         });
 
-        // "책 모아보기" 버튼 클릭 이벤트 설정
-        tvRecordRegistration.setOnClickListener(v -> addRandomBookToReadBooks());
-
         // 책 추가 버튼 클릭 이벤트 설정
         Button addButton = view.findViewById(R.id.btn_main_record_add_book);
         addButton.setOnClickListener(v -> {
@@ -106,51 +111,21 @@ public class RecordFragment extends Fragment {
             navController.navigate(R.id.action_recordFragment_to_searchFragment);
         });
 
-        NavController navController = Navigation.findNavController(container);
-
         // 어댑터 클릭 리스너 설정
         bookAdapter.setOnItemClickListener(book -> {
-            String category = currentCategory; // 현재 선택된 카테고리 사용
-            DatabaseReference bookRef = FirebaseDatabase.getInstance().getReference(category).child(book.getId());
+            String bookId = book.getId();
+            Bundle bundle = new Bundle();
+            bundle.putString("bookId", bookId);
+            bundle.putString("bookTitle", book.getTitle());
+            bundle.putString("bookAuthor", book.getAuthor());
+            bundle.putString("bookImage", book.getImage());
+            bundle.putString("category", currentCategory);
 
-            bookRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    String title = snapshot.child("title").getValue(String.class);
-                    String author = snapshot.child("author").getValue(String.class);
-                    String image = snapshot.child("image").getValue(String.class);
-
-                    if (title != null && author != null) {
-                        Bundle bundle = new Bundle();
-                        bundle.putString("bookId", book.getId());
-                        bundle.putString("bookTitle", title);
-                        bundle.putString("bookAuthor", author);
-                        bundle.putString("bookImage", image);
-                        bundle.putString("category", category);
-
-                        // 카테고리 플래그 전달
-                        bundle.putBoolean("showReadBooksUI", "read_books".equals(category));
-                        navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
-                    } else {
-                        Toast.makeText(getContext(), "책 정보를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(getContext(), "데이터베이스 오류: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            NavController navController = Navigation.findNavController(container);
+            navController.navigate(R.id.action_recordFragment_to_recordSpecificFragment, bundle);
         });
 
         return view;
-    }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        // 현재 카테고리 저장
-        outState.putString("currentCategory", currentCategory);
     }
 
     private List<BookSearchResponseDto.BookItemDto> getCurrentBookList() {
@@ -175,61 +150,25 @@ public class RecordFragment extends Fragment {
         }
     }
 
-    private void loadBooksFromFirebase(DatabaseReference dbRef, List<BookSearchResponseDto.BookItemDto> bookList) {
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                bookList.clear();
-                for (DataSnapshot data : snapshot.getChildren()) {
-                    BookSearchResponseDto.BookItemDto book = data.getValue(BookSearchResponseDto.BookItemDto.class);
-                    if (book != null) {
-                        book.setId(data.getKey()); // Firebase 키를 ID로 설정
-                        bookList.add(book);
-                    }
-                }
-                bookAdapter.updateBooks(bookList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(getContext(), "데이터 로드 실패: " + error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
     private void loadBooksByCategory(String category) {
-        DatabaseReference dbRef;
-        List<BookSearchResponseDto.BookItemDto> bookList;
-
-        switch (category) {
-            case "reading_books":
-                dbRef = dbReading;
-                bookList = booksReading;
-                break;
-            case "read_books":
-                dbRef = dbRead;
-                bookList = booksRead;
-                break;
-            default:
-                dbRef = dbWillRead;
-                bookList = booksWillRead;
-        }
-
-        loadBooksFromFirebase(dbRef, bookList);
+        List<BookSearchResponseDto.BookItemDto> bookList = getCurrentBookList();
+        db.collection("users").document(userId).collection("books")
+                .whereEqualTo("readingStatus", category)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    bookList.clear(); // 기존 데이터를 초기화
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        BookSearchResponseDto.BookItemDto book = doc.toObject(BookSearchResponseDto.BookItemDto.class);
+                        book.setId(doc.getId()); // Firestore 문서 ID 설정
+                        bookList.add(book); // 책 리스트에 추가
+                    }
+                    bookAdapter.updateBooks(bookList); // 어댑터에 데이터 갱신
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "데이터 로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
-    private void addRandomBookToReadBooks() {
-        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
-        newBook.setTitle("임의의 책 제목");
-        newBook.setAuthor("임의의 작가");
-        newBook.setImage("https://example.com/randombook.jpg");
-
-        dbRead.push().setValue(newBook).addOnSuccessListener(aVoid -> {
-            Toast.makeText(getContext(), "새 책이 '읽은 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
-    }
 
     private void setFont(TextView selectedTextView) {
         tvRecordWill.setTypeface(regularFont);
@@ -238,4 +177,113 @@ public class RecordFragment extends Fragment {
 
         selectedTextView.setTypeface(boldFont);
     }
+
+    private void addBookToFirestore(String userId, BookSearchResponseDto.BookItemDto book) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Map<String, Object> bookData = new HashMap<>();
+        bookData.put("title", book.getTitle());
+        bookData.put("author", book.getAuthor());
+        bookData.put("publisher", book.getPublisher());
+        bookData.put("image", book.getImage());
+        bookData.put("description", book.getDescription());
+        bookData.put("readingStatus", book.getReadingStatus());
+
+        db.collection("users").document(userId).collection("books")
+                .add(bookData)
+                .addOnSuccessListener(documentReference -> Log.d("Firestore", "책 정보 저장 성공"))
+                .addOnFailureListener(e -> Log.e("Firestore", "책 정보 저장 실패", e));
+    }
+
+    private void addRandomBookToWillReadBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽을 책 제목");
+        newBook.setAuthor("읽을 작가");
+        newBook.setPublisher("읽을 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽을 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("will_read_books");
+
+        // 추가된 필드
+        newBook.setId("book_id_1234"); // 책 ID (Firestore에서 자동 생성될 수도 있음)
+        newBook.setCreatedAt(new Date()); // 현재 시간으로 설정
+        newBook.setStartDate(new Date()); // 책 읽기 시작 날짜
+        newBook.setEndDate(null); // 책 읽기 종료 날짜 (아직 종료되지 않은 경우 null)
+        newBook.setTotalPages(300); // 총 페이지 수
+        newBook.setReadingPage(50); // 현재 읽고 있는 페이지
+        newBook.setRating(4); // 평점 (1~5)
+        newBook.setReview("흥미로운 스토리 전개와 깔끔한 문체가 돋보이는 책입니다."); // 리뷰
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void addRandomBookToReadBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽는 중 책 제목");
+        newBook.setAuthor("읽는 중 작가");
+        newBook.setPublisher("읽는 중 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽는 중 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("read_books");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+
+    private void addRandomBookToReadingBooks() {
+        BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
+        newBook.setTitle("읽는 중 책 제목");
+        newBook.setAuthor("읽는 중 작가");
+        newBook.setPublisher("읽는 중 출판사");
+        newBook.setImage("https://example.com/reading.jpg");
+        newBook.setDescription("읽는 중 책 설명");
+        newBook.setPubdate("2024");
+        newBook.setReadingStatus("reading_books");
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(newBook) // Firestore가 자동으로 ID 생성
+                .addOnSuccessListener(documentReference -> {
+                    // Firestore에서 생성된 ID를 가져옴
+                    String generatedId = documentReference.getId();
+                    documentReference.update("id", generatedId) // 생성된 ID를 해당 문서에 업데이트
+                            .addOnSuccessListener(aVoid -> Log.d("Firestore", "ID 업데이트 성공"))
+                            .addOnFailureListener(e -> Log.e("Firestore", "ID 업데이트 실패", e));
+
+                    Toast.makeText(getContext(), "새 책이 '읽는 중 책'에 추가되었습니다.", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 추가 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
 }

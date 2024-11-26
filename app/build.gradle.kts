@@ -52,6 +52,7 @@ dependencies {
     // 네비게이션 그래프
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+    implementation(libs.firebase.storage)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
@@ -59,6 +60,7 @@ dependencies {
 
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation ("com.google.firebase:firebase-firestore")
 
     // Google Play services library
     implementation("com.google.android.gms:play-services-auth:20.5.0")

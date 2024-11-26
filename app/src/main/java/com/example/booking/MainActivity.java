@@ -13,6 +13,7 @@ import com.example.booking.presentation.home.HomeFragment;
 import com.example.booking.presentation.map.MapFragment;
 import com.example.booking.presentation.mypage.MyFragment;
 import com.example.booking.presentation.record.RecordFragment;
+import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 
@@ -29,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         initBottomNavigation();
+        FirebaseApp.initializeApp(this);
     }
 
     private void initBottomNavigation() {
