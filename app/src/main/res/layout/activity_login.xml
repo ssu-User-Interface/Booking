@@ -88,6 +88,7 @@
                 android:layout_marginTop="10dp"
                 android:background="@drawable/ic_login_round_box"
                 android:paddingStart="15dp"
+                android:inputType="textPassword"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_login_pw" />
