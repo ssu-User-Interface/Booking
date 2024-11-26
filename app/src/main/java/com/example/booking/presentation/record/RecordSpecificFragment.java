@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,11 +23,15 @@ import com.bumptech.glide.Glide;
 import com.example.booking.R;
 import com.example.booking.data.model.Record;
 import com.example.booking.presentation.record.adapter.RecordAdapter;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,48 +122,70 @@ public class RecordSpecificFragment extends Fragment {
     }
 
     private void loadBookDetails(String category, String bookId, List<Record> recordList, RecordAdapter adapter) {
-        DatabaseReference bookRef = FirebaseDatabase.getInstance().getReference(category).child(bookId);
+        // Firestore 초기화
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
 
-        bookRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                String title = snapshot.child("title").getValue(String.class);
-                String author = snapshot.child("author").getValue(String.class);
-                String image = snapshot.child("image").getValue(String.class);
+        // Firestore 경로 설정 (category는 Firestore 구조에서 필요하지 않으므로 제거 가능)
+        DocumentReference bookRef = db.collection("users").document(userId)
+                .collection("books").document(bookId);
 
-                Log.d("FirebaseData", "Title: " + title + ", Author: " + author);
+        // Firestore에서 책 정보 로드
+        bookRef.get()
+                .addOnSuccessListener(snapshot -> {
+                    if (snapshot.exists()) {
+                        // 책 정보 로드
+                        String title = snapshot.getString("title");
+                        String author = snapshot.getString("author");
+                        String image = snapshot.getString("image");
 
-                // 기록 데이터 로드
-                DataSnapshot recordsSnapshot = snapshot.child("records");
-                recordList.clear();
-                for (DataSnapshot recordSnapshot : recordsSnapshot.getChildren()) {
-                    Record record = recordSnapshot.getValue(Record.class);
-                    if (record != null) {
-                        recordList.add(record);
+                        Log.d("FirestoreData", "Title: " + title + ", Author: " + author);
+
+                        // UI 업데이트
+                        updateBookDetailsUI(title, author, image);
+
+                        // 기록 데이터 로드
+                        bookRef.collection("records").get()
+                                .addOnSuccessListener(querySnapshot -> {
+                                    recordList.clear();
+                                    for (DocumentSnapshot recordSnapshot : querySnapshot) {
+                                        Record record = recordSnapshot.toObject(Record.class);
+                                        if (record != null) {
+                                            recordList.add(record);
+                                        }
+                                    }
+                                    adapter.notifyDataSetChanged();
+
+                                    // 기록이 비어 있는 경우 처리
+                                    if (recordList.isEmpty()) {
+                                        emptyRecordList();
+                                        status.setText("기록이 비어있어요.");
+                                    }
+                                })
+                                .addOnFailureListener(e -> Log.e("FirestoreError", "기록 데이터 로드 실패: " + e.getMessage()));
+                    } else {
+                        Log.e("FirestoreError", "책 데이터를 찾을 수 없음");
+                        Toast.makeText(getContext(), "책 데이터를 로드할 수 없습니다.", Toast.LENGTH_SHORT).show();
                     }
-                }
-                adapter.notifyDataSetChanged();
-
-                // 기록이 비어 있는 경우 처리
-                if (recordList.isEmpty()) {
-                    emptyRecordList();
-                    if ("will_read_books".equals(category)) {
-                        status.setText("독서를 시작하세요!");
-                    } if ("reading_books".equals(category)) {
-                        status.setText("기록이 비어있어요.");
-                    } else if("read_books".equals(category)) {
-                        status.setText("기록을 추가하시겠어요?");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("FirebaseError", "Database Error: " + error.getMessage());
-            }
-        });
+                })
+                .addOnFailureListener(e -> Log.e("FirestoreError", "책 데이터 로드 실패: " + e.getMessage()));
     }
 
+
+    // 책 세부 정보 UI 업데이트
+    private void updateBookDetailsUI(String title, String author, String image) {
+        TextView titleTextView = getView().findViewById(R.id.tv_record_specific_book_title);
+        TextView authorTextView = getView().findViewById(R.id.tv_record_main_book_author);
+        ImageView imageView = getView().findViewById(R.id.iv_record_specific_book);
+
+        titleTextView.setText(title != null ? title : "제목 없음");
+        authorTextView.setText(author != null ? author : "저자 없음");
+
+        if (image != null) {
+            Glide.with(this).load(image).into(imageView);
+        }
+    }
     public void readBooksVisibility()
     {
         icNote.setVisibility(View.VISIBLE);
