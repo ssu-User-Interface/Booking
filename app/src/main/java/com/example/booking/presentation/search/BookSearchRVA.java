@@ -70,7 +70,12 @@ public class BookSearchRVA extends RecyclerView.Adapter<BookSearchRVA.BookViewHo
         public void bind(BookSearchResponseDto.BookItemDto book, OnBookClickListener listener) {
             title.setText(book.getTitle());
             author.setText(book.getAuthor());
-            publisher.setText(book.getPublisher());
+            String publisherText = book.getPublisher();
+            if (publisherText.length() > 15) {
+                publisher.setText(publisherText.substring(0, 15) + "...");
+            } else {
+                publisher.setText(publisherText);
+            }
             publishDate.setText(book.getPubdate());
             Glide.with(thumbnail.getContext()).load(book.getImage()).into(thumbnail);
 

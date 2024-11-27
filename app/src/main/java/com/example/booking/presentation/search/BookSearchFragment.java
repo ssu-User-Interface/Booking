@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.booking.R;
+import com.example.booking.dto.response.BookSearchResponseDto;
 
 import java.util.ArrayList;
 import dagger.hilt.android.AndroidEntryPoint;
@@ -49,7 +50,7 @@ public class BookSearchFragment extends Fragment {
         ivSearchButton = view.findViewById(R.id.iv_book_search_icon);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new BookSearchRVA(new ArrayList<>(), book -> openBookDetailFragment(view));
+        adapter = new BookSearchRVA(new ArrayList<>(), book -> openBookDetailFragment(requireView(), book));
         recyclerView.setAdapter(adapter);
 
         ivSearchButton.setOnClickListener(v -> performSearch());
@@ -74,8 +75,18 @@ public class BookSearchFragment extends Fragment {
         viewModel.searchBooks(query);
     }
 
-    private void openBookDetailFragment(View view) {
+    private void openBookDetailFragment(View view, BookSearchResponseDto.BookItemDto bookItem) {
         NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.action_bookSearchFragment_to_bookSearchDetailFragment);
+
+        BookSearchFragmentDirections.ActionBookSearchFragmentToBookSearchDetailFragment action =
+                BookSearchFragmentDirections.actionBookSearchFragmentToBookSearchDetailFragment(
+                        bookItem.getTitle(),
+                        bookItem.getAuthor(),
+                        bookItem.getPublisher(),
+                        bookItem.getImage(),
+                        bookItem.getDescription()
+                );
+
+        navController.navigate(action);
     }
 }

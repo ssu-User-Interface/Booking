@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("com.google.gms.google-services") // Google Services 플러그인 적용
     id("dagger.hilt.android.plugin")
+    id ("androidx.navigation.safeargs")
 }
 
 android {

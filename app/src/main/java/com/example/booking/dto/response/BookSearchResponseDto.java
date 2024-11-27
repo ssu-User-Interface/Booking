@@ -23,6 +23,7 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
+        private int pageCount; 
         private String readingStatus;
 
         // 새로 추가된 필드
@@ -95,12 +96,15 @@ public class BookSearchResponseDto {
             this.pubdate = pubdate;
         }
 
-        public String getDescription() {
-            return description;
+        public int getPageCount() {
+            return pageCount;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
+        public void setPageCount(int pageCount) {
+            this.pageCount = pageCount;
+        }
+        public String getDescription() {
+            return description;
         }
 
         public void setReadingStatus(String readingStatus) {
