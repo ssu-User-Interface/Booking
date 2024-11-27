@@ -78,16 +78,18 @@
 
     <TextView
         android:id="@+id/tv_home_first_widget_book_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/pretendard_bold"
         android:text="모순"
-        android:textSize="33sp"
+        android:maxLength="12"
+        android:textSize="25sp"
         android:textColor="#FFFF"
         app:layout_constraintTop_toTopOf="@id/view_home_first_widget_bg"
         app:layout_constraintStart_toEndOf="@id/iv_home_book"
         android:layout_marginTop="15dp"
         android:layout_marginStart="15dp"
+        app:layout_constraintEnd_toStartOf="@id/view_home_first_widget_right_bg"
         android:visibility="visible"/>
 
 

@@ -3,6 +3,7 @@ package com.example.booking.presentation.record;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.booking.R;
 
 import java.util.Locale;
@@ -50,11 +52,34 @@ public class TimerFragment extends Fragment {
         // NavController 가져오기
         NavController navController = Navigation.findNavController(container);
 
-        // Bundle에서 데이터 복원
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            timeElapsedInMillis = bundle.getLong("elapsedTime", 0);
+        Bundle receivedBundle = getArguments();
+        if (receivedBundle != null) {
+            // 타이머와 관련된 데이터
+            timeElapsedInMillis = receivedBundle.getLong("elapsedTime", 0);
             updateTimerText();
+
+            // 책 정보와 관련된 데이터
+            String bookId = receivedBundle.getString("bookId");
+            String bookTitle = receivedBundle.getString("bookTitle");
+            String bookImage = receivedBundle.getString("bookImage");
+            String bookAuthor = receivedBundle.getString("bookAuthor");
+            String category = receivedBundle.getString("category");
+
+            // UI 업데이트 (예: 책 제목 표시)
+            TextView bookTitleTextView = view.findViewById(R.id.tv_timer_book_title);
+            bookTitleTextView.setText(bookTitle != null ? bookTitle : "책 제목 없음");
+
+            TextView bookAuthorTextView = view.findViewById(R.id.tv_timer_book_author);
+            bookAuthorTextView.setText(bookAuthor != null ? bookTitle : "책 저자 없음");
+
+            // 책 이미지를 표시 (Glide 활용)
+            ImageView bookImageView = view.findViewById(R.id.iv_timer_book);
+            if (bookImage != null) {
+                Glide.with(this).load(bookImage).into(bookImageView);
+            }
+
+            // 디버깅 로그
+            Log.d("TimerFragment", "Received Data - bookId: " + bookId + ", category: " + category);
         }
 
         // 타이머 시작 버튼 동작
@@ -69,10 +94,19 @@ public class TimerFragment extends Fragment {
         // 독서 완료 버튼 동작
         btnTimerComplete.setOnClickListener(v -> {
             pauseStopwatch();
+
+            // Bundle 생성 및 데이터 추가
             Bundle bundleToNext = new Bundle();
             bundleToNext.putLong("elapsedTime", timeElapsedInMillis);
+            bundleToNext.putString("bookId", getArguments().getString("bookId"));
+            bundleToNext.putString("bookTitle", getArguments().getString("bookTitle"));
+            bundleToNext.putString("bookImage", getArguments().getString("bookImage"));
+            bundleToNext.putString("recordId", getArguments().getString("recordId"));
+
+            // RecordRegistrationFragment로 이동
             navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundleToNext);
         });
+
 
         // 뒤로가기 버튼 동작
         ivTimerBackArrow.setOnClickListener(v -> {

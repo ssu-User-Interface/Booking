@@ -34,7 +34,10 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RecordSpecificFragment extends Fragment {
 
@@ -79,10 +82,6 @@ public class RecordSpecificFragment extends Fragment {
         // NavController 초기화
         NavController navController = Navigation.findNavController(container);
 
-        // 독서 시작 버튼 이벤트
-        Button startButton = view.findViewById(R.id.btn_specific_record_start_timer);
-        startButton.setOnClickListener(v -> navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment));
-
         // 뒤로 가기 버튼 이벤트
         ImageView backButton = view.findViewById(R.id.iv_record_specific_back_arrow);
         backButton.setOnClickListener(v -> navController.navigate(R.id.action_recordSpecificFragment_to_recordFragment));
@@ -96,6 +95,43 @@ public class RecordSpecificFragment extends Fragment {
             String bookImage = args.getString("bookImage");
             String category = args.getString("category"); // 카테고리 정보
             boolean showReadBooksUI = args.getBoolean("showReadBooksUI", false);
+
+            // 독서 시작 버튼 이벤트
+            Button startButton = view.findViewById(R.id.btn_specific_record_start_timer);
+            startButton.setOnClickListener(v -> {
+                // Firestore 초기화
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                String userId = auth.getCurrentUser().getUid(); // 현재 사용자 ID
+
+                // Firestore에서 bookId에 해당하는 book 문서의 record 컬렉션에 빈 문서 추가
+                db.collection("users").document(userId)
+                        .collection("books").document(bookId)
+                        .collection("records")
+                        .add(new HashMap<>()) // 빈 데이터로 추가
+                        .addOnSuccessListener(documentReference -> {
+                            // 기록 생성 성공 후 recordId 가져오기
+                            String recordId = documentReference.getId();
+                            Log.d("Firestore", "Record created with ID: " + recordId);
+
+                            // Bundle 생성 및 TimerFragment로 이동
+                            Bundle timerBundle = new Bundle();
+                            timerBundle.putString("recordId", recordId);
+                            timerBundle.putString("bookId", bookId);
+                            timerBundle.putString("bookTitle", bookTitle);
+                            timerBundle.putString("bookImage", bookImage);
+                            timerBundle.putString("bookAuthor", bookAuthor);
+                            timerBundle.putString("category", category);
+
+                            navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment, timerBundle);
+                        })
+                        .addOnFailureListener(e -> {
+                            // 기록 생성 실패 로그 및 메시지
+                            Log.e("Firestore", "Failed to create record", e);
+                            Toast.makeText(getContext(), "기록 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            });
+
 
             Log.d("RecordSpecificFragment", "bookId: " + bookId + ", category: " + category);
 
@@ -117,8 +153,8 @@ public class RecordSpecificFragment extends Fragment {
                 Log.e("RecordSpecificFragment", "bookId or category is null");
             }
         }
-
         return view;
+
     }
 
     private void loadBookDetails(String category, String bookId, List<Record> recordList, RecordAdapter adapter) {
