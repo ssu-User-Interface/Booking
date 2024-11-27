@@ -23,8 +23,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
 
@@ -69,6 +74,10 @@ public class HomeFragment extends Fragment {
         View addBookButton = view.findViewById(R.id.view_home_first_widget_right_add_book);
         TextView tvHomeTitleName = view.findViewById(R.id.tv_home_title_name);
 
+        // UI element initialization
+        TextView tvDdayResult = view.findViewById(R.id.tv_home_d_day_result);
+        TextView tvTotalTimeResult = view.findViewById(R.id.tv_home_total_time_result);
+
         // 사용자 닉네임 가져오기
         String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
         if (userId != null) {
@@ -82,6 +91,53 @@ public class HomeFragment extends Fragment {
                         tvHomeTitleName.setText("사용자님,");
                         e.printStackTrace();
                     });
+
+                db.collection("users").document(userId).collection("books")
+                        .get()
+                        .addOnSuccessListener(booksSnapshot -> {
+                            if (!booksSnapshot.isEmpty()) {
+                                final AtomicInteger totalReadingTimeInSeconds = new AtomicInteger(0);
+                                List<Timestamp> recordDates = new ArrayList<>();
+
+                                for (DocumentSnapshot bookDoc : booksSnapshot) {
+                                    String bookId = bookDoc.getId();
+
+                                    // Fetch book records
+                                    db.collection("users").document(userId)
+                                            .collection("books").document(bookId)
+                                            .collection("records")
+                                            .get()
+                                            .addOnSuccessListener(recordsSnapshot -> {
+                                                for (DocumentSnapshot recordDoc : recordsSnapshot) {
+                                                    // Calculate total reading time
+                                                    Long readingTime = recordDoc.getLong("readingTime");
+                                                    if (readingTime != null) {
+                                                        totalReadingTimeInSeconds.addAndGet(readingTime.intValue());
+                                                    }
+
+                                                    // Collect record dates
+                                                    Timestamp recordDate = recordDoc.getTimestamp("startDate");
+                                                    if (recordDate != null) {
+                                                        recordDates.add(recordDate);
+                                                    }
+                                                }
+
+                                                // Update UI: Total Reading Time
+                                                String totalTimeFormatted = formatSecondsToTime(totalReadingTimeInSeconds.get());
+                                                tvTotalTimeResult.setText(totalTimeFormatted);
+
+                                                // Update UI: D-Day
+                                                int consecutiveDays = calculateConsecutiveDays(recordDates);
+                                                tvDdayResult.setText("D+" + consecutiveDays);
+                                            })
+                                            .addOnFailureListener(e -> Log.e("HomeFragment", "Failed to fetch records", e));
+                                }
+                            } else {
+                                tvDdayResult.setText("D+0");
+                                tvTotalTimeResult.setText("00:00:00");
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e("HomeFragment", "Failed to fetch books", e));
 
             // 책 정보 가져오기
             db.collection("users").document(userId).collection("books")
@@ -217,6 +273,71 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+
+    // Helper: 초를 HH:mm:ss로 변환
+    private String formatSecondsToTime(int totalSeconds) {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    // Helper: D-Day 계산
+    private int calculateConsecutiveDays(List<Timestamp> recordDates) {
+        // 최신순으로 정렬
+        recordDates.sort((d1, d2) -> d2.toDate().compareTo(d1.toDate()));
+
+        int consecutiveDays = 0;
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        Log.d("D-Day", "Today's date: " + today);
+
+        // Debug: 정렬된 recordDates 출력
+        for (Timestamp recordDate : recordDates) {
+            Log.d("D-Day", "Record date: " + recordDate.toDate());
+        }
+
+        // 연속 날짜 확인
+        for (Timestamp recordDate : recordDates) {
+            Date record = recordDate.toDate();
+
+            if (consecutiveDays == 0 && isSameDay(record, today)) {
+                consecutiveDays++;
+            } else if (isSameDay(record, getPreviousDate(today, consecutiveDays))) {
+                consecutiveDays++;
+            } else {
+                break; // 연속되지 않는 날이 발견되면 중단
+            }
+        }
+
+        Log.d("D-Day", "Consecutive days: " + consecutiveDays);
+        return consecutiveDays;
+    }
+
+    // Helper: 두 날짜가 같은 날인지 확인
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        Log.d("D-Day", "Comparing dates: " + date1 + " and " + date2 + " -> " + sameDay);
+        return sameDay;
+    }
+
+    // Helper: 이전 날짜 계산
+    private Date getPreviousDate(Date date, int daysAgo) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo);
+        Date previousDate = calendar.getTime();
+        Log.d("D-Day", "Previous date for " + daysAgo + " days ago: " + previousDate);
+        return previousDate;
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
