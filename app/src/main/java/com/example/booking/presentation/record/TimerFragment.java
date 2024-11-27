@@ -20,6 +20,9 @@ import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.booking.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.Locale;
 
@@ -35,13 +38,16 @@ public class TimerFragment extends Fragment {
     private long timeElapsedInMillis = 0; // 경과 시간 (밀리초)
     private long startTimeInMillis;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_timer, container, false);
+    private String source;
+    private String bookId;
+    private String recordId;
 
-        // UI 요소 초기화
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_timer, container, false);
+        NavController navController = Navigation.findNavController(container);
+
+        // Initialize UI elements
         tvTimer = view.findViewById(R.id.tv_timer);
         btnTimerComplete = view.findViewById(R.id.btn_timer_complete);
         ivTimerBackArrow = view.findViewById(R.id.iv_timer_back_arrow);
@@ -49,40 +55,24 @@ public class TimerFragment extends Fragment {
 
         handler = new Handler(Looper.getMainLooper());
 
-        // NavController 가져오기
-        NavController navController = Navigation.findNavController(container);
-
+        // Get arguments
         Bundle receivedBundle = getArguments();
         if (receivedBundle != null) {
-            // 타이머와 관련된 데이터
-            timeElapsedInMillis = receivedBundle.getLong("elapsedTime", 0);
-            updateTimerText();
+            bookId = receivedBundle.getString("bookId");
+            recordId = receivedBundle.getString("recordId");
 
-            // 책 정보와 관련된 데이터
-            String bookId = receivedBundle.getString("bookId");
-            String bookTitle = receivedBundle.getString("bookTitle");
-            String bookImage = receivedBundle.getString("bookImage");
-            String bookAuthor = receivedBundle.getString("bookAuthor");
-            String category = receivedBundle.getString("category");
-
-            // UI 업데이트 (예: 책 제목 표시)
-            TextView bookTitleTextView = view.findViewById(R.id.tv_timer_book_title);
-            bookTitleTextView.setText(bookTitle != null ? bookTitle : "책 제목 없음");
-
-            TextView bookAuthorTextView = view.findViewById(R.id.tv_timer_book_author);
-            bookAuthorTextView.setText(bookAuthor != null ? bookTitle : "책 저자 없음");
-
-            // 책 이미지를 표시 (Glide 활용)
-            ImageView bookImageView = view.findViewById(R.id.iv_timer_book);
-            if (bookImage != null) {
-                Glide.with(this).load(bookImage).into(bookImageView);
+            if (bookId != null) {
+                loadBookDetails(bookId);
+            } else {
+                Log.e("TimerFragment", "bookId is null");
             }
 
-            // 디버깅 로그
-            Log.d("TimerFragment", "Received Data - bookId: " + bookId + ", category: " + category);
+            if (recordId != null) {
+                Log.d("TimerFragment", "Using recordId: " + recordId);
+            }
         }
 
-        // 타이머 시작 버튼 동작
+        // Timer start/stop handling
         viewTimerRound.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 startStopwatch();
@@ -91,30 +81,65 @@ public class TimerFragment extends Fragment {
             }
         });
 
-        // 독서 완료 버튼 동작
+        // Timer complete action
         btnTimerComplete.setOnClickListener(v -> {
             pauseStopwatch();
-
-            // Bundle 생성 및 데이터 추가
+            // Bundle with elapsed time and return to RecordRegistrationFragment
             Bundle bundleToNext = new Bundle();
             bundleToNext.putLong("elapsedTime", timeElapsedInMillis);
-            bundleToNext.putString("bookId", getArguments().getString("bookId"));
-            bundleToNext.putString("bookTitle", getArguments().getString("bookTitle"));
-            bundleToNext.putString("bookImage", getArguments().getString("bookImage"));
-            bundleToNext.putString("recordId", getArguments().getString("recordId"));
-
-            // RecordRegistrationFragment로 이동
+            bundleToNext.putString("recordId", recordId);
+            bundleToNext.putString("bookId", bookId);
+            bundleToNext.putString("source","timer");
             navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundleToNext);
         });
 
-
-        // 뒤로가기 버튼 동작
+        // Back button handling
         ivTimerBackArrow.setOnClickListener(v -> {
             pauseStopwatch();
-            navController.navigate(R.id.action_timerFragment_to_recordSpecificFragment);
+
+            // Navigate back to RecordSpecificFragment with bookId
+            Bundle bundleToPrevious = new Bundle();
+            bundleToPrevious.putString("bookId", bookId);
+            navController.navigate(R.id.action_timerFragment_to_recordSpecificFragment, bundleToPrevious);
         });
 
         return view;
+    }
+
+    private void loadBookDetails(String bookId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
+
+        DocumentReference bookRef = db.collection("users").document(userId)
+                .collection("books").document(bookId);
+
+        // Fetch book details
+        bookRef.get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                String title = snapshot.getString("title");
+                String author = snapshot.getString("author");
+                String image = snapshot.getString("image");
+
+                // Update UI with book details
+                updateBookDetailsUI(title, author, image);
+            } else {
+                Log.e("TimerFragment", "Book not found for bookId: " + bookId);
+            }
+        }).addOnFailureListener(e -> Log.e("TimerFragment", "Failed to load book details", e));
+    }
+
+    private void updateBookDetailsUI(String title, String author, String image) {
+        TextView bookTitleTextView = getView().findViewById(R.id.tv_timer_book_title);
+        TextView bookAuthorTextView = getView().findViewById(R.id.tv_timer_book_author);
+        ImageView bookImageView = getView().findViewById(R.id.iv_timer_book);
+
+        bookTitleTextView.setText(title != null ? title : "제목 없음");
+        bookAuthorTextView.setText(author != null ? author : "저자 없음");
+
+        if (image != null) {
+            Glide.with(this).load(image).into(bookImageView);
+        }
     }
 
     private void startStopwatch() {

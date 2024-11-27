@@ -41,6 +41,7 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
     private MapSearchAdapter adapter;
     private FirebaseFirestore db; // Firestore 인스턴스
     private String userId; // 현재 로그인한 사용자 ID
+    private String source;
 
 
     @Override
@@ -48,18 +49,6 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // inflate for this view
         View view = inflater.inflate(R.layout.fragment_record_registration_map_search, container, false);
-
-        // Firebase Auth로 사용자 ID 가져오기
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser != null) {
-            userId = currentUser.getUid();
-        } else {
-            Toast.makeText(getContext(), "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show();
-            return view;
-        }
-
-        // Firestore 초기화
-        db = FirebaseFirestore.getInstance();
 
         // 네비게이션 설정
         NavController navController = Navigation.findNavController(container);
@@ -79,6 +68,56 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         EditText etSearchPlace = view.findViewById(R.id.et_record_map_search);
         ImageView ivSearchPlace = view.findViewById(R.id.iv_record_map_search_ic);
 
+        // Bundle에서 데이터 가져오기
+        Bundle ReceiveBundleAll = getArguments();
+        String bookId = null;
+        Long elapsedTime = 0L;
+
+        if (ReceiveBundleAll != null) {
+            bookId = ReceiveBundleAll.getString("bookId"); // 이전 프래그먼트에서 전달된 bookId
+            elapsedTime = ReceiveBundleAll.getLong("elapsedTime",0L); // 이전 프래그먼트에서 전달된 elapsedTime
+            Log.d("RecordRegistrationMapSearch", "bookId: " + bookId + ", elapsedTime: " + elapsedTime);
+        }
+
+        adapter = new MapSearchAdapter(new ArrayList<>()); // 어댑터 생성
+        recyclerView.setAdapter(adapter);
+
+        // 장소 저장 버튼 안보이게 하기
+        Button btnAddPlace = view.findViewById(R.id.btn_add_place);
+        btnAddPlace.setVisibility(View.GONE);
+
+        // 어댑터 아이템 클릭 리스너
+        String finalBookId = bookId; // effectively final로 사용
+        Long finalElapsedTime = elapsedTime; // effectively final로 사용
+
+        adapter.setOnItemClickListener(place -> {
+            btnAddPlace.setVisibility(View.VISIBLE); // 버튼 보이기
+            Log.d("PlaceSelected", "선택된 장소: " + place.getName());
+
+            btnAddPlace.setOnClickListener(v -> {
+                Bundle bundle_final  = new Bundle();
+                bundle_final.putString("bookId",finalBookId);
+                bundle_final.putLong("elapsedTime",finalElapsedTime);
+                bundle_final.putString("placeName", place.getName()); // 선택된 장소 이름
+                bundle_final.putString("placeAddress", place.getAddress()); // 선택된 장소 주소
+                bundle_final.putString("source","mapsearch");
+
+                // 로그 출력
+                Log.d("RecordRegistrationMapSearch", "Sending Bundle Data:");
+                Log.d("RecordRegistrationMapSearch", "bookId: " + finalBookId);
+                Log.d("RecordRegistrationMapSearch", "elapsedTimeInMillis: " + finalElapsedTime);
+                Log.d("RecordRegistrationMapSearch", "placeName: " + place.getName());
+                Log.d("RecordRegistrationMapSearch", "placeAddress: " + place.getAddress());
+                Log.d("RecordRegistrationMapSearch", "source: mapsearch");
+
+                navController.navigate(R.id.recordRegistrationFragment,bundle_final);
+            });
+        });
+
+        etSearchPlace.setOnClickListener(v-> {
+            btnAddPlace.setVisibility(View.GONE);
+        });
+
         ivSearchPlace.setOnClickListener(v -> {
             String keyword = etSearchPlace.getText().toString().trim();
             if(!keyword.isEmpty()) {
@@ -87,65 +126,6 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
                 Log.w("Search Place","검색어가 비어있습니다.");
             }
         });
-
-
-        adapter = new MapSearchAdapter(new ArrayList<>()); // 어댑터 생성
-        recyclerView.setAdapter(adapter);
-
-        Button btnAddPlace = view.findViewById(R.id.btn_add_place);
-        btnAddPlace.setVisibility(View.GONE);
-
-        adapter.setOnItemClickListener(place -> {
-            btnAddPlace.setVisibility(View.VISIBLE); // 버튼 보이기
-            Log.d("PlaceSelected", "선택된 장소: " + place.getName());
-
-            btnAddPlace.setOnClickListener(v -> {
-                // Firestore에 장소 저장
-                Map<String, Object> locationData = new HashMap<>();
-                locationData.put("name", place.getName());
-                locationData.put("address", place.getAddress());
-//                locationData.put("latitude", place.getLatitude());
-//                locationData.put("longitude", place.getLongitude());
-                locationData.put("timestamp", new Date()); // 저장 시간
-
-                // 전달된 bookId와 recordId를 가져옴
-                String bookId = getArguments() != null ? getArguments().getString("bookId") : null;
-                String recordId = getArguments() != null ? getArguments().getString("recordId") : null;
-
-                // 값 검증
-                if (bookId == null || recordId == null) {
-                    Log.e("Firestore", "bookId 또는 recordId가 null입니다. 저장 작업을 중단합니다.");
-                    return;
-                }
-
-                db.collection("users")
-                        .document(userId)
-                        .collection("books")
-                        .document(bookId)
-                        .collection("records")
-                        .document(recordId)
-                        .collection("locations")
-                        .add(locationData)
-                        .addOnSuccessListener(documentReference -> {
-                            Log.d("Firestore", "장소가 성공적으로 저장되었습니다.");
-                            btnAddPlace.setVisibility(View.GONE); // 버튼 숨기기
-
-                            // 장소 이름을 전달하여 이전 프래그먼트로 이동
-                            Bundle resultBundle = new Bundle();
-                            resultBundle.putString("selectedPlaceName", place.getName());
-                            navController.navigate(R.id.action_recordRegistrationMapSearchFragment_to_recordRegistrationFragment, resultBundle);
-
-                        })
-                        .addOnFailureListener(e -> Log.e("Firestore", "장소 저장 실패: " + e.getMessage()));
-
-                navController.navigate(R.id.recordRegistrationFragment);
-            });
-        });
-
-        etSearchPlace.setOnClickListener(v-> {
-            btnAddPlace.setVisibility(View.GONE);
-        });
-
         return view;
     }
 

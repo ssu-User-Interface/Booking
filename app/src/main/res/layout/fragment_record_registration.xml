@@ -208,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:text="365p"
                     android:textSize="12sp"
-                    android:gravity="center_vertical||end"/>
+                    android:gravity="center_vertical|end"/>
             </LinearLayout>
         </LinearLayout>
 
