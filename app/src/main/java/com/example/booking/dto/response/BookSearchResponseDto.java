@@ -106,6 +106,9 @@ public class BookSearchResponseDto {
         public String getDescription() {
             return description;
         }
+        public void setDescription(String description) {
+            this.description = description;
+        }
 
         public void setReadingStatus(String readingStatus) {
             this.readingStatus = readingStatus;
