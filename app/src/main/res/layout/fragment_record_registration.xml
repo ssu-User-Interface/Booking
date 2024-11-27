@@ -306,11 +306,28 @@
             android:layout_weight="1" />
 
         <Button
-            android:id="@+id/btn_complete_reading"
+            android:id="@+id/btn_complete_reading_activate"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
+            android:text="독서 종료"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="@font/pretendard_bold"
+            android:gravity="center"
+            android:visibility="gone"/>
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"/>
+
+        <Button
+            android:id="@+id/btn_complete_reading_deactivate"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="9"
+            android:background="@drawable/iv_record_button_deactivate"
             android:text="독서 종료"
             android:textColor="@color/white"
             android:textSize="20sp"

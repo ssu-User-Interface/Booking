@@ -123,7 +123,7 @@ public class RecordRegistrationFragment extends Fragment {
         }
 
         // 독서 종료 버튼
-        Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading);
+        Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading_deactivate);
         openBottomSheetButton.setOnClickListener(v -> {
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
             bottomSheetDialogFragment.show(getParentFragmentManager(), "RecordRegistrationBottomSheetDialogFragment");
