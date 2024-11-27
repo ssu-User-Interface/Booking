@@ -24,6 +24,7 @@ import com.example.booking.presentation.record.adapter.BookAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
@@ -158,20 +159,40 @@ public class RecordFragment extends Fragment {
         List<BookSearchResponseDto.BookItemDto> bookList = getCurrentBookList();
         db.collection("users").document(userId).collection("books")
                 .whereEqualTo("readingStatus", category)
-                .get()
+                .get() // 정렬 없이 먼저 가져옴
                 .addOnSuccessListener(querySnapshot -> {
                     bookList.clear(); // 기존 데이터를 초기화
+
+                    List<BookSearchResponseDto.BookItemDto> booksWithCreatedAt = new ArrayList<>();
+                    List<BookSearchResponseDto.BookItemDto> booksWithoutCreatedAt = new ArrayList<>();
+
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         BookSearchResponseDto.BookItemDto book = doc.toObject(BookSearchResponseDto.BookItemDto.class);
                         book.setId(doc.getId()); // Firestore 문서 ID 설정
-                        bookList.add(book); // 책 리스트에 추가
+
+                        // createdAt이 존재하는지 확인
+                        if (doc.contains("createdAt") && doc.getTimestamp("createdAt") != null) {
+                            book.setCreatedAt(doc.getTimestamp("createdAt").toDate());
+                            booksWithCreatedAt.add(book);
+                        } else {
+                            booksWithoutCreatedAt.add(book);
+                        }
                     }
+
+                    // createdAt이 있는 책은 최신순으로 정렬
+                    booksWithCreatedAt.sort((b1, b2) -> b2.getCreatedAt().compareTo(b1.getCreatedAt()));
+
+                    // 두 리스트 합치기
+                    bookList.addAll(booksWithCreatedAt);
+                    bookList.addAll(booksWithoutCreatedAt);
+
                     bookAdapter.updateBooks(bookList); // 어댑터에 데이터 갱신
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "데이터 로드 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void setFont(TextView selectedTextView) {
         tvRecordWill.setTypeface(regularFont);

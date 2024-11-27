@@ -133,7 +133,9 @@ public class RecordSpecificFragment extends Fragment {
     }
 
     private void loadRecordList(DocumentReference bookRef) {
-        bookRef.collection("records").get()
+        bookRef.collection("records")
+                .orderBy("recordDate", com.google.firebase.firestore.Query.Direction.DESCENDING) // 최신순으로 정렬
+                .get()
                 .addOnSuccessListener(querySnapshot -> {
                     recordList.clear();
                     for (DocumentSnapshot recordSnapshot : querySnapshot) {
@@ -150,6 +152,7 @@ public class RecordSpecificFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> Log.e("FirestoreError", "기록 데이터 로드 실패: " + e.getMessage()));
     }
+
 
     private void updateBookDetailsUI(String title, String author, String image) {
         TextView titleTextView = getView().findViewById(R.id.tv_record_specific_book_title);
