@@ -71,11 +71,15 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         // Bundle에서 데이터 가져오기
         Bundle ReceiveBundleAll = getArguments();
         String bookId = null;
+        String recordTitle = null;
+        Integer readPages = 0;
         Long elapsedTime = 0L;
 
         if (ReceiveBundleAll != null) {
             bookId = ReceiveBundleAll.getString("bookId"); // 이전 프래그먼트에서 전달된 bookId
             elapsedTime = ReceiveBundleAll.getLong("elapsedTime",0L); // 이전 프래그먼트에서 전달된 elapsedTime
+            recordTitle = ReceiveBundleAll.getString("recordTitle",recordTitle);
+            readPages = ReceiveBundleAll.getInt("readPages",readPages);
             Log.d("RecordRegistrationMapSearch", "bookId: " + bookId + ", elapsedTime: " + elapsedTime);
         }
 
@@ -89,6 +93,8 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         // 어댑터 아이템 클릭 리스너
         String finalBookId = bookId; // effectively final로 사용
         Long finalElapsedTime = elapsedTime; // effectively final로 사용
+        String finalRecordTitle = recordTitle;
+        Integer finalReadPages = readPages;
 
         adapter.setOnItemClickListener(place -> {
             btnAddPlace.setVisibility(View.VISIBLE); // 버튼 보이기
@@ -101,14 +107,8 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
                 bundle_final.putString("placeName", place.getName()); // 선택된 장소 이름
                 bundle_final.putString("placeAddress", place.getAddress()); // 선택된 장소 주소
                 bundle_final.putString("source","mapsearch");
-
-                // 로그 출력
-                Log.d("RecordRegistrationMapSearch", "Sending Bundle Data:");
-                Log.d("RecordRegistrationMapSearch", "bookId: " + finalBookId);
-                Log.d("RecordRegistrationMapSearch", "elapsedTimeInMillis: " + finalElapsedTime);
-                Log.d("RecordRegistrationMapSearch", "placeName: " + place.getName());
-                Log.d("RecordRegistrationMapSearch", "placeAddress: " + place.getAddress());
-                Log.d("RecordRegistrationMapSearch", "source: mapsearch");
+                bundle_final.putString("recordTitle",finalRecordTitle);
+                bundle_final.putInt("readPages",finalReadPages);
 
                 navController.navigate(R.id.recordRegistrationFragment,bundle_final);
             });
