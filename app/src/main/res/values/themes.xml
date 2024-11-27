@@ -19,4 +19,12 @@
         <item name="fullscreenBackgroundColor">@color/light_blue_600</item>
         <item name="fullscreenTextColor">@color/light_blue_A200</item>
     </style>
+
+    <style name="Theme.SplashEx" parent="Base.Theme.Booking">
+        <item name="android:windowSplashScreenBackground" tools:targetApi="S">#FBFAF7</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="S">@drawable/splash</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="S">@null</item>
+        <item name="android:windowSplashScreenAnimationDuration" tools:targetApi="S">200</item>
+        <item name="android:windowSplashScreenBrandingImage" tools:targetApi="S">@drawable/splash_branding_txt</item>
+    </style>
 </resources>

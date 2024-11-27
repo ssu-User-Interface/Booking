@@ -1,7 +1,6 @@
 package com.example.booking.dto.response;
 
-import android.os.Parcelable;
-
+import java.util.Date;
 import java.util.List;
 
 public class BookSearchResponseDto {
@@ -16,6 +15,7 @@ public class BookSearchResponseDto {
     }
 
     public static class BookItemDto {
+        private String id;
         private String title;
         private String link;
         private String image;
@@ -23,7 +23,30 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
-        private int pageCount; // 페이지 수
+        private int pageCount; 
+        private String readingStatus;
+
+        // 새로 추가된 필드
+        private Date createdAt;
+        private Date startDate;
+        private Date endDate;
+        private int totalPages;
+        private int readingPage;
+        private int rating;
+        private String review;
+
+        // 기존 필드
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getReadingStatus() {
+            return readingStatus;
+        }
 
         public String getTitle() {
             return title;
@@ -83,6 +106,70 @@ public class BookSearchResponseDto {
         public String getDescription() {
             return description;
         }
+
+        public void setReadingStatus(String readingStatus) {
+            this.readingStatus = readingStatus;
+        }
+
+        // 추가된 필드의 getter와 setter
+        public Date getCreatedAt() {
+            return createdAt;
+        }
+
+        public void setCreatedAt(Date createdAt) {
+            this.createdAt = createdAt;
+        }
+
+        public Date getStartDate() {
+            return startDate;
+        }
+
+        public void setStartDate(Date startDate) {
+            this.startDate = startDate;
+        }
+
+        public Date getEndDate() {
+            return endDate;
+        }
+
+        public void setEndDate(Date endDate) {
+            this.endDate = endDate;
+        }
+
+        public int getTotalPages() {
+            return totalPages;
+        }
+
+        public void setTotalPages(int totalPages) {
+            this.totalPages = totalPages;
+        }
+
+        public int getReadingPage() {
+            return readingPage;
+        }
+
+        public void setReadingPage(int readingPage) {
+            this.readingPage = readingPage;
+        }
+
+        public int getRating() {
+            return rating;
+        }
+
+        public void setRating(int rating) {
+            this.rating = rating;
+        }
+
+        public String getReview() {
+            return review;
+        }
+
+        public void setReview(String review) {
+            this.review = review;
+        }
+
+        public BookItemDto() {
+            // Firebase에서 객체 변환 시 필요
+        }
     }
 }
-
