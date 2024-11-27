@@ -21,6 +21,9 @@ import java.util.Locale;
 
 public class RecordRegistrationFragment extends Fragment {
 
+    private String currentBookId;  // 현재 책 ID
+    private String currentRecordId; // 현재 기록 ID
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,10 +49,21 @@ public class RecordRegistrationFragment extends Fragment {
             etRecordTime.setText(timeFormatted);
         }
 
+        // 전달받은 장소 값 설정
+        TextView tvRecordPlace = view.findViewById(R.id.tv_record_place);
+        Bundle place_bundle = getArguments();
+        if(place_bundle != null && place_bundle.containsKey("selectedPlaceName")) {
+            String selectedPlaceName = place_bundle.getString("selectedPlaceName");
+            tvRecordPlace.setText(selectedPlaceName);
+        }
+
         // 장소 검색
         TextView placeText = view.findViewById(R.id.tv_record_place);
         placeText.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
+            Bundle bundle_place = new Bundle();
+            bundle_place.putString("bookId", currentBookId);
+            bundle_place.putString("recordId",currentRecordId);
+            navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment,bundle_place);
         });
 
         // 독서 종료 버튼
