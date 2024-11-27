@@ -147,6 +147,18 @@ public class RecordRegistrationFragment extends Fragment {
             String readPagesText = etReadPages.getText().toString();
             int readPages = readPagesText.isEmpty() ? 0 : Integer.parseInt(readPagesText); // 빈값 처리
             String elapsedTime = etRecordTime.getText().toString();
+            long elapsedTimeInMillisfinal = 0L;
+            try {
+                String[] timeParts = elapsedTime.split(":"); // hh:mm:ss를 ":" 기준으로 분리
+                int hours = Integer.parseInt(timeParts[0]); // 시간 부분
+                int minutes = Integer.parseInt(timeParts[1]); // 분 부분
+                int seconds = Integer.parseInt(timeParts[2]); // 초 부분
+
+                // 시간, 분, 초를 밀리초로 변환
+                elapsedTimeInMillisfinal = (hours * 3600 + minutes * 60 + seconds) * 1000L;
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                Log.e("ElapsedTimeConversion", "시간 변환 실패: " + e.getMessage());
+            }
             String placeName = tvRecordRegistrationPlaceText.getText().toString();
             String likePhrase = etLikePhrase.getText().toString();
             String memo = etMomo.getText().toString();
@@ -160,7 +172,7 @@ public class RecordRegistrationFragment extends Fragment {
             // Firestore에 저장할 데이터 생성
             Map<String, Object> records = new HashMap<>();
             records.put("myTitle", recordTitle);
-            records.put("readingTime", elapsedTime);
+            records.put("readingTime", elapsedTimeInMillisfinal);
             records.put("address", placeName);
             records.put("phrase", likePhrase);
             records.put("memo", memo);
