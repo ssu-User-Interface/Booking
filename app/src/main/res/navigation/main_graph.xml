@@ -12,15 +12,16 @@
         tools:layout="@layout/fragment_signup">
 
     </fragment>
+
     <!-- Home Fragment -->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.booking.presentation.home.HomeFragment"
         android:label="HomeFragment"
         tools:layout="@layout/fragment_home">
-        <actions
+        <action
             android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@+id/bookSearchFragment"/>
+            app:destination="@id/bookSearchFragment"/>
         <action
             android:id="@+id/action_homeFragment_to_timerFragment"
             app:destination="@id/timerFragment"/>
