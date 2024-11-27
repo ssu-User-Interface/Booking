@@ -183,13 +183,13 @@ public class RecordFragment extends Fragment {
 
     private void addRandomBookToWillReadBooks() {
         BookSearchResponseDto.BookItemDto newBook = new BookSearchResponseDto.BookItemDto();
-        newBook.setTitle("하기 싫다");
-        newBook.setAuthor("이수민");
+        newBook.setTitle("아 졸령");
+        newBook.setAuthor("백종원");
         newBook.setPublisher("숭실대");
         newBook.setImage("https://example.com/reading.jpg");
-        newBook.setDescription("읽을 책 설명");
+        newBook.setDescription("읽는 책 설명");
         newBook.setPubdate("2024");
-        newBook.setReadingStatus("read_books");
+        newBook.setReadingStatus("reading_books");
         newBook.setCreatedAt(new Date()); // 현재 시간으로 설정
         newBook.setStartDate(new Date()); // 책 읽기 시작 날짜
         newBook.setEndDate(null); // 책 읽기 종료 날짜 (아직 종료되지 않은 경우 null)

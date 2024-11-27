@@ -85,7 +85,7 @@ public class HomeFragment extends Fragment {
 
             // 책 정보 가져오기
             db.collection("users").document(userId).collection("books")
-                    .whereEqualTo("readingStatus", "will_read_books")
+                    .whereEqualTo("readingStatus", "reading_books")
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
                         if (!querySnapshot.isEmpty()) {
@@ -121,6 +121,15 @@ public class HomeFragment extends Fragment {
                                     String startDate = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault())
                                             .format(mostRecentTimestamp.toDate());
                                     tvReadingPeriod.setText(startDate);
+                                }
+
+                                // ProgressBar 업데이트
+                                if (totalPages > 0) {
+                                    prg.setMax((int) totalPages); // totalPages를 max로 설정
+                                    prg.setProgress((int) readingPage); // readingPage를 progress로 설정
+                                } else {
+                                    prg.setMax(1); // 0으로 설정 시 오류가 발생할 수 있으므로 기본값 설정
+                                    prg.setProgress(0);
                                 }
 
                                 // 읽고 있는 책 UI
@@ -160,10 +169,6 @@ public class HomeFragment extends Fragment {
                                                     // TimerFragment로 이동 및 데이터 전달
                                                     Bundle timerBundle = new Bundle();
                                                     timerBundle.putString("bookId", finalDocument.getId());
-                                                    timerBundle.putString("bookTitle", finalDocument.getString("title"));
-                                                    timerBundle.putString("recordId", recordId);
-                                                    timerBundle.putString("bookImage", finalDocument.getString("image"));
-                                                    timerBundle.putString("bookAuthor", finalDocument.getString("author"));
 
                                                     navController.navigate(R.id.action_homeFragment_to_timerFragment, timerBundle);
                                                 })
