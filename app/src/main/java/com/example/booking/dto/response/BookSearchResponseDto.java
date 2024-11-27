@@ -1,5 +1,7 @@
 package com.example.booking.dto.response;
 
+import android.os.Parcelable;
+
 import java.util.List;
 
 public class BookSearchResponseDto {
@@ -21,6 +23,7 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
+        private int pageCount; // 페이지 수
 
         public String getTitle() {
             return title;
@@ -70,12 +73,15 @@ public class BookSearchResponseDto {
             this.pubdate = pubdate;
         }
 
-        public String getDescription() {
-            return description;
+        public int getPageCount() {
+            return pageCount;
         }
 
-        public void setDescription(String description) {
-            this.description = description;
+        public void setPageCount(int pageCount) {
+            this.pageCount = pageCount;
+        }
+        public String getDescription() {
+            return description;
         }
     }
 }
