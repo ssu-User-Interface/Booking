@@ -107,7 +107,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-7dp"
                     android:fontFamily="@font/pretendard_bold"
-                    android:text="5번째 기록"
+                    android:text="오늘의 기록"
                     android:textColor="@color/black"
                     android:textSize="30sp" />
 
@@ -178,17 +178,47 @@
 
                 <EditText
                     android:id="@+id/et_record_page"
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:gravity="center_vertical|start"
                     android:hint="읽은 페이지"
                     android:fontFamily="@font/pretendard_regular"
-
-                    android:paddingEnd="10dp"
                     android:textSize="12dp" />
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_record_registraion_slash"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    android:textSize="12sp"/>
+
+                <View
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tv_record_registration_total_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="365"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical|end"/>
+                <TextView
+                    android:id="@+id/tv_record_registration_p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="p"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical|end"/>
+
+
             </LinearLayout>
         </LinearLayout>
 
@@ -284,12 +314,25 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
         <Button
-            android:id="@+id/btn_complete_reading"
+            android:id="@+id/btn_complete_reading_activate"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="9"
             android:background="@drawable/iv_record_button"
+            android:text="독서 종료"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:fontFamily="@font/pretendard_bold"
+            android:gravity="center"
+            android:visibility="gone"/>
+        <Button
+            android:id="@+id/btn_complete_reading_deactivate"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="9"
+            android:background="@drawable/iv_record_button_deactivate"
             android:text="독서 종료"
             android:textColor="@color/white"
             android:textSize="20sp"

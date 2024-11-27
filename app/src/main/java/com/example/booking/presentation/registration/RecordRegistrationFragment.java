@@ -1,6 +1,8 @@
 package com.example.booking.presentation.registration;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +18,16 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.bumptech.glide.Glide;
 import com.example.booking.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class RecordRegistrationFragment extends Fragment {
 
@@ -31,30 +41,121 @@ public class RecordRegistrationFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 전달받은 타이머 값 설정
+        EditText etRecordTitle = view.findViewById(R.id.et_record_book_title);
+        EditText etReadPages = view.findViewById(R.id.et_record_page);
         EditText etRecordTime = view.findViewById(R.id.et_record_time);
+        TextView tvRecordRegistrationPlaceText = view.findViewById(R.id.tv_record_place);
+        ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
+        EditText etLikePhrase = view.findViewById(R.id.et_record_like_phrase);
+        EditText etMomo = view.findViewById(R.id.et_record_memo);
+
         Bundle bundle = getArguments();
         long elapsedTimeInMillis = 0;
+
         if (bundle != null) {
-            elapsedTimeInMillis = bundle.getLong("elapsedTime", 0);
+            Log.d("RecordRegistrationFragment", "Received Bundle Data:");
+            String source = bundle.getString("source", ""); // source 확인 (timer/mapsearch)
+            Log.d("sourceSource",source);
+            if(source.equals("timer")){
+                // bookId 처리
+                String bookId = bundle.getString("bookId");
+                loadBookDetails(bookId);
+                // elapsedTime 처리
+                elapsedTimeInMillis = bundle.getLong("elapsedTime", 0L);
+                // 장소 정보 처리
 
-            // 시간을 hh:mm:ss 형식으로 변환하여 EditText에 표시
-            int hours = (int) (elapsedTimeInMillis / 1000) / 3600;
-            int minutes = (int) ((elapsedTimeInMillis / 1000) % 3600) / 60;
-            int seconds = (int) (elapsedTimeInMillis / 1000) % 60;
+                long finalElapsedTimeInMillis = elapsedTimeInMillis;
 
-            String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
-            etRecordTime.setText(timeFormatted);
+                // 시간을 hh:mm:ss 형식으로 변환하여 EditText에 표시
+                int hours = (int) (elapsedTimeInMillis / 1000) / 3600;
+                int minutes = (int) ((elapsedTimeInMillis / 1000) % 3600) / 60;
+                int seconds = (int) (elapsedTimeInMillis / 1000) % 60;
+                String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+
+                etRecordTime.setText(timeFormatted);
+
+                // 장소 검색
+                tvRecordRegistrationPlaceText.setOnClickListener(v -> {
+                    String recordTitle = etRecordTitle.getText().toString();
+                    String readPagesText = etReadPages.getText().toString();
+                    int readPages = readPagesText.isEmpty() ? 0 : Integer.parseInt(readPagesText); // 빈값 처리
+                    Bundle Bundle_all = new Bundle();
+                    Bundle_all.putLong("elapsedTime", finalElapsedTimeInMillis);
+                    Bundle_all.putString("bookId", bookId);
+                    Bundle_all.putString("recordTitle",recordTitle);
+                    Bundle_all.putInt("readPages",readPages);
+                    navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment,Bundle_all);
+                });
+
+                // 뒤로가기 이미지
+                backArrow.setOnClickListener(v -> {
+                    // 현재 데이터를 Bundle에 저장하여 다시 TimerFragment로 전달
+                    Bundle backBundle = new Bundle();
+                    backBundle.putLong("elapsedTime", finalElapsedTimeInMillis);
+                    backBundle.putString("bookId",bookId);
+                    navController.navigate(R.id.action_recordRegistrationFragment_to_timerFragment, backBundle);
+                });
+
+            } else if(source.equals("mapsearch")){
+                // bookId 처리
+                String bookId = bundle.getString("bookId");
+                loadBookDetails(bookId);
+                // elapsedTime 처리
+                elapsedTimeInMillis = bundle.getLong("elapsedTime", 0L);
+                // 장소 정보 처리
+                String placeName = bundle.getString("placeName", "선택된 장소 없음");
+
+                String recordTitle = bundle.getString("recordTitle");
+                Integer readPages = bundle.getInt("readPages");
+
+                // 시간을 hh:mm:ss 형식으로 변환하여 EditText에 표시
+                int hours = (int) (elapsedTimeInMillis / 1000) / 3600;
+                int minutes = (int) ((elapsedTimeInMillis / 1000) % 3600) / 60;
+                int seconds = (int) (elapsedTimeInMillis / 1000) % 60;
+                String timeFormatted = String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+
+                Log.d("RecordRegistrationFragment", "Received elapsedTimeInMillis from mapsearch: " + elapsedTimeInMillis);
+
+                etRecordTitle.setText(recordTitle);
+                etReadPages.setText(String.valueOf(readPages));
+                etRecordTime.setText(timeFormatted);
+                tvRecordRegistrationPlaceText.setText(placeName);
+            }
         }
 
-        // 장소 검색
-        TextView placeText = view.findViewById(R.id.tv_record_place);
-        placeText.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordRegistrationFragment_to_recordRegistrationMapSearchFragment);
+        TextView tvTotalPages = view.findViewById(R.id.tv_record_registration_total_page); // 전체 페이지 표시 텍스트
+        Button btnCompleteReadingActive = view.findViewById(R.id.btn_complete_reading_activate);
+        Button btnCompleteReadingDeactivate = view.findViewById(R.id.btn_complete_reading_deactivate);
+
+
+        // 기본적으로 활성화 버튼 숨김, 비활성화 버튼 표시
+        btnCompleteReadingActive.setVisibility(View.GONE);
+        btnCompleteReadingDeactivate.setVisibility(View.VISIBLE);
+
+        // 전체 페이지 값 가져오기 (예: TextView에 표시된 값)
+        String totalPagesText = tvTotalPages.getText().toString();
+        int totalPages = totalPagesText.isEmpty() ? 0 : Integer.parseInt(totalPagesText);
+
+        // EditText의 값이 변경될 때 리스너 설정
+        etReadPages.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String enteredPagesText = etReadPages.getText().toString();
+                int enteredPages = enteredPagesText.isEmpty() ? 0 : Integer.parseInt(enteredPagesText);
+
+                // 읽은 페이지 값과 전체 페이지 값 비교
+                if (enteredPages == totalPages) {
+                    btnCompleteReadingActive.setVisibility(View.VISIBLE); // 활성화 버튼 표시
+                    btnCompleteReadingDeactivate.setVisibility(View.GONE); // 비활성화 버튼 숨김
+                } else {
+                    btnCompleteReadingActive.setVisibility(View.GONE); // 활성화 버튼 숨김
+                    btnCompleteReadingDeactivate.setVisibility(View.VISIBLE); // 비활성화 버튼 표시
+                }
+            }
         });
 
         // 독서 종료 버튼
-        Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading);
-        openBottomSheetButton.setOnClickListener(v -> {
+        btnCompleteReadingActive.setOnClickListener(v -> {
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
             bottomSheetDialogFragment.show(getParentFragmentManager(), "RecordRegistrationBottomSheetDialogFragment");
         });
@@ -62,20 +163,116 @@ public class RecordRegistrationFragment extends Fragment {
         // 기록 저장 버튼
         Button saveRecordButton = view.findViewById(R.id.btn_save_record);
         saveRecordButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment);
+            // Firestore 참조 가져오기
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            FirebaseAuth auth = FirebaseAuth.getInstance();
+            String userId = auth.getCurrentUser().getUid();
+            String bookId = bundle != null ? bundle.getString("bookId") : null;
+            if (bookId == null) {
+                Toast.makeText(getContext(), "Book ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // 사용자 입력값 가져오기
+            String recordTitle = etRecordTitle.getText().toString();
+            String readPagesText = etReadPages.getText().toString();
+            int readPages = readPagesText.isEmpty() ? 0 : Integer.parseInt(readPagesText); // 빈값 처리
+            String elapsedTime = etRecordTime.getText().toString();
+            long elapsedTimeInMillisfinal = 0L;
+            try {
+                String[] timeParts = elapsedTime.split(":"); // hh:mm:ss를 ":" 기준으로 분리
+                int hours = Integer.parseInt(timeParts[0]); // 시간 부분
+                int minutes = Integer.parseInt(timeParts[1]); // 분 부분
+                int seconds = Integer.parseInt(timeParts[2]); // 초 부분
+
+                // 시간, 분, 초를 밀리초로 변환
+                elapsedTimeInMillisfinal = (hours * 3600 + minutes * 60 + seconds) * 1000L;
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                Log.e("ElapsedTimeConversion", "시간 변환 실패: " + e.getMessage());
+            }
+            String placeName = tvRecordRegistrationPlaceText.getText().toString();
+            String likePhrase = etLikePhrase.getText().toString();
+            String memo = etMomo.getText().toString();
+
+            // 기본 유효성 검사
+            if (recordTitle.isEmpty() || readPages <= 0 || elapsedTime.isEmpty() || placeName.equals("선택된 장소 없음")) {
+                Toast.makeText(getContext(), "모든 필드를 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            // Firestore에 저장할 데이터 생성
+            Map<String, Object> records = new HashMap<>();
+            records.put("myTitle", recordTitle);
+            records.put("readingTime", elapsedTimeInMillisfinal);
+            records.put("address", placeName);
+            records.put("phrase", likePhrase);
+            records.put("memo", memo);
+            records.put("recordDate", new Date()); // 기록 생성 시간 추가
+
+            // Firestore 경로 설정: users/{userId}/records/{newRecordId}
+            db.collection("users")
+                    .document(userId)
+                    .collection("books")
+                    .document(bookId)
+                    .collection("records")
+                    .add(records)// 데이터 추가
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(getContext(), "기록이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+                        // readingPage를 books 컬렉션의 bookId에 업데이트
+                        db.collection("users")
+                                .document(userId)
+                                .collection("books")
+                                .document(bookId)
+                                .update("readingPage", readPages) // books에 readingPage 업데이트
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("RecordRegistration", "readingPage가 books에 성공적으로 저장되었습니다.");
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("RecordRegistration", "readingPage 업데이트 실패", e);
+                                });
+
+                        navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment,bundle); // 저장 후 다른 화면으로 이동
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("RecordRegistration", "기록 저장 실패", e);
+                        Toast.makeText(getContext(), "기록 저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                    });
         });
-
-        // 뒤로가기 이미지
-        ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
-        long finalElapsedTimeInMillis = elapsedTimeInMillis; // effectively final로 사용
-        backArrow.setOnClickListener(v -> {
-            // 현재 데이터를 Bundle에 저장하여 다시 TimerFragment로 전달
-            Bundle backBundle = new Bundle();
-            backBundle.putLong("elapsedTime", finalElapsedTimeInMillis);
-
-            navController.navigate(R.id.action_recordRegistrationFragment_to_timerFragment, backBundle);
-        });
-
         return view;
     }
+
+    private void loadBookDetails(String bookId) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
+
+        DocumentReference bookRef = db.collection("users").document(userId)
+                .collection("books").document(bookId);
+
+        // Fetch book details
+        bookRef.get().addOnSuccessListener(snapshot -> {
+            if (snapshot.exists()) {
+                String title = snapshot.getString("title");
+                String image = snapshot.getString("image");
+
+                // Update UI with book details
+                updateBookDetailsUI(title, image);
+            } else {
+                Log.e("TimerFragment", "Book not found for bookId: " + bookId);
+            }
+        }).addOnFailureListener(e -> Log.e("TimerFragment", "Failed to load book details", e));
+    }
+
+    private void updateBookDetailsUI(String title, String image) {
+        TextView bookTitleTextView = getView().findViewById(R.id.tv_record_registration_book_title);
+        ImageView bookImageView = getView().findViewById(R.id.iv_record_registration_book);
+
+        bookTitleTextView.setText(title != null ? title : "제목 없음");
+
+        if (image != null) {
+            Glide.with(this).load(image).into(bookImageView);
+        }
+    }
 }
+

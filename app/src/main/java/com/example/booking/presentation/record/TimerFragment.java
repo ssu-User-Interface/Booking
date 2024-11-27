@@ -38,6 +38,7 @@ public class TimerFragment extends Fragment {
     private long timeElapsedInMillis = 0; // 경과 시간 (밀리초)
     private long startTimeInMillis;
 
+    private String source;
     private String bookId;
     private String recordId;
 
@@ -88,6 +89,7 @@ public class TimerFragment extends Fragment {
             bundleToNext.putLong("elapsedTime", timeElapsedInMillis);
             bundleToNext.putString("recordId", recordId);
             bundleToNext.putString("bookId", bookId);
+            bundleToNext.putString("source","timer");
             navController.navigate(R.id.action_timerFragment_to_recordRegistrationFragment, bundleToNext);
         });
 
