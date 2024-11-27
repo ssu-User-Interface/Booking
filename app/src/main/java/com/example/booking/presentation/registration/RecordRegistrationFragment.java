@@ -232,7 +232,7 @@ public class RecordRegistrationFragment extends Fragment {
                                     Log.e("RecordRegistration", "readingPage 업데이트 실패", e);
                                 });
 
-                        navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment); // 저장 후 다른 화면으로 이동
+                        navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment,bundle); // 저장 후 다른 화면으로 이동
                     })
                     .addOnFailureListener(e -> {
                         Log.e("RecordRegistration", "기록 저장 실패", e);
