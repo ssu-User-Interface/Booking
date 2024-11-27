@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,14 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Locale;
 
 public class HomeFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
-
+    private DocumentSnapshot mostRecentDocument; // 전역 변수로 선언
     private boolean hasReadingBook = false;
 
     @Override
@@ -134,8 +136,48 @@ public class HomeFragment extends Fragment {
                                 tvNoBook.setVisibility(View.GONE);
                                 addBookButton.setVisibility(View.GONE);
 
-                                // 타이머 버튼 클릭 이벤트
-                                toTimerButton.setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_timerFragment));
+                                final DocumentSnapshot finalMostRecentDocument = mostRecentDocument;
+
+                                toTimerButton.setOnClickListener(v -> {
+                                    if (finalMostRecentDocument != null && userId != null) {
+                                        // 캡처를 위한 final 변수 선언
+                                        final DocumentSnapshot finalDocument = finalMostRecentDocument;
+                                        final String finalUserId = userId;
+
+                                        // Firestore 초기화
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                        // 새로운 record 데이터 생성
+                                        db.collection("users").document(finalUserId)
+                                                .collection("books").document(finalDocument.getId())
+                                                .collection("records")
+                                                .add(new HashMap<>()) // 빈 데이터로 추가 (recordId만 생성)
+                                                .addOnSuccessListener(recordReference -> {
+                                                    // 기록 생성 성공
+                                                    String recordId = recordReference.getId();
+                                                    Log.d("Firestore", "Record created with ID: " + recordId);
+
+                                                    // TimerFragment로 이동 및 데이터 전달
+                                                    Bundle timerBundle = new Bundle();
+                                                    timerBundle.putString("bookId", finalDocument.getId());
+                                                    timerBundle.putString("bookTitle", finalDocument.getString("title"));
+                                                    timerBundle.putString("recordId", recordId);
+                                                    timerBundle.putString("bookImage", finalDocument.getString("image"));
+                                                    timerBundle.putString("bookAuthor", finalDocument.getString("author"));
+
+                                                    navController.navigate(R.id.action_homeFragment_to_timerFragment, timerBundle);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // 기록 생성 실패
+                                                    Log.e("Firestore", "Failed to create record", e);
+                                                    Toast.makeText(getContext(), "기록 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Toast.makeText(getContext(), "책 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
                             }
                         }
 
