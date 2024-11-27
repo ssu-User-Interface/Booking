@@ -1,21 +1,28 @@
 package com.example.booking.data.model;
 
+import java.sql.Timestamp;
+import java.util.Date;
+
 public class Record {
     private String title;
     private String myTitle;
     private String phrase;
+    private String memo;
     private String address;
-    private String date; // String 타입
-    private int time;
+    private long readingTime;
+    private Date recordDate;
+    private int readingPage;
 
     // Constructor
-    public Record(String title, String myTitle, String memo, String address, int date, int time) {
+    public Record(String title, String myTitle, String phrase, String memo, String address, int readingPage, long readingTime, Date recordDate) {
         this.title = title;
         this.myTitle = myTitle;
-        this.phrase = memo;
+        this.phrase = phrase;
+        this.memo = memo;
         this.address = address;
-        this.date = String.valueOf(date);
-        this.time = time;
+        this.readingTime = readingTime;
+        this.recordDate = recordDate;
+        this.readingPage = readingPage;
     }
 
     // Getters
@@ -23,8 +30,20 @@ public class Record {
         return title;
     }
 
+    public String getMemo() {
+        return memo;
+    }
+
     public String getMyTitle() {
         return myTitle;
+    }
+
+    public int getReadingPage() {
+        return readingPage;
+    }
+
+    public Date getRecordDate() {
+        return recordDate;
     }
 
     public String getPhrase() {
@@ -35,12 +54,9 @@ public class Record {
         return address;
     }
 
-    public String getDate() {
-        return date;
-    }
 
-    public int getTime() {
-        return time;
+    public long getReadingTime() {
+        return readingTime;
     }
 
     public Record() {
