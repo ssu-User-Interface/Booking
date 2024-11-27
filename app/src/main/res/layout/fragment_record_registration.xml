@@ -206,9 +206,19 @@
                     android:id="@+id/tv_record_registration_total_page"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="365p"
+                    android:text="365"
                     android:textSize="12sp"
                     android:gravity="center_vertical|end"/>
+                <TextView
+                    android:id="@+id/tv_record_registration_p"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:text="p"
+                    android:textSize="12sp"
+                    android:gravity="center_vertical|end"/>
+
+
             </LinearLayout>
         </LinearLayout>
 
@@ -317,11 +327,6 @@
             android:fontFamily="@font/pretendard_bold"
             android:gravity="center"
             android:visibility="gone"/>
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"/>
-
         <Button
             android:id="@+id/btn_complete_reading_deactivate"
             android:layout_width="0dp"

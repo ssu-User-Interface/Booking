@@ -1,6 +1,7 @@
 package com.example.booking.presentation.registration;
 
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -122,9 +123,39 @@ public class RecordRegistrationFragment extends Fragment {
             }
         }
 
+        TextView tvTotalPages = view.findViewById(R.id.tv_record_registration_total_page); // 전체 페이지 표시 텍스트
+        Button btnCompleteReadingActive = view.findViewById(R.id.btn_complete_reading_activate);
+        Button btnCompleteReadingDeactivate = view.findViewById(R.id.btn_complete_reading_deactivate);
+
+
+        // 기본적으로 활성화 버튼 숨김, 비활성화 버튼 표시
+        btnCompleteReadingActive.setVisibility(View.GONE);
+        btnCompleteReadingDeactivate.setVisibility(View.VISIBLE);
+
+        // 전체 페이지 값 가져오기 (예: TextView에 표시된 값)
+        String totalPagesText = tvTotalPages.getText().toString();
+        int totalPages = totalPagesText.isEmpty() ? 0 : Integer.parseInt(totalPagesText);
+
+        // EditText의 값이 변경될 때 리스너 설정
+        etReadPages.addTextChangedListener(new SimpleTextWatcher() {
+            @Override
+            public void afterTextChanged(Editable s) {
+                String enteredPagesText = etReadPages.getText().toString();
+                int enteredPages = enteredPagesText.isEmpty() ? 0 : Integer.parseInt(enteredPagesText);
+
+                // 읽은 페이지 값과 전체 페이지 값 비교
+                if (enteredPages == totalPages) {
+                    btnCompleteReadingActive.setVisibility(View.VISIBLE); // 활성화 버튼 표시
+                    btnCompleteReadingDeactivate.setVisibility(View.GONE); // 비활성화 버튼 숨김
+                } else {
+                    btnCompleteReadingActive.setVisibility(View.GONE); // 활성화 버튼 숨김
+                    btnCompleteReadingDeactivate.setVisibility(View.VISIBLE); // 비활성화 버튼 표시
+                }
+            }
+        });
+
         // 독서 종료 버튼
-        Button openBottomSheetButton = view.findViewById(R.id.btn_complete_reading_deactivate);
-        openBottomSheetButton.setOnClickListener(v -> {
+        btnCompleteReadingActive.setOnClickListener(v -> {
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
             bottomSheetDialogFragment.show(getParentFragmentManager(), "RecordRegistrationBottomSheetDialogFragment");
         });
