@@ -116,9 +116,12 @@ public class HomeFragment extends Fragment {
                                                     }
 
                                                     // Collect record dates
-                                                    Timestamp recordDate = recordDoc.getTimestamp("startDate");
+                                                    Timestamp recordDate = recordDoc.getTimestamp("recordDate");
                                                     if (recordDate != null) {
                                                         recordDates.add(recordDate);
+                                                        Log.d("D-Day", "Fetched recordDate: " + recordDate.toDate());
+                                                    } else {
+                                                        Log.d("D-Day", "recordDate가 null입니다: " + recordDoc.getId());
                                                     }
                                                 }
 
@@ -302,18 +305,32 @@ public class HomeFragment extends Fragment {
         // 연속 날짜 확인
         for (Timestamp recordDate : recordDates) {
             Date record = recordDate.toDate();
+            Log.d("D-Day", "Checking record date: " + record);
 
             if (consecutiveDays == 0 && isSameDay(record, today)) {
                 consecutiveDays++;
+                Log.d("D-Day", "Matched today: " + record);
             } else if (isSameDay(record, getPreviousDate(today, consecutiveDays))) {
                 consecutiveDays++;
+                Log.d("D-Day", "Matched previous day: " + record);
             } else {
+                Log.d("D-Day", "No match, breaking loop at date: " + record);
                 break; // 연속되지 않는 날이 발견되면 중단
             }
         }
 
-        Log.d("D-Day", "Consecutive days: " + consecutiveDays);
+        Log.d("D-Day", "Final Consecutive days: " + consecutiveDays);
         return consecutiveDays;
+    }
+
+    // Helper: 이전 날짜 계산
+    private Date getPreviousDate(Date date, int daysAgo) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo); // 날짜에서 daysAgo 만큼 이전 날짜 계산
+        Date previousDate = calendar.getTime();
+        Log.d("D-Day", "Calculated previous date: " + previousDate);
+        return previousDate;
     }
 
     // Helper: 두 날짜가 같은 날인지 확인
@@ -326,16 +343,6 @@ public class HomeFragment extends Fragment {
                 cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
         Log.d("D-Day", "Comparing dates: " + date1 + " and " + date2 + " -> " + sameDay);
         return sameDay;
-    }
-
-    // Helper: 이전 날짜 계산
-    private Date getPreviousDate(Date date, int daysAgo) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo);
-        Date previousDate = calendar.getTime();
-        Log.d("D-Day", "Previous date for " + daysAgo + " days ago: " + previousDate);
-        return previousDate;
     }
 
 
