@@ -8,7 +8,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/layout_record_specific_item"
-        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -89,6 +89,7 @@
             android:textSize="10dp"
             app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
             app:layout_constraintStart_toStartOf="@id/view_record_specific_book_bg1"
+            android:visibility="visible"
             />
 
         <TextView
@@ -101,7 +102,7 @@
             android:fontFamily="@font/pretendard_regular"
             app:layout_constraintEnd_toStartOf="@id/tv_record_specific_item_time"
             app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
-
+            android:visibility="visible"
             />
 
         <TextView
@@ -115,6 +116,24 @@
             android:fontFamily="@font/pretendard_regular"
             app:layout_constraintBottom_toBottomOf="@id/view_record_specific_book_bg1"
             app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
+            android:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/tv_record_specific_list_item_memo"
+            android:layout_width="50dp"
+            android:layout_height="20dp"
+            android:text="memo"
+            android:textSize="13sp"
+            android:textAlignment="center"
+            android:textColor="@color/black"
+            android:fontFamily="@font/pretendard_light"
+            android:background="@drawable/ic_record_specific_list_item_memo"
+            app:layout_constraintTop_toTopOf="@id/view_record_specific_book_bg1"
+            app:layout_constraintEnd_toEndOf="@id/view_record_specific_book_bg1"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="20dp"
+            android:visibility="gone"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

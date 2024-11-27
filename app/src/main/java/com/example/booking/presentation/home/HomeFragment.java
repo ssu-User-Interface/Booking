@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +23,19 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class HomeFragment extends Fragment {
 
     private FirebaseAuth auth;
     private FirebaseFirestore db;
-
+    private DocumentSnapshot mostRecentDocument; // 전역 변수로 선언
     private boolean hasReadingBook = false;
 
     @Override
@@ -67,6 +74,10 @@ public class HomeFragment extends Fragment {
         View addBookButton = view.findViewById(R.id.view_home_first_widget_right_add_book);
         TextView tvHomeTitleName = view.findViewById(R.id.tv_home_title_name);
 
+        // UI element initialization
+        TextView tvDdayResult = view.findViewById(R.id.tv_home_d_day_result);
+        TextView tvTotalTimeResult = view.findViewById(R.id.tv_home_total_time_result);
+
         // 사용자 닉네임 가져오기
         String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
         if (userId != null) {
@@ -81,9 +92,59 @@ public class HomeFragment extends Fragment {
                         e.printStackTrace();
                     });
 
+                db.collection("users").document(userId).collection("books")
+                        .get()
+                        .addOnSuccessListener(booksSnapshot -> {
+                            if (!booksSnapshot.isEmpty()) {
+                                final AtomicInteger totalReadingTimeInSeconds = new AtomicInteger(0);
+                                List<Timestamp> recordDates = new ArrayList<>();
+
+                                for (DocumentSnapshot bookDoc : booksSnapshot) {
+                                    String bookId = bookDoc.getId();
+
+                                    // Fetch book records
+                                    db.collection("users").document(userId)
+                                            .collection("books").document(bookId)
+                                            .collection("records")
+                                            .get()
+                                            .addOnSuccessListener(recordsSnapshot -> {
+                                                for (DocumentSnapshot recordDoc : recordsSnapshot) {
+                                                    // Calculate total reading time
+                                                    Long readingTime = recordDoc.getLong("readingTime");
+                                                    if (readingTime != null) {
+                                                        totalReadingTimeInSeconds.addAndGet(readingTime.intValue());
+                                                    }
+
+                                                    // Collect record dates
+                                                    Timestamp recordDate = recordDoc.getTimestamp("recordDate");
+                                                    if (recordDate != null) {
+                                                        recordDates.add(recordDate);
+                                                        Log.d("D-Day", "Fetched recordDate: " + recordDate.toDate());
+                                                    } else {
+                                                        Log.d("D-Day", "recordDate가 null입니다: " + recordDoc.getId());
+                                                    }
+                                                }
+
+                                                // Update UI: Total Reading Time
+                                                String totalTimeFormatted = formatSecondsToTime(totalReadingTimeInSeconds.get());
+                                                tvTotalTimeResult.setText(totalTimeFormatted);
+
+                                                // Update UI: D-Day
+                                                int consecutiveDays = calculateConsecutiveDays(recordDates);
+                                                tvDdayResult.setText("D+" + consecutiveDays);
+                                            })
+                                            .addOnFailureListener(e -> Log.e("HomeFragment", "Failed to fetch records", e));
+                                }
+                            } else {
+                                tvDdayResult.setText("D+0");
+                                tvTotalTimeResult.setText("00:00:00");
+                            }
+                        })
+                        .addOnFailureListener(e -> Log.e("HomeFragment", "Failed to fetch books", e));
+
             // 책 정보 가져오기
             db.collection("users").document(userId).collection("books")
-                    .whereEqualTo("readingStatus", "will_read_books")
+                    .whereEqualTo("readingStatus", "reading_books")
                     .get()
                     .addOnSuccessListener(querySnapshot -> {
                         if (!querySnapshot.isEmpty()) {
@@ -121,6 +182,15 @@ public class HomeFragment extends Fragment {
                                     tvReadingPeriod.setText(startDate);
                                 }
 
+                                // ProgressBar 업데이트
+                                if (totalPages > 0) {
+                                    prg.setMax((int) totalPages); // totalPages를 max로 설정
+                                    prg.setProgress((int) readingPage); // readingPage를 progress로 설정
+                                } else {
+                                    prg.setMax(1); // 0으로 설정 시 오류가 발생할 수 있으므로 기본값 설정
+                                    prg.setProgress(0);
+                                }
+
                                 // 읽고 있는 책 UI
                                 tvBookTitle.setVisibility(View.VISIBLE);
                                 viewLine.setVisibility(View.VISIBLE);
@@ -134,8 +204,44 @@ public class HomeFragment extends Fragment {
                                 tvNoBook.setVisibility(View.GONE);
                                 addBookButton.setVisibility(View.GONE);
 
-                                // 타이머 버튼 클릭 이벤트
-                                toTimerButton.setOnClickListener(v -> navController.navigate(R.id.action_homeFragment_to_timerFragment));
+                                final DocumentSnapshot finalMostRecentDocument = mostRecentDocument;
+
+                                toTimerButton.setOnClickListener(v -> {
+                                    if (finalMostRecentDocument != null && userId != null) {
+                                        // 캡처를 위한 final 변수 선언
+                                        final DocumentSnapshot finalDocument = finalMostRecentDocument;
+                                        final String finalUserId = userId;
+
+                                        // Firestore 초기화
+                                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                                        // 새로운 record 데이터 생성
+                                        db.collection("users").document(finalUserId)
+                                                .collection("books").document(finalDocument.getId())
+                                                .collection("records")
+                                                .add(new HashMap<>()) // 빈 데이터로 추가 (recordId만 생성)
+                                                .addOnSuccessListener(recordReference -> {
+                                                    // 기록 생성 성공
+                                                    String recordId = recordReference.getId();
+                                                    Log.d("Firestore", "Record created with ID: " + recordId);
+
+                                                    // TimerFragment로 이동 및 데이터 전달
+                                                    Bundle timerBundle = new Bundle();
+                                                    timerBundle.putString("bookId", finalDocument.getId());
+
+                                                    navController.navigate(R.id.action_homeFragment_to_timerFragment, timerBundle);
+                                                })
+                                                .addOnFailureListener(e -> {
+                                                    // 기록 생성 실패
+                                                    Log.e("Firestore", "Failed to create record", e);
+                                                    Toast.makeText(getContext(), "기록 생성 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                });
+                                    } else {
+                                        Toast.makeText(getContext(), "책 정보를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+                                    }
+                                });
+
+
                             }
                         }
 
@@ -170,6 +276,75 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+
+
+    // Helper: 초를 HH:mm:ss로 변환
+    private String formatSecondsToTime(int totalSeconds) {
+        int hours = totalSeconds / 3600;
+        int minutes = (totalSeconds % 3600) / 60;
+        int seconds = totalSeconds % 60;
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
+    }
+
+    // Helper: D-Day 계산
+    private int calculateConsecutiveDays(List<Timestamp> recordDates) {
+        // 최신순으로 정렬
+        recordDates.sort((d1, d2) -> d2.toDate().compareTo(d1.toDate()));
+
+        int consecutiveDays = 0;
+        Calendar calendar = Calendar.getInstance();
+        Date today = calendar.getTime();
+
+        Log.d("D-Day", "Today's date: " + today);
+
+        // Debug: 정렬된 recordDates 출력
+        for (Timestamp recordDate : recordDates) {
+            Log.d("D-Day", "Record date: " + recordDate.toDate());
+        }
+
+        // 연속 날짜 확인
+        for (Timestamp recordDate : recordDates) {
+            Date record = recordDate.toDate();
+            Log.d("D-Day", "Checking record date: " + record);
+
+            if (consecutiveDays == 0 && isSameDay(record, today)) {
+                consecutiveDays++;
+                Log.d("D-Day", "Matched today: " + record);
+            } else if (isSameDay(record, getPreviousDate(today, consecutiveDays))) {
+                consecutiveDays++;
+                Log.d("D-Day", "Matched previous day: " + record);
+            } else {
+                Log.d("D-Day", "No match, breaking loop at date: " + record);
+                break; // 연속되지 않는 날이 발견되면 중단
+            }
+        }
+
+        Log.d("D-Day", "Final Consecutive days: " + consecutiveDays);
+        return consecutiveDays;
+    }
+
+    // Helper: 이전 날짜 계산
+    private Date getPreviousDate(Date date, int daysAgo) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_YEAR, -daysAgo); // 날짜에서 daysAgo 만큼 이전 날짜 계산
+        Date previousDate = calendar.getTime();
+        Log.d("D-Day", "Calculated previous date: " + previousDate);
+        return previousDate;
+    }
+
+    // Helper: 두 날짜가 같은 날인지 확인
+    private boolean isSameDay(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        Calendar cal2 = Calendar.getInstance();
+        cal1.setTime(date1);
+        cal2.setTime(date2);
+        boolean sameDay = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+                cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+        Log.d("D-Day", "Comparing dates: " + date1 + " and " + date2 + " -> " + sameDay);
+        return sameDay;
+    }
+
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
