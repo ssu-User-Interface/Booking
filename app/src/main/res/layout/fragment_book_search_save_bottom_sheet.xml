@@ -245,32 +245,32 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_gravity="center_horizontal|end"
-                    android:src="@drawable/img_star_unselected"
+                    android:src="@drawable/img_star_unfilled"
                     android:layout_marginStart="200dp"/>
 
                 <ImageView
                     android:id="@+id/iv_book_search_save_final_record_star2"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/img_star_unselected" />
+                    android:src="@drawable/img_star_unfilled" />
 
                 <ImageView
                     android:id="@+id/iv_book_search_save_final_record_star3"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/img_star_unselected" />
+                    android:src="@drawable/img_star_unfilled" />
 
                 <ImageView
                     android:id="@+id/iv_book_search_save_final_record_star4"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/img_star_unselected" />
+                    android:src="@drawable/img_star_unfilled" />
 
                 <ImageView
                     android:id="@+id/iv_book_search_save_final_record_star5"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/img_star_unselected" />
+                    android:src="@drawable/img_star_unfilled" />
 
             </LinearLayout>
 

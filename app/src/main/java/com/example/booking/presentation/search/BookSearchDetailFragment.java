@@ -8,8 +8,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -20,35 +22,55 @@ public class BookSearchDetailFragment extends Fragment {
 
     private TextView tvTitle, tvAuthor, tvPublisher, tvDescription;
     private ImageView ivCover;
+    private BookSearchDetailViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_search_deatil, container, false);
-
         initView(view);
         return view;
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        viewModel = new ViewModelProvider(requireActivity()).get(BookSearchDetailViewModel.class);
 
         BookSearchDetailFragmentArgs args = BookSearchDetailFragmentArgs.fromBundle(getArguments());
-        bindDataToUI(args.getBookTitle(), args.getBookAuthor(), args.getBookPublisher(), args.getBookImage(), args.getBookDescription());
+
+        if (viewModel.getBookTitle().getValue() == null) {
+            viewModel.setBookTitle(args.getBookTitle());
+            viewModel.setBookAuthor(args.getBookAuthor());
+            viewModel.setBookPublisher(args.getBookPublisher());
+            viewModel.setBookImage(args.getBookImage());
+            viewModel.setBookDescription(args.getBookDescription());
+        }
+
+        observeViewModel();
+
+        NavController navController = NavHostFragment.findNavController(this);
 
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
         Button saveButton = view.findViewById(R.id.bt_book_search_detail_save);
-
-        NavController navController = NavHostFragment.findNavController(this);
 
         backButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_bookSearchDetailFragment_to_bookSearchFragment);
         });
 
+        // 저장 버튼
         saveButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_bookSearchDetailFragment_to_bookSearchSaveBottomSheetFragment);
+            BookSearchDetailFragmentDirections.ActionBookSearchDetailFragmentToBookSearchSaveBottomSheetFragment action =
+                    BookSearchDetailFragmentDirections.actionBookSearchDetailFragmentToBookSearchSaveBottomSheetFragment(
+                            viewModel.getBookTitle().getValue(),
+                            viewModel.getBookAuthor().getValue(),
+                            viewModel.getBookPublisher().getValue(),
+                            viewModel.getBookImage().getValue(),
+                            viewModel.getBookDescription().getValue()
+                    );
+            navController.navigate(action);
         });
-
     }
 
     private void initView(View view) {
@@ -59,14 +81,15 @@ public class BookSearchDetailFragment extends Fragment {
         ivCover = view.findViewById(R.id.iv_book_search_detail_cover);
     }
 
-    private void bindDataToUI(String title, String author, String publisher, String imageUrl, String description) {
-        tvTitle.setText(title);
-        tvAuthor.setText(author);
-        tvPublisher.setText(publisher);
-        tvDescription.setText(description);
-
-        Glide.with(this)
-                .load(imageUrl)
-                .into(ivCover);
+    private void observeViewModel() {
+        viewModel.getBookTitle().observe(getViewLifecycleOwner(), title -> tvTitle.setText(title));
+        viewModel.getBookAuthor().observe(getViewLifecycleOwner(), author -> tvAuthor.setText(author));
+        viewModel.getBookPublisher().observe(getViewLifecycleOwner(), publisher -> tvPublisher.setText(publisher));
+        viewModel.getBookImage().observe(getViewLifecycleOwner(), image -> {
+            if (image != null) {
+                Glide.with(this).load(image).into(ivCover);
+            }
+        });
+        viewModel.getBookDescription().observe(getViewLifecycleOwner(), description -> tvDescription.setText(description));
     }
 }

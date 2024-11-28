@@ -145,6 +145,21 @@
         <action
             android:id="@+id/action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment"
             app:destination="@id/bookSearchDetailFragment" />
+        <argument
+            android:name="bookTitle"
+            app:argType="string" />
+        <argument
+            android:name="bookAuthor"
+            app:argType="string" />
+        <argument
+            android:name="bookPublisher"
+            app:argType="string" />
+        <argument
+            android:name="bookImage"
+            app:argType="string" />
+        <argument
+            android:name="bookDescription"
+            app:argType="string" />
     </dialog>
 
     <!-- Timer Fragment -->
