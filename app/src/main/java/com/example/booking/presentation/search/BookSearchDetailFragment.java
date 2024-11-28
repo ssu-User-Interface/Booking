@@ -40,13 +40,11 @@ public class BookSearchDetailFragment extends Fragment {
 
         BookSearchDetailFragmentArgs args = BookSearchDetailFragmentArgs.fromBundle(getArguments());
 
-        if (viewModel.getBookTitle().getValue() == null) {
-            viewModel.setBookTitle(args.getBookTitle());
-            viewModel.setBookAuthor(args.getBookAuthor());
-            viewModel.setBookPublisher(args.getBookPublisher());
-            viewModel.setBookImage(args.getBookImage());
-            viewModel.setBookDescription(args.getBookDescription());
-        }
+        viewModel.setBookTitle(args.getBookTitle());
+        viewModel.setBookAuthor(args.getBookAuthor());
+        viewModel.setBookPublisher(args.getBookPublisher());
+        viewModel.setBookImage(args.getBookImage());
+        viewModel.setBookDescription(args.getBookDescription());
 
         observeViewModel();
 
