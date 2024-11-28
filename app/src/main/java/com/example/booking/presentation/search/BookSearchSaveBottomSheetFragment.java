@@ -22,10 +22,12 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.booking.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -156,10 +158,6 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
                     year, month, day
             );
 
-            if (datePickerDialog.getWindow() != null) {
-                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            }
-
             datePickerDialog.show();
         });
     }
@@ -189,13 +187,19 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         bookData.put("readingStatus", readingStatus);
         bookData.put("createdAt", new Date());
 
-
         if ("reading_books".equals(readingStatus)) {
-            bookData.put("startDate", etStartDay.getText().toString());
+            String startDateString = etStartDay.getText().toString().trim();
+            Timestamp startDate = convertToTimestamp(startDateString);
+            bookData.put("startDate", startDate);
             bookData.put("readingPage", Integer.parseInt(etAmount.getText().toString()));
         } else if ("read_books".equals(readingStatus)) {
-            bookData.put("startDate", etStartPeriod.getText().toString());
-            bookData.put("endDate", etEndPeriod.getText().toString());
+            String startPeriodString = etStartPeriod.getText().toString().trim();
+            String endPeriodString = etEndPeriod.getText().toString().trim();
+            Timestamp startDate = convertToTimestamp(startPeriodString);
+            Timestamp endDate = convertToTimestamp(endPeriodString);
+
+            bookData.put("startDate", startDate);
+            bookData.put("endDate", endDate);
             bookData.put("rating", selectedStars);
             bookData.put("review", etReview.getText().toString());
         }
@@ -220,6 +224,18 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "책 정보 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    private Timestamp convertToTimestamp(String dateString) {
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            dateFormat.setLenient(false);
+            Date date = dateFormat.parse(dateString);
+            return new Timestamp(date);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "날짜 형식을 확인해주세요: " + dateString, Toast.LENGTH_SHORT).show();
+            return null;
+        }
     }
 
     private String getSelectedReadingStatus() {
