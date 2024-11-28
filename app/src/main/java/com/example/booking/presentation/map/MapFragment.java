@@ -79,6 +79,14 @@ public class MapFragment extends Fragment {
                 trackingManager.startTracking(centerLabel);
                 startLocationUpdates();
             }
+            // 지도 클릭 리스너 추가
+            kakaoMap.setOnMapClickListener((kakaoMap, latLng, pointF, layer) -> {
+                // 지도 터치 시 TrackingManager의 stopTracking 호출
+                if (kakaoMap.getTrackingManager() != null) {
+                    kakaoMap.getTrackingManager().stopTracking();
+                    Log.d("MapFragment", "Tracking stopped because user touched the map.");
+                }
+            });
 
             kakaoMap.setOnLabelClickListener((kakaoMap,layer,label) -> {
                 String placeName = labelDataMap.get(label);
@@ -287,7 +295,6 @@ public class MapFragment extends Fragment {
             Log.e("MapFragment", "KakaoMap is not ready.");
         }
     }
-
     private void showBottomSheet(String placeName) {
         MapBottomSheetDialogFragment bottomSheetDialog = MapBottomSheetDialogFragment.newInstance(placeName);
         bottomSheetDialog.show(getChildFragmentManager(), "MapBottomSheetDialog");
