@@ -75,6 +75,13 @@
         android:name="com.example.booking.presentation.mypage.MyFragment"
         android:label="MyFragment"
         tools:layout="@layout/fragment_my">
+        <argument
+            android:name="nickname"
+            app:argType="string"
+            android:defaultValue="Default Nickname" />
+        <argument
+            android:name="profileImageUri"
+            app:argType="string" />
         <action
             android:id="@+id/action_myFragment_to_myProfileChangeFragment"
             app:destination="@id/myProfileChangeFragment"/>
