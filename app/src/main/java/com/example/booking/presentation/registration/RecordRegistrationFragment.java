@@ -100,11 +100,13 @@ public class RecordRegistrationFragment extends Fragment {
                 // bookId 처리
                 String bookId = bundle.getString("bookId");
                 loadBookDetails(bookId);
+
                 // elapsedTime 처리
                 elapsedTimeInMillis = bundle.getLong("elapsedTime", 0L);
+
                 // 장소 정보 처리
                 String placeName = bundle.getString("placeName", "선택된 장소 없음");
-
+                String placeAddress = bundle.getString("placeAddress","선택된 주소 없음");
                 String recordTitle = bundle.getString("recordTitle");
                 Integer readPages = bundle.getInt("readPages");
 
@@ -120,6 +122,9 @@ public class RecordRegistrationFragment extends Fragment {
                 etReadPages.setText(String.valueOf(readPages));
                 etRecordTime.setText(timeFormatted);
                 tvRecordRegistrationPlaceText.setText(placeName);
+
+                // 번들에 placeAddress 저장
+                bundle.putString("placeAddress",placeAddress);
             }
         }
 
@@ -193,7 +198,9 @@ public class RecordRegistrationFragment extends Fragment {
             String placeName = tvRecordRegistrationPlaceText.getText().toString();
             String likePhrase = etLikePhrase.getText().toString();
             String memo = etMomo.getText().toString();
-
+            String placeAddress = bundle != null ? bundle.getString("placeAddress", "선택된 주소 없음") : "선택된 주소 없음";
+            Double selectedLatitude = bundle !=null ? bundle.getDouble("latitude") : 0.0 ;
+            Double selectedLongitude = bundle !=null ? bundle.getDouble("longitude") : 0.0;
             // 기본 유효성 검사
             if (recordTitle.isEmpty() || readPages <= 0 || elapsedTime.isEmpty() || placeName.equals("선택된 장소 없음")) {
                 Toast.makeText(getContext(), "모든 필드를 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show();
@@ -208,6 +215,11 @@ public class RecordRegistrationFragment extends Fragment {
             records.put("phrase", likePhrase);
             records.put("memo", memo);
             records.put("recordDate", new Date()); // 기록 생성 시간 추가
+            records.put("placeAddress",placeAddress);
+
+            // 위도 경도 보내기
+            records.put("latitude",selectedLatitude);
+            records.put("longitude",selectedLongitude);
 
             // Firestore 경로 설정: users/{userId}/records/{newRecordId}
             db.collection("users")

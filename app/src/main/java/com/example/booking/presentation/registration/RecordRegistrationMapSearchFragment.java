@@ -39,9 +39,6 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
     private static final String BASE_URL = "https://dapi.kakao.com/";
     private static final String API_KEY = "KakaoAK 3c022649ad8de389859c169d2e306c8e"; // REST API 키
     private MapSearchAdapter adapter;
-    private FirebaseFirestore db; // Firestore 인스턴스
-    private String userId; // 현재 로그인한 사용자 ID
-    private String source;
 
 
     @Override
@@ -96,6 +93,7 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
         String finalRecordTitle = recordTitle;
         Integer finalReadPages = readPages;
 
+
         adapter.setOnItemClickListener(place -> {
             btnAddPlace.setVisibility(View.VISIBLE); // 버튼 보이기
             Log.d("PlaceSelected", "선택된 장소: " + place.getName());
@@ -109,6 +107,9 @@ public class RecordRegistrationMapSearchFragment extends Fragment {
                 bundle_final.putString("source","mapsearch");
                 bundle_final.putString("recordTitle",finalRecordTitle);
                 bundle_final.putInt("readPages",finalReadPages);
+                // 여기에 번들로 한번에 보내야함.
+                bundle_final.putDouble("latitude",place.getLatitude());
+                bundle_final.putDouble("longitude",place.getLongitude());
 
                 navController.navigate(R.id.recordRegistrationFragment,bundle_final);
             });

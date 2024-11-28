@@ -27,6 +27,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 
 import android.Manifest;
+import android.widget.Toast;
+
 import com.example.booking.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -34,6 +36,9 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.vectormap.KakaoMap;
 import com.kakao.vectormap.KakaoMapReadyCallback;
 import com.kakao.vectormap.LatLng;
@@ -44,6 +49,9 @@ import com.kakao.vectormap.label.LabelLayer;
 import com.kakao.vectormap.label.LabelOptions;
 import com.kakao.vectormap.label.LabelStyle;
 import com.kakao.vectormap.label.TrackingManager;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MapFragment extends Fragment {
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
@@ -57,12 +65,15 @@ public class MapFragment extends Fragment {
     private LocationRequest locationRequest;
     private LocationCallback locationCallback;
     private KakaoMap kakaoMap;
+    private final Map<Label, String> labelDataMap = new HashMap<>();
 
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull KakaoMap map) {
             progressBar.setVisibility(View.GONE);
             kakaoMap = map;
+
+            loadMarkersFromFirestore();
 
             // 사용자 위치 마커 추가
             if (startPosition != null) {
@@ -182,5 +193,61 @@ public class MapFragment extends Fragment {
                 .setNegativeButton("앱 종료", (dialog, which) -> requireActivity().finish())
                 .setCancelable(false)
                 .show();
+    }
+
+    private void loadMarkersFromFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser().getUid();
+
+        db.collection("users")
+                .document(userId)
+                .collection("books")
+                .get()
+                .addOnSuccessListener(booksSnapshot -> {
+                    for (DocumentSnapshot book : booksSnapshot) {
+                        String bookId = book.getId();
+
+                        db.collection("users")
+                                .document(userId)
+                                .collection("books")
+                                .document(bookId)
+                                .collection("records")
+                                .get()
+                                .addOnSuccessListener(recordsSnapshot -> {
+                                    for (DocumentSnapshot record : recordsSnapshot) {
+                                        String placeName = record.getString("address");
+                                        String placeAddress = record.getString("placeAddress");
+                                        Double latitude = record.getDouble("latitude");
+                                        Double longitude = record.getDouble("longitude");
+
+                                        // 마커 추가
+                                        if (placeName != null && latitude != null && longitude != null) {
+                                            addMarkerToMap(placeName, placeAddress, latitude, longitude);
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> Log.e("Firestore", "Failed to load records", e));
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("Firestore", "Failed to load books", e));
+    }
+
+    private void addMarkerToMap(String placeName, String placeAddress, double latitude, double longitude) {
+        if (kakaoMap != null) {
+            LabelLayer labelLayer = kakaoMap.getLabelManager().getLayer();
+
+            LabelOptions options = LabelOptions.from(placeName, LatLng.from(latitude, longitude))
+                    .setStyles(LabelStyle.from(R.drawable.ic_custom_marker) // 커스텀 마커 아이콘
+                            .setAnchorPoint(0.5f, 1.0f)) // 마커 위치 조정
+                    .setRank(1);
+
+            Label markerLabel = labelLayer.addLabel(options);
+
+            // 라벨과 주소 데이터를 매핑
+            labelDataMap.put(markerLabel, placeAddress);
+        } else {
+            Log.e("KakaoMap", "KakaoMap is not ready.");
+        }
     }
 }
