@@ -60,7 +60,7 @@ public class MapFragment extends Fragment {
     private KakaoMap kakaoMap;
     private final Map<Label, String> labelDataMap = new HashMap<>();
 
-    
+
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull KakaoMap map) {
@@ -77,9 +77,14 @@ public class MapFragment extends Fragment {
                         .setRank(1));
                 TrackingManager trackingManager = kakaoMap.getTrackingManager();
                 trackingManager.startTracking(centerLabel);
-
                 startLocationUpdates();
             }
+
+            kakaoMap.setOnLabelClickListener((kakaoMap,layer,label) -> {
+                String placeName = labelDataMap.get(label);
+
+                showBottomSheet(placeName);
+            });
         }
     };
 
@@ -120,6 +125,15 @@ public class MapFragment extends Fragment {
             getStartLocation();
         } else {
             requestPermissions(locationPermissions, LOCATION_PERMISSION_REQUEST_CODE);
+        }
+
+        if (getArguments() != null) {
+            String placeName = getArguments().getString("placeName");
+            String placeAddress = getArguments().getString("placeAddress");
+
+            // 데이터를 UI에 표시하거나 로직 처리
+            Log.d("MapFragment", "Place Name: " + placeName);
+            Log.d("MapFragment", "Place Address: " + placeAddress);
         }
 
         return view;
@@ -261,7 +275,7 @@ public class MapFragment extends Fragment {
                 Label markerLabel = labelLayer.addLabel(options);
                 if (markerLabel != null) {
                     Log.d("MapFragment", "Marker successfully added: " + placeName);
-                    labelDataMap.put(markerLabel, placeAddress);
+                    labelDataMap.put(markerLabel, placeName);
 
                 } else {
                     Log.e("MapFragment", "Failed to create marker label: " + placeName);
@@ -272,5 +286,10 @@ public class MapFragment extends Fragment {
         } else {
             Log.e("MapFragment", "KakaoMap is not ready.");
         }
+    }
+
+    private void showBottomSheet(String placeName) {
+        MapBottomSheetDialogFragment bottomSheetDialog = MapBottomSheetDialogFragment.newInstance(placeName);
+        bottomSheetDialog.show(getChildFragmentManager(), "MapBottomSheetDialog");
     }
 }

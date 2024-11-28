@@ -47,24 +47,29 @@ public class MapPlaceAdapter extends RecyclerView.Adapter<MapPlaceAdapter.MapPla
 
     @Override
     public void onBindViewHolder(@NonNull MapPlaceAdapter.MapPlaceViewHolder holder, int position) {
-        PlaceSearchKeyword.Place place = placeList.get(position);
+        PlaceSearchKeyword.Place place = placeList.get(holder.getAdapterPosition());
 
         // ViewHolder에 데이터 바인딩
         holder.placeName.setText(place.getAddress());
         holder.placeAddress.setText(place.getPlaceAddress());
 
-        if (position == selectedPosition) {
+        if (holder.getAdapterPosition() == selectedPosition) {
             holder.itemView.setBackgroundColor(Color.parseColor("#8E8E8E")); // 선택된 색상
         } else {
             holder.itemView.setBackgroundColor(Color.parseColor("#FBFAF7")); // 기본 색상
         }
 
-        // 클릭 리스너 연결
+        // 클릭 이벤트
         holder.itemView.setOnClickListener(v -> {
-            selectedPosition = position;
-            notifyDataSetChanged(); // 선택 상태를 갱신
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition == RecyclerView.NO_POSITION) {
+                return; // 아이템이 삭제되었거나 변경된 경우 안전 처리
+            }
+
+            selectedPosition = adapterPosition;
+            notifyDataSetChanged(); // 선택 상태 업데이트
             if (listener != null) {
-                listener.onItemClick(place); // 클릭 이벤트 전달
+                listener.onItemClick(placeList.get(adapterPosition));
             }
         });
     }
