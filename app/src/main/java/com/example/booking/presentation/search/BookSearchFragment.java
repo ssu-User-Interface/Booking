@@ -20,6 +20,8 @@ import com.example.booking.R;
 import com.example.booking.dto.response.BookSearchResponseDto;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import dagger.hilt.android.AndroidEntryPoint;
 
 @AndroidEntryPoint
@@ -33,7 +35,7 @@ public class BookSearchFragment extends Fragment {
     private ImageView ivSearchButton;
 
     @Override
-    public View onCreateView(LayoutInflater inflater,ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_book_search, container, false);
 
         viewModel = new ViewModelProvider(this).get(BookSearchViewModel.class);
@@ -62,6 +64,13 @@ public class BookSearchFragment extends Fragment {
                 adapter.updateBooks(books);
             } else {
                 Toast.makeText(getContext(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
+                adapter.updateBooks(new ArrayList<>()); // RecyclerView 초기화
+            }
+        });
+
+        viewModel.getCurrentQuery().observe(getViewLifecycleOwner(), query -> {
+            if (query != null) {
+                etBookSearch.setText(query); // 검색어 복원
             }
         });
     }
