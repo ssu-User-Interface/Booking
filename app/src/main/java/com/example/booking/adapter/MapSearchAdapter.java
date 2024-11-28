@@ -53,7 +53,7 @@ public class MapSearchAdapter extends RecyclerView.Adapter<MapSearchAdapter.MapS
     @Override
     public void onBindViewHolder(@NonNull MapSearchViewHolder holder, int position) {
         PlaceSearchKeyword.Place place = places.get(position);
-        holder.title.setText(place.getName()); // 장소 이름 설정
+        holder.title.setText(place.getPlaceAddress()); // 장소 이름 설정
         holder.address.setText(place.getAddress()); // 주소 설정
 
         if (position == selectedPosition) {

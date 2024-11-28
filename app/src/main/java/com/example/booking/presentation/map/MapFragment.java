@@ -268,6 +268,7 @@ public class MapFragment extends Fragment {
                 if (markerLabel != null) {
                     Log.d("MapFragment", "Marker successfully added: " + placeName);
                     labelDataMap.put(markerLabel, placeAddress);
+
                 } else {
                     Log.e("MapFragment", "Failed to create marker label: " + placeName);
                 }

@@ -15,7 +15,7 @@ public class PlaceSearchKeyword {
 
     public static class Place {
         @SerializedName("place_name")
-        private String name;
+        private String placeAddress;
 
         @SerializedName("road_address_name")
         private String address;
@@ -26,8 +26,8 @@ public class PlaceSearchKeyword {
         @SerializedName("y")
         private String y; // 위도는 String으로 제공됨
 
-        public String getName() {
-            return name;
+        public String getPlaceAddress() {
+            return placeAddress;
         }
 
         public String getAddress() {
