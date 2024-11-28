@@ -87,9 +87,10 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_map_search"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/et_map_search"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:itemCount="41"
         tools:listitem="@layout/item_map_search" />
 
