@@ -201,6 +201,7 @@ public class RecordRegistrationFragment extends Fragment {
             String placeAddress = bundle != null ? bundle.getString("placeAddress", "선택된 주소 없음") : "선택된 주소 없음";
             Double selectedLatitude = bundle !=null ? bundle.getDouble("latitude") : 0.0 ;
             Double selectedLongitude = bundle !=null ? bundle.getDouble("longitude") : 0.0;
+
             // 기본 유효성 검사
             if (recordTitle.isEmpty() || readPages <= 0 || elapsedTime.isEmpty() || placeName.equals("선택된 장소 없음")) {
                 Toast.makeText(getContext(), "모든 필드를 올바르게 입력해주세요.", Toast.LENGTH_SHORT).show();

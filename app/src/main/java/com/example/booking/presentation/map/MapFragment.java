@@ -66,6 +66,8 @@ public class MapFragment extends Fragment {
     private LocationCallback locationCallback;
     private KakaoMap kakaoMap;
     private final Map<Label, String> labelDataMap = new HashMap<>();
+    Map<String, LatLng> uniqueLocations = new HashMap<>();
+
 
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
         @Override
@@ -216,15 +218,28 @@ public class MapFragment extends Fragment {
                                 .get()
                                 .addOnSuccessListener(recordsSnapshot -> {
                                     for (DocumentSnapshot record : recordsSnapshot) {
+                                        // 모든 데이터 출력 (디버깅용)
+                                        Log.d("Firestore", "Record Data: " + record.getData());
+
                                         String placeName = record.getString("address");
                                         String placeAddress = record.getString("placeAddress");
                                         Double latitude = record.getDouble("latitude");
                                         Double longitude = record.getDouble("longitude");
 
-                                        // 마커 추가
-                                        if (placeName != null && latitude != null && longitude != null) {
-                                            addMarkerToMap(placeName, placeAddress, latitude, longitude);
+                                        // latitude, longitude가 없는 데이터를 건너뜀
+                                        if (latitude == null || longitude == null) {
+                                            Log.w("Firestore", "Skipping record with missing latitude/longitude for document: " + record.getId());
+                                            continue;
                                         }
+
+                                        // 필요한 데이터가 없는 경우 건너뜀
+                                        if (placeName == null || placeAddress == null) {
+                                            Log.w("Firestore", "Skipping record with missing placeName/placeAddress for document: " + record.getId());
+                                            continue;
+                                        }
+
+                                        // 유효한 데이터만 마커로 추가
+                                        addMarkerToMap(placeName, placeAddress, latitude, longitude);
                                     }
                                 })
                                 .addOnFailureListener(e -> Log.e("Firestore", "Failed to load records", e));
@@ -235,19 +250,32 @@ public class MapFragment extends Fragment {
 
     private void addMarkerToMap(String placeName, String placeAddress, double latitude, double longitude) {
         if (kakaoMap != null) {
-            LabelLayer labelLayer = kakaoMap.getLabelManager().getLayer();
+            Log.d("MapFragment", "Adding marker: " + placeName + " at " + latitude + ", " + longitude);
 
-            LabelOptions options = LabelOptions.from(placeName, LatLng.from(latitude, longitude))
-                    .setStyles(LabelStyle.from(R.drawable.ic_custom_marker) // 커스텀 마커 아이콘
-                            .setAnchorPoint(0.5f, 1.0f)) // 마커 위치 조정
-                    .setRank(1);
+            try {
+                LabelLayer labelLayer = kakaoMap.getLabelManager().getLayer();
+                if (labelLayer == null) {
+                    Log.e("MapFragment", "LabelLayer is null.");
+                    return;
+                }
 
-            Label markerLabel = labelLayer.addLabel(options);
+                LabelOptions options = LabelOptions.from(placeName, LatLng.from(latitude, longitude))
+                        .setStyles(LabelStyle.from(R.drawable.custommarker) // 기본 마커 아이콘 적용
+                                .setAnchorPoint(0.5f, 1.0f)) // 마커의 앵커 포인트 (중앙 하단)
+                        .setRank(1); // 레이블의 우선순위
 
-            // 라벨과 주소 데이터를 매핑
-            labelDataMap.put(markerLabel, placeAddress);
+                Label markerLabel = labelLayer.addLabel(options);
+                if (markerLabel != null) {
+                    Log.d("MapFragment", "Marker successfully added: " + placeName);
+                    labelDataMap.put(markerLabel, placeAddress);
+                } else {
+                    Log.e("MapFragment", "Failed to create marker label: " + placeName);
+                }
+            } catch (Exception e) {
+                Log.e("MapFragment", "Error adding marker: " + placeName, e);
+            }
         } else {
-            Log.e("KakaoMap", "KakaoMap is not ready.");
+            Log.e("MapFragment", "KakaoMap is not ready.");
         }
     }
 }
