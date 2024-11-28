@@ -56,8 +56,8 @@ public class MapSearchFragment extends Fragment {
         NavController navController = Navigation.findNavController(container);
 
         // 버튼 설정 및 클릭 리스너 구현
-        ImageView imageView = view.findViewById(R.id.iv_back_arrow);
-        imageView.setOnClickListener(v -> {
+        ImageView ivBackArrow = view.findViewById(R.id.iv_back_arrow);
+        ivBackArrow.setOnClickListener(v -> {
             navController.navigate(R.id.action_mapSearchFragment_to_mapFragment);
         });
 
@@ -68,7 +68,6 @@ public class MapSearchFragment extends Fragment {
         // 검색 버튼 클릭 리스너 추가
         ivSearch.setOnClickListener(v -> {
             String searchQuery = etSearch.getText().toString().trim();
-
             if (!searchQuery.isEmpty()) {
                 searchRecords(searchQuery); // Firestore에서 검색
             } else {
@@ -76,6 +75,15 @@ public class MapSearchFragment extends Fragment {
             }
         });
 
+        // 아이템 클릭 리스너
+        adapter.setOnItemClickListener(place -> {
+
+            Bundle bundle_toMap = new Bundle();
+            bundle_toMap.putString("placeName",place.getAddress());
+            bundle_toMap.putString("placeAddress", place.getPlaceAddress());
+
+            navController.navigate(R.id.mapFragment, bundle_toMap);
+        });
         return view;
     }
 

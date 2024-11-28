@@ -1,7 +1,5 @@
 package com.example.booking.presentation.map;
 
-import static androidx.databinding.DataBindingUtil.setContentView;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
@@ -22,13 +20,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-
 import android.Manifest;
-import android.widget.Toast;
-
 import com.example.booking.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -42,7 +36,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.kakao.vectormap.KakaoMap;
 import com.kakao.vectormap.KakaoMapReadyCallback;
 import com.kakao.vectormap.LatLng;
-import com.kakao.vectormap.MapLifeCycleCallback;
 import com.kakao.vectormap.MapView;
 import com.kakao.vectormap.label.Label;
 import com.kakao.vectormap.label.LabelLayer;
@@ -66,9 +59,8 @@ public class MapFragment extends Fragment {
     private LocationCallback locationCallback;
     private KakaoMap kakaoMap;
     private final Map<Label, String> labelDataMap = new HashMap<>();
-    Map<String, LatLng> uniqueLocations = new HashMap<>();
 
-
+    
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull KakaoMap map) {
@@ -85,10 +77,12 @@ public class MapFragment extends Fragment {
                         .setRank(1));
                 TrackingManager trackingManager = kakaoMap.getTrackingManager();
                 trackingManager.startTracking(centerLabel);
+
                 startLocationUpdates();
             }
         }
     };
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
