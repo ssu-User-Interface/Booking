@@ -1,5 +1,6 @@
 package com.example.booking.presentation.search;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
@@ -19,6 +22,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import com.example.booking.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -27,10 +39,39 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
     private EditText etStartDay, etAmount, etStartPeriod, etEndPeriod, etReview;
     private LinearLayout layoutPeriod, layoutScore;
 
+    private String bookTitle, bookAuthor, bookPublisher, bookImage, bookDescription;
+    private Integer bookTotalPage;
+    private String userId;
+
+    private int selectedStars = 0; // 선택된 별 개수
+    private ImageView[] stars;
+
+    private FirebaseFirestore db;
+    private FirebaseAuth auth;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        FirebaseUser currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            userId = currentUser.getUid();
+        } else {
+            Toast.makeText(getContext(), "로그인 정보가 없습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show();
+        }
+
+
+        BookSearchSaveBottomSheetFragmentArgs args = BookSearchSaveBottomSheetFragmentArgs.fromBundle(getArguments());
+        bookTitle = args.getBookTitle();
+        bookAuthor = args.getBookAuthor();
+        bookPublisher = args.getBookPublisher();
+        bookImage = args.getBookImage();
+        bookDescription = args.getBookDescription();
+        bookTotalPage = 250;
     }
 
     @Override
@@ -41,7 +82,6 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         btnReading = view.findViewById(R.id.bt_book_search_save_record_reading);
         btnRead = view.findViewById(R.id.bt_book_search_save_record_read);
 
-        // 독서 상태에 따라 표시되는 필드 초기화
         tvStartDay = view.findViewById(R.id.tv_book_search_save_start_day);
         etStartDay = view.findViewById(R.id.et_book_search_save_start_day);
         tvAmount = view.findViewById(R.id.tv_book_search_save_amount);
@@ -55,9 +95,13 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         layoutPeriod = view.findViewById(R.id.l_layout_book_search_save_final_record_period);
         layoutScore = view.findViewById(R.id.l_layout_book_search_save_final_record_score_star);
 
-        // 기본값
+
         setReadingView();
         updateButtonStyles(btnReading);
+
+        setupDatePicker(etStartDay);
+        setupDatePicker(etStartPeriod);
+        setupDatePicker(etEndPeriod);
 
         btnToRead.setOnClickListener(v -> {
             setToReadView();
@@ -74,7 +118,119 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
             updateButtonStyles(btnRead);
         });
 
+        stars = new ImageView[]{
+                view.findViewById(R.id.iv_book_search_save_final_record_star1),
+                view.findViewById(R.id.iv_book_search_save_final_record_star2),
+                view.findViewById(R.id.iv_book_search_save_final_record_star3),
+                view.findViewById(R.id.iv_book_search_save_final_record_star4),
+                view.findViewById(R.id.iv_book_search_save_final_record_star5)
+        };
+
+        for (int i = 0; i < stars.length; i++) {
+            final int starIndex = i + 1;
+            stars[i].setOnClickListener(v -> setStarRating(starIndex));
+        }
+
+        Button saveButton = view.findViewById(R.id.bt_book_search_save_save_record);
+        saveButton.setOnClickListener(v -> saveBookData());
+
         return view;
+    }
+
+    private void setupDatePicker(EditText editText) {
+        editText.setFocusable(false);
+        editText.setClickable(true);
+
+        editText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    (DatePicker view, int selectedYear, int selectedMonth, int selectedDay) -> {
+                        String formattedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        editText.setText(formattedDate);
+                    },
+                    year, month, day
+            );
+
+            if (datePickerDialog.getWindow() != null) {
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+
+            datePickerDialog.show();
+        });
+    }
+
+    private void setStarRating(int starCount) {
+        selectedStars = starCount;
+
+        for (int i = 0; i < stars.length; i++) {
+            if (i < starCount) {
+                stars[i].setImageResource(R.drawable.img_star_filled); // 활성화된 별
+            } else {
+                stars[i].setImageResource(R.drawable.img_star_unfilled); // 비활성화된 별
+            }
+        }
+    }
+
+    private void saveBookData() {
+        String readingStatus = getSelectedReadingStatus();
+
+        Map<String, Object> bookData = new HashMap<>();
+        bookData.put("title", bookTitle);
+        bookData.put("author", bookAuthor);
+        bookData.put("publisher", bookPublisher);
+        bookData.put("image", bookImage);
+        bookData.put("description", bookDescription);
+        bookData.put(("totalPage"),bookTotalPage);
+        bookData.put("readingStatus", readingStatus);
+        bookData.put("createdAt", new Date());
+
+
+        if ("reading_books".equals(readingStatus)) {
+            bookData.put("startDate", etStartDay.getText().toString());
+            bookData.put("readingPage", Integer.parseInt(etAmount.getText().toString()));
+        } else if ("read_books".equals(readingStatus)) {
+            bookData.put("startDate", etStartPeriod.getText().toString());
+            bookData.put("endDate", etEndPeriod.getText().toString());
+            bookData.put("rating", selectedStars);
+            bookData.put("review", etReview.getText().toString());
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userId).collection("books")
+                .add(bookData)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(getContext(), "책 정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                    NavController navController = NavHostFragment.findNavController(this);
+                    BookSearchSaveBottomSheetFragmentDirections.ActionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment action =
+                            BookSearchSaveBottomSheetFragmentDirections
+                                    .actionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment(
+                                            bookTitle,
+                                            bookAuthor,
+                                            bookPublisher,
+                                            bookImage,
+                                            bookDescription
+                                    );
+                    navController.navigate(action);
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "책 정보 저장 실패: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private String getSelectedReadingStatus() {
+        if (btnToRead.isSelected()) {
+            return "will_read_books";
+        } else if (btnReading.isSelected()) {
+            return "reading_books";
+        } else if (btnRead.isSelected()) {
+            return "read_books";
+        }
+        return "";
     }
 
     private void setToReadView() {
@@ -140,7 +296,16 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         NavController navController = NavHostFragment.findNavController(this);
 
         backButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_bookSearchSaveBottomSheetFragment_to_bookSearchDetailFragment);
+            BookSearchSaveBottomSheetFragmentDirections.ActionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment action;
+            action = BookSearchSaveBottomSheetFragmentDirections
+                    .actionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment(
+                            "bookTitleExample",
+                            "bookAuthorExample",
+                            "bookPublisherExample",
+                            "bookImageExample",
+                            "bookDescriptionExample"
+                    );
+            navController.navigate(action);
         });
     }
 

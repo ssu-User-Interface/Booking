@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel;
 public class BookSearchViewModel extends ViewModel {
     private final BookRepository repository;
     private final MutableLiveData<List<BookSearchResponseDto.BookItemDto>> books = new MutableLiveData<>();
+    private final MutableLiveData<String> currentQuery = new MutableLiveData<>(); // 검색 쿼리 상태
 
     @Inject
     public BookSearchViewModel(BookRepository repository) {
@@ -27,7 +28,12 @@ public class BookSearchViewModel extends ViewModel {
         return books;
     }
 
+    public LiveData<String> getCurrentQuery() {
+        return currentQuery;
+    }
+
     public void searchBooks(String query) {
+        currentQuery.setValue(query);
         new Thread(() -> {
             try {
                 BookSearchResponseDto response = repository.fetchBooks(query);
@@ -38,3 +44,4 @@ public class BookSearchViewModel extends ViewModel {
         }).start();
     }
 }
+
