@@ -1,5 +1,6 @@
 package com.example.booking.presentation.search;
 
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -8,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,8 +26,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment {
@@ -53,12 +57,10 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // 현재 로그인된 사용자 정보에서 userId 가져오기
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser != null) {
             userId = currentUser.getUid();
         } else {
-            // 로그아웃 상태인 경우 처리
             Toast.makeText(getContext(), "로그인 정보가 없습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show();
         }
 
@@ -80,7 +82,6 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         btnReading = view.findViewById(R.id.bt_book_search_save_record_reading);
         btnRead = view.findViewById(R.id.bt_book_search_save_record_read);
 
-        // 독서 상태에 따라 표시되는 필드 초기화
         tvStartDay = view.findViewById(R.id.tv_book_search_save_start_day);
         etStartDay = view.findViewById(R.id.et_book_search_save_start_day);
         tvAmount = view.findViewById(R.id.tv_book_search_save_amount);
@@ -94,9 +95,13 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         layoutPeriod = view.findViewById(R.id.l_layout_book_search_save_final_record_period);
         layoutScore = view.findViewById(R.id.l_layout_book_search_save_final_record_score_star);
 
-        // 기본값
+
         setReadingView();
         updateButtonStyles(btnReading);
+
+        setupDatePicker(etStartDay);
+        setupDatePicker(etStartPeriod);
+        setupDatePicker(etEndPeriod);
 
         btnToRead.setOnClickListener(v -> {
             setToReadView();
@@ -130,6 +135,33 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         saveButton.setOnClickListener(v -> saveBookData());
 
         return view;
+    }
+
+    private void setupDatePicker(EditText editText) {
+        editText.setFocusable(false);
+        editText.setClickable(true);
+
+        editText.setOnClickListener(v -> {
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    requireContext(),
+                    (DatePicker view, int selectedYear, int selectedMonth, int selectedDay) -> {
+                        String formattedDate = String.format(Locale.getDefault(), "%04d-%02d-%02d", selectedYear, selectedMonth + 1, selectedDay);
+                        editText.setText(formattedDate);
+                    },
+                    year, month, day
+            );
+
+            if (datePickerDialog.getWindow() != null) {
+                datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            }
+
+            datePickerDialog.show();
+        });
     }
 
     private void setStarRating(int starCount) {

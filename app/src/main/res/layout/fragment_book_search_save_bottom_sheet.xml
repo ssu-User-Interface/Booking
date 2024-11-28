@@ -130,15 +130,20 @@
                 android:id="@+id/et_book_search_save_start_day"
                 android:layout_width="330dp"
                 android:layout_height="28dp"
+                android:hint="YYYY-MM-DD"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="#7E7E7E"
+                android:textSize="13sp"
                 android:background="@drawable/img_book_search_save_bg"
                 android:layout_gravity="center"
-                android:layout_marginTop="5dp"/>
+                android:layout_marginTop="5dp"
+                android:paddingLeft="10dp"/>
 
             <TextView
                 android:id="@+id/tv_book_search_save_amount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="독서량"
+                android:text="독서량(page)"
                 android:textSize="15sp"
                 android:textColor="@color/black"
                 android:fontFamily="@font/pretendard_medium"
@@ -151,6 +156,11 @@
                 android:layout_height="28dp"
                 android:background="@drawable/img_book_search_save_bg"
                 android:layout_gravity="center"
+                android:hint="000"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="#7E7E7E"
+                android:textSize="13sp"
+                android:paddingStart="10dp"
                 android:layout_marginTop="5dp"/>
 
             <TextView
@@ -179,9 +189,9 @@
                     android:background="@drawable/img_book_search_save_bg"
                     android:hint="시작일"
                     android:fontFamily="@font/pretendard_regular"
-                    android:textColor="#ACACAC"
-                    android:textSize="11sp"
-                    android:paddingStart="10dp"/>
+                    android:textColor="#7E7E7E"
+                    android:textSize="13sp"
+                    android:paddingLeft="10dp"/>
 
                 <EditText
                     android:id="@+id/et_book_search_save_final_end_day"
@@ -190,9 +200,9 @@
                     android:background="@drawable/img_book_search_save_bg"
                     android:hint="종료일"
                     android:fontFamily="@font/pretendard_regular"
-                    android:textColor="#ACACAC"
-                    android:textSize="11sp"
-                    android:paddingStart="10dp"
+                    android:textColor="#7E7E7E"
+                    android:textSize="13sp"
+                    android:paddingLeft="10dp"
                     android:layout_marginStart="12dp"/>
 
             </LinearLayout>
@@ -214,6 +224,10 @@
                 android:layout_height="40dp"
                 android:background="@drawable/img_book_search_save_bg"
                 android:layout_gravity="center"
+                android:fontFamily="@font/pretendard_regular"
+                android:textColor="#7E7E7E"
+                android:textSize="13sp"
+                android:paddingLeft="10dp"
                 android:layout_marginTop="5dp"/>
 
             <LinearLayout
