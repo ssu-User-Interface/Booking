@@ -24,8 +24,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class MapBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -135,7 +137,14 @@ public class MapBottomSheetDialogFragment extends BottomSheetDialogFragment {
                                                         String recordTitle = latestRecordSnapshot.getString("myTitle");
                                                         String likePhrase = latestRecordSnapshot.getString("phrase");
 
-                                                        bookList.add(new BookItem(imageUrl, title, author, recordTitle, likePhrase, latestRecordDate.toDate().toString()));
+                                                        // 날짜 형식 변환
+                                                        String formattedDate = "";
+                                                        if (latestRecordDate != null) {
+                                                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
+                                                            formattedDate = sdf.format(latestRecordDate.toDate());
+                                                        }
+
+                                                        bookList.add(new BookItem(imageUrl, title, author, recordTitle, likePhrase, formattedDate));
                                                         Log.d("MapBottomSheet", "Added Book: " + title);
                                                     }
 

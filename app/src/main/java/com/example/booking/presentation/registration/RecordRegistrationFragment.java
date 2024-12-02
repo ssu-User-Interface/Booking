@@ -218,6 +218,7 @@ public class RecordRegistrationFragment extends Fragment {
             records.put("recordDate", new Date()); // 기록 생성 시간 추가
             records.put("placeAddress",placeAddress);
 
+
             // 위도 경도 보내기
             records.put("latitude",selectedLatitude);
             records.put("longitude",selectedLongitude);
@@ -244,6 +245,28 @@ public class RecordRegistrationFragment extends Fragment {
                                 .addOnFailureListener(e -> {
                                     Log.e("RecordRegistration", "readingPage 업데이트 실패", e);
                                 });
+
+                        db.collection("users")
+                                .document(userId)
+                                .collection("books")
+                                .document(bookId)
+                                .get()
+                                .addOnSuccessListener(snapshot -> {
+                                    if (snapshot.exists()) {
+                                        String currentStatus = snapshot.getString("readingStatus");
+                                        if ("will_read_books".equals(currentStatus)) {
+                                            // 상태를 reading_books로 업데이트
+                                            db.collection("users")
+                                                    .document(userId)
+                                                    .collection("books")
+                                                    .document(bookId)
+                                                    .update("readingStatus", "reading_books")
+                                                    .addOnSuccessListener(aVoid -> Log.d("RecordRegistration", "책 상태가 reading_books로 업데이트되었습니다."))
+                                                    .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 업데이트 실패", e));
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 확인 실패", e));
 
                         navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment,bundle); // 저장 후 다른 화면으로 이동
                     })
