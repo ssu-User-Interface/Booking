@@ -92,7 +92,6 @@ public class MapFragment extends Fragment {
 
             kakaoMap.setOnLabelClickListener((kakaoMap,layer,label) -> {
                 String placeName = labelDataMap.get(label);
-
                 showBottomSheet(placeName);
             });
         }
