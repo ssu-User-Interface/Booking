@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -53,6 +54,12 @@ public class RecordRegistrationFragment extends Fragment {
         ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
         EditText etLikePhrase = view.findViewById(R.id.et_record_like_phrase);
         EditText etMemo = view.findViewById(R.id.et_record_memo);
+        TextView tvRecordDate = view.findViewById(R.id.tv_record_when);
+
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
+        String formattedDate = dateFormat.format(date);
+        tvRecordDate.setText(formattedDate);
 
 
         Bundle bundle = getArguments();
