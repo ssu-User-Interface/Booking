@@ -15,11 +15,13 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.bumptech.glide.Glide;
 import com.example.booking.R;
+import com.example.booking.presentation.mypage.MyViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -30,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class RecordRegistrationFragment extends Fragment {
+    private RecordRegistrationViewModel viewModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,6 +43,8 @@ public class RecordRegistrationFragment extends Fragment {
         // NavController 가져오기
         NavController navController = Navigation.findNavController(container);
 
+        viewModel = new ViewModelProvider(requireActivity()).get(RecordRegistrationViewModel.class);
+
         // 전달받은 타이머 값 설정
         EditText etRecordTitle = view.findViewById(R.id.et_record_book_title);
         EditText etReadPages = view.findViewById(R.id.et_record_page);
@@ -47,7 +52,7 @@ public class RecordRegistrationFragment extends Fragment {
         TextView tvRecordRegistrationPlaceText = view.findViewById(R.id.tv_record_place);
         ImageView backArrow = view.findViewById(R.id.iv_back_arrow);
         EditText etLikePhrase = view.findViewById(R.id.et_record_like_phrase);
-        EditText etMomo = view.findViewById(R.id.et_record_memo);
+        EditText etMemo = view.findViewById(R.id.et_record_memo);
 
 
         Bundle bundle = getArguments();
@@ -63,8 +68,6 @@ public class RecordRegistrationFragment extends Fragment {
                 loadBookDetails(bookId);
                 // elapsedTime 처리
                 elapsedTimeInMillis = bundle.getLong("elapsedTime", 0L);
-                // 장소 정보 처리
-
                 long finalElapsedTimeInMillis = elapsedTimeInMillis;
 
                 // 시간을 hh:mm:ss 형식으로 변환하여 EditText에 표시
@@ -160,8 +163,34 @@ public class RecordRegistrationFragment extends Fragment {
             }
         });
 
+        elapsedTimeInMillis = bundle.getLong("elapsedTime", 0L);
+        long finalElapsedTimeInMillis = elapsedTimeInMillis;
+
         // 독서 종료 버튼
         btnCompleteReadingActive.setOnClickListener(v -> {
+
+            String elapsedTime = etRecordTime.getText().toString();
+            long elapsedTimeInMillisfinal = 0L;
+            try {
+                String[] timeParts = elapsedTime.split(":"); // hh:mm:ss를 ":" 기준으로 분리
+                int hours = Integer.parseInt(timeParts[0]); // 시간 부분
+                int minutes = Integer.parseInt(timeParts[1]); // 분 부분
+                int seconds = Integer.parseInt(timeParts[2]); // 초 부분
+
+                // 시간, 분, 초를 밀리초로 변환
+                elapsedTimeInMillisfinal = (hours * 3600 + minutes * 60 + seconds) * 1000L;
+            } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+                Log.e("ElapsedTimeConversion", "시간 변환 실패: " + e.getMessage());
+            }
+
+            viewModel.setRecordTitle(etRecordTitle.getText().toString());
+            viewModel.setReadingTime(elapsedTimeInMillisfinal);
+            viewModel.setReadPages(Integer.parseInt(etReadPages.getText().toString()));
+            viewModel.setPlace(tvRecordRegistrationPlaceText.getText().toString());
+            viewModel.setLikePhrase(etLikePhrase.getText().toString());
+            viewModel.setMemo(etMemo.getText().toString());
+
+
             String bookId = bundle!=null ? bundle.getString("bookId") : null;
             if (bookId == null) {
                 Toast.makeText(getContext(), "Book ID를 설정할 수 없습니다.", Toast.LENGTH_SHORT).show();
@@ -207,7 +236,7 @@ public class RecordRegistrationFragment extends Fragment {
             }
             String placeName = tvRecordRegistrationPlaceText.getText().toString();
             String likePhrase = etLikePhrase.getText().toString();
-            String memo = etMomo.getText().toString();
+            String memo = etMemo.getText().toString();
             String placeAddress = bundle != null ? bundle.getString("placeAddress", "선택된 주소 없음") : "선택된 주소 없음";
             Double selectedLatitude = bundle !=null ? bundle.getDouble("latitude") : 0.0 ;
             Double selectedLongitude = bundle !=null ? bundle.getDouble("longitude") : 0.0;

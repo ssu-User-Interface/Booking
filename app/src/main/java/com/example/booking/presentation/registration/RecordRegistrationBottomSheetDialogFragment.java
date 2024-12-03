@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -32,14 +33,13 @@ import java.util.Map;
 public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDialogFragment {
     private int selectedStars = 0; // 선택된 별 개수
     private ImageView[] stars;
-    private FirebaseFirestore db;
-    private FirebaseAuth auth;
-
+    private RecordRegistrationViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(STYLE_NORMAL, R.style.BottomSheetDialogTheme);
+        viewModel = new ViewModelProvider(requireActivity()).get(RecordRegistrationViewModel.class);
     }
 
 
@@ -50,6 +50,7 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
         View view = inflater.inflate(R.layout.fragment_record_bottom_sheet, container, false);
 
         Button saveButton = view.findViewById(R.id.btn_save_record);
+        EditText etReview = view.findViewById(R.id.et_final_record_review);
 
         Bundle bundle = getArguments();
         if (bundle == null || !bundle.containsKey("bookId")) {
@@ -60,7 +61,10 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
         saveButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
+              viewModel.setReview(etReview.getText().toString());
+              viewModel.setRating(selectedStars);
 
+              saveToFirestore();
               Bundle bundle1 = new Bundle();
               bundle1.putString("bookId",bookId);
               NavController navController = Navigation.findNavController(requireActivity(), R.id.main_frm);
@@ -83,5 +87,57 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
                 stars[i].setImageResource(R.drawable.img_star_unfilled); // 비활성화된 별
             }
         }
+    }
+
+    private void saveToFirestore() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        String userId = auth.getCurrentUser() != null ? auth.getCurrentUser().getUid() : null;
+
+        // Arguments 체크
+        Bundle bundle = getArguments();
+        if (bundle == null || !bundle.containsKey("bookId")) {
+            Toast.makeText(getContext(), "Book ID를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String bookId = bundle.getString("bookId");
+
+        // 데이터 준비
+        Map<String, Object> bookData = new HashMap<>();
+        bookData.put("rating", viewModel.getRating() != null ? viewModel.getRating().getValue() : 0);
+        bookData.put("review", viewModel.getReview() != null ? viewModel.getReview().getValue() : "");
+        bookData.put("readingStatus", "read_books");
+        bookData.put("readingPage", viewModel.getReadPages() != null ? viewModel.getReadPages().getValue() : 0);
+
+        Map<String, Object> recordData = new HashMap<>();
+        recordData.put("myTitle", viewModel.getRecordTitle() != null ? viewModel.getRecordTitle().getValue() : "");
+        recordData.put("readingTime", viewModel.getReadingTime() != null ? viewModel.getReadingTime().getValue() : 0L);
+        recordData.put("pagesRead", viewModel.getReadPages() != null ? viewModel.getReadPages().getValue() : 0);
+        recordData.put("address", viewModel.getPlace() != null ? viewModel.getPlace().getValue() : "");
+        recordData.put("phrase", viewModel.getLikePhrase() != null ? viewModel.getLikePhrase().getValue() : "");
+        recordData.put("memo", viewModel.getMemo() != null ? viewModel.getMemo().getValue() : "");
+        recordData.put("recordDate", new Date());
+
+        // Firestore 업데이트
+        db.collection("users")
+                .document(userId)
+                .collection("books")
+                .document(bookId)
+                .update(bookData)
+                .addOnSuccessListener(aVoid -> Log.d("Firestore", "책 데이터가 성공적으로 업데이트되었습니다!"))
+                .addOnFailureListener(e -> Log.e("Firestore", "책 데이터 업데이트 실패", e));
+
+        db.collection("users")
+                .document(userId)
+                .collection("books")
+                .document(bookId)
+                .collection("records")
+                .add(recordData)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firestore", "기록이 성공적으로 저장되었습니다!");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "기록 저장 실패", e);
+                });
     }
 }
