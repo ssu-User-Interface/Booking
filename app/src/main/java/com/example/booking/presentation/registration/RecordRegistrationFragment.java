@@ -264,61 +264,88 @@ public class RecordRegistrationFragment extends Fragment {
             records.put("recordDate", new Date()); // 기록 생성 시간 추가
             records.put("placeAddress",placeAddress);
 
-
             // 위도 경도 보내기
             records.put("latitude",selectedLatitude);
             records.put("longitude",selectedLongitude);
 
-            // Firestore 경로 설정: users/{userId}/records/{newRecordId}
+            // Firestore 경로 설정
             db.collection("users")
                     .document(userId)
                     .collection("books")
                     .document(bookId)
                     .collection("records")
-                    .add(records)// 데이터 추가
-                    .addOnSuccessListener(documentReference -> {
-                        Toast.makeText(getContext(), "기록이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        // 첫 기록인지 확인
+                        if (querySnapshot.isEmpty()) {
+                            // 첫 기록인 경우 books 문서에 startDate 저장
+                            Map<String, Object> bookUpdate = new HashMap<>();
+                            bookUpdate.put("startDate", new Date());
 
-                        // readingPage를 books 컬렉션의 bookId에 업데이트
+                            db.collection("users")
+                                    .document(userId)
+                                    .collection("books")
+                                    .document(bookId)
+                                    .update(bookUpdate)
+                                    .addOnSuccessListener(aVoid -> Log.d("RecordRegistration", "startDate가 books 문서에 추가되었습니다."))
+                                    .addOnFailureListener(e -> Log.e("RecordRegistration", "startDate 추가 실패", e));
+                        }
+
+                        // 기록 추가
                         db.collection("users")
                                 .document(userId)
                                 .collection("books")
                                 .document(bookId)
-                                .update("readingPage", readPages) // books에 readingPage 업데이트
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("RecordRegistration", "readingPage가 books에 성공적으로 저장되었습니다.");
+                                .collection("records")
+                                .add(records) // 데이터 추가
+                                .addOnSuccessListener(documentReference -> {
+                                    Toast.makeText(getContext(), "기록이 저장되었습니다.", Toast.LENGTH_SHORT).show();
+
+                                    // readingPage를 books 컬렉션의 bookId에 업데이트
+                                    db.collection("users")
+                                            .document(userId)
+                                            .collection("books")
+                                            .document(bookId)
+                                            .update("readingPage", readPages) // books에 readingPage 업데이트
+                                            .addOnSuccessListener(aVoid -> {
+                                                Log.d("RecordRegistration", "readingPage가 books에 성공적으로 저장되었습니다.");
+                                            })
+                                            .addOnFailureListener(e -> {
+                                                Log.e("RecordRegistration", "readingPage 업데이트 실패", e);
+                                            });
+
+                                    db.collection("users")
+                                            .document(userId)
+                                            .collection("books")
+                                            .document(bookId)
+                                            .get()
+                                            .addOnSuccessListener(snapshot -> {
+                                                if (snapshot.exists()) {
+                                                    String currentStatus = snapshot.getString("readingStatus");
+                                                    if ("will_read_books".equals(currentStatus)) {
+                                                        // 상태를 reading_books로 업데이트
+                                                        db.collection("users")
+                                                                .document(userId)
+                                                                .collection("books")
+                                                                .document(bookId)
+                                                                .update("readingStatus", "reading_books")
+                                                                .addOnSuccessListener(aVoid -> Log.d("RecordRegistration", "책 상태가 reading_books로 업데이트되었습니다."))
+                                                                .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 업데이트 실패", e));
+                                                    }
+                                                }
+                                            })
+                                            .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 확인 실패", e));
+
+                                    navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment, bundle); // 저장 후 다른 화면으로 이동
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.e("RecordRegistration", "readingPage 업데이트 실패", e);
+                                    Log.e("RecordRegistration", "기록 저장 실패", e);
+                                    Toast.makeText(getContext(), "기록 저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
                                 });
-
-                        db.collection("users")
-                                .document(userId)
-                                .collection("books")
-                                .document(bookId)
-                                .get()
-                                .addOnSuccessListener(snapshot -> {
-                                    if (snapshot.exists()) {
-                                        String currentStatus = snapshot.getString("readingStatus");
-                                        if ("will_read_books".equals(currentStatus)) {
-                                            // 상태를 reading_books로 업데이트
-                                            db.collection("users")
-                                                    .document(userId)
-                                                    .collection("books")
-                                                    .document(bookId)
-                                                    .update("readingStatus", "reading_books")
-                                                    .addOnSuccessListener(aVoid -> Log.d("RecordRegistration", "책 상태가 reading_books로 업데이트되었습니다."))
-                                                    .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 업데이트 실패", e));
-                                        }
-                                    }
-                                })
-                                .addOnFailureListener(e -> Log.e("RecordRegistration", "책 상태 확인 실패", e));
-
-                        navController.navigate(R.id.action_recordRegistrationFragment_to_recordSpecificFragment,bundle); // 저장 후 다른 화면으로 이동
                     })
                     .addOnFailureListener(e -> {
-                        Log.e("RecordRegistration", "기록 저장 실패", e);
-                        Toast.makeText(getContext(), "기록 저장에 실패했습니다. 다시 시도해주세요.", Toast.LENGTH_SHORT).show();
+                        Log.e("RecordRegistration", "레코드 확인 실패", e);
+                        Toast.makeText(getContext(), "레코드 확인 중 문제가 발생했습니다.", Toast.LENGTH_SHORT).show();
                     });
         });
         return view;
