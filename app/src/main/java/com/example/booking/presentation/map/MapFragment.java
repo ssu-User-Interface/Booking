@@ -64,6 +64,8 @@ public class MapFragment extends Fragment {
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
         @Override
         public void onMapReady(@NonNull KakaoMap map) {
+            Log.d("MapFragment", "onMapReady called"); // 디버깅 로그 추가
+
             progressBar.setVisibility(View.GONE);
             kakaoMap = map;
 
@@ -90,7 +92,6 @@ public class MapFragment extends Fragment {
 
             kakaoMap.setOnLabelClickListener((kakaoMap,layer,label) -> {
                 String placeName = labelDataMap.get(label);
-
                 showBottomSheet(placeName);
             });
         }
@@ -214,6 +215,7 @@ public class MapFragment extends Fragment {
     }
 
     private void loadMarkersFromFirestore() {
+        Log.d("MapFragment", "loadMarkersFromFirestore called"); // 디버깅 로그 추가
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseAuth auth = FirebaseAuth.getInstance();
         String userId = auth.getCurrentUser().getUid();
@@ -225,6 +227,7 @@ public class MapFragment extends Fragment {
                 .addOnSuccessListener(booksSnapshot -> {
                     for (DocumentSnapshot book : booksSnapshot) {
                         String bookId = book.getId();
+                        Log.d("MapFragment", "Book ID: " + bookId);
 
                         db.collection("users")
                                 .document(userId)
@@ -241,6 +244,21 @@ public class MapFragment extends Fragment {
                                         String placeAddress = record.getString("placeAddress");
                                         Double latitude = record.getDouble("latitude");
                                         Double longitude = record.getDouble("longitude");
+
+                                        // 추가 로그
+                                        Log.d("MapFragment", "PlaceName: " + placeName + ", Latitude: " + latitude + ", Longitude: " + longitude);
+
+                                        // latitude, longitude가 없는 데이터를 건너뜀
+                                        if (latitude == null || longitude == null) {
+                                            Log.w("MapFragment", "Skipping record with missing latitude/longitude for document: " + record.getId());
+                                            continue;
+                                        }
+
+                                        // 필요한 데이터가 없는 경우 건너뜀
+                                        if (placeName == null) {
+                                            Log.w("MapFragment", "Skipping record with missing placeName for document: " + record.getId());
+                                            continue;
+                                        }
 
                                         // latitude, longitude가 없는 데이터를 건너뜀
                                         if (latitude == null || longitude == null) {

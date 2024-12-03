@@ -1,35 +1,37 @@
 package com.example.booking.data.model;
 
 public class Book {
-    private int imageResId;
+    private String imageResId;
     private String title;
     private String author;
 
-    public Book(int imageResId, String title, String author) {
+    public Book(String imageResId, String title, String author) {
         this.imageResId = imageResId;
         this.title = title;
         this.author = author;
     }
 
-    public int getImageResId() {
+    public String getImageResId() {
         return imageResId;
     }
+    public String getAuthor() {
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
+        return author;
     }
 
     public String getTitle() {
         return title;
     }
 
+    public void setImageResId(String imageResId) {
+        this.imageResId = imageResId;
+    }
+
+
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public String getAuthor() {
-        return author;
-    }
 
     public void setAuthor(String author) {
         this.author = author;
