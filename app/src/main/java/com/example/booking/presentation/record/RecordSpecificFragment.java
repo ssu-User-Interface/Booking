@@ -112,8 +112,9 @@ public class RecordSpecificFragment extends Fragment {
         // 뒤로가기 버튼 설정
         ImageView backButton = view.findViewById(R.id.iv_record_specific_back_arrow);
         backButton.setOnClickListener(v -> {
-            // 현재 카테고리를 번들로 전달
             String currentCategory = requireArguments().getString("category", "will_read_books");
+            Log.d("BackButton", "Current category: " + currentCategory);
+
             Bundle bundle = new Bundle();
             bundle.putString("currentCategory", currentCategory);
 

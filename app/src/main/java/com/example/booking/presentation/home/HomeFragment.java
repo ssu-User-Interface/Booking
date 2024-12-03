@@ -169,7 +169,7 @@ public class HomeFragment extends Fragment {
                                 String title = mostRecentDocument.getString("title");
                                 long totalPages = mostRecentDocument.getLong("totalPages") != null
                                         ? mostRecentDocument.getLong("totalPages")
-                                        : 0;
+                                        : 350;
                                 long readingPage = mostRecentDocument.getLong("readingPage") != null
                                         ? mostRecentDocument.getLong("readingPage")
                                         : 0;
@@ -184,6 +184,7 @@ public class HomeFragment extends Fragment {
                                     tvReadingPeriod.setText(startDate);
                                 }
 
+                                prg.setVisibility(View.VISIBLE);
                                 // ProgressBar 업데이트
                                 if (totalPages > 0) {
                                     prg.setMax((int) totalPages); // totalPages를 max로 설정
@@ -257,6 +258,12 @@ public class HomeFragment extends Fragment {
 
                         // 책이 없을 경우 처리
                         if (!hasReadingBook) {
+                            // "읽는 책 없음" UI 표시
+                            ivBookIcon.setVisibility(View.VISIBLE);
+                            tvNoBook.setVisibility(View.VISIBLE);
+                            addBookButton.setVisibility(View.VISIBLE);
+
+                            // 기존 읽는 책 관련 UI 숨김
                             tvBookTitle.setVisibility(View.GONE);
                             viewLine.setVisibility(View.GONE);
                             tvReadingPeriod.setVisibility(View.GONE);
@@ -264,10 +271,6 @@ public class HomeFragment extends Fragment {
                             prg.setVisibility(View.GONE);
                             toTimerButton.setVisibility(View.GONE);
                             ivBookImg.setVisibility(View.GONE);
-
-                            ivBookIcon.setVisibility(View.VISIBLE);
-                            tvNoBook.setVisibility(View.VISIBLE);
-                            addBookButton.setVisibility(View.VISIBLE);
 
                             // 책 추가 버튼 클릭 이벤트
                             addBookButton.setOnClickListener(v -> {

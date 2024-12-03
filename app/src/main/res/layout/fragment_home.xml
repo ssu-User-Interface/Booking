@@ -133,6 +133,7 @@
         android:layout_width="0dp"
         android:layout_height="7dp"
         android:max="1000"
+        android:progress="300"
         android:progressDrawable="@drawable/progressbar_color"
         app:layout_constraintTop_toBottomOf="@id/tv_home_first_widget_reading_page"
         app:layout_constraintStart_toEndOf="@id/iv_home_book"
