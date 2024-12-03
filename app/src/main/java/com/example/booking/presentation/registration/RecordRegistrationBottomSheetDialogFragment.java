@@ -58,6 +58,20 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
         }
         String bookId = bundle.getString("bookId");
 
+        stars = new ImageView[]{
+                view.findViewById(R.id.iv_final_record_star1),
+                view.findViewById(R.id.iv_final_record_star2),
+                view.findViewById(R.id.iv_final_record_star3),
+                view.findViewById(R.id.iv_final_record_star4),
+                view.findViewById(R.id.iv_final_record_star5)
+        };
+
+        for (int i = 0; i < stars.length; i++) {
+            final int starIndex = i + 1;
+            stars[i].setOnClickListener(v -> setStarRating(starIndex));
+        }
+
+        // 최종 저장 버튼
         saveButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
@@ -104,7 +118,7 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
 
         // 데이터 준비
         Map<String, Object> bookData = new HashMap<>();
-        bookData.put("rating", viewModel.getRating() != null ? viewModel.getRating().getValue() : 0);
+        bookData.put("rating", selectedStars);
         bookData.put("review", viewModel.getReview() != null ? viewModel.getReview().getValue() : "");
         bookData.put("readingStatus", "read_books");
         bookData.put("readingPage", viewModel.getReadPages() != null ? viewModel.getReadPages().getValue() : 0);

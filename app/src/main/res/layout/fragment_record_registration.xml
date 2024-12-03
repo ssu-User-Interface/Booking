@@ -98,8 +98,10 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/pretendard_regular"
                     android:text="책 제목, "
+                    android:maxLines="2"
+                    android:ellipsize="end"
                     android:textColor="@color/black"
-                    android:textSize="25sp" />
+                    android:textSize="23sp" />
 
                 <TextView
                     android:id="@+id/tv_record_count"
@@ -109,6 +111,7 @@
                     android:fontFamily="@font/pretendard_bold"
                     android:text="오늘의 기록"
                     android:textColor="@color/black"
+
                     android:textSize="30sp" />
 
                 <EditText
