@@ -75,9 +75,9 @@
             android:id="@+id/iv_record_specific_book"
             android:layout_width="90dp"
             android:layout_height="130dp"
-            android:background="@drawable/img_book"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -88,8 +88,9 @@
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_bold"
             android:textColor="#000000"
-            android:textSize="25sp"
-            android:text="사랑데 답함(나태주의 어쩌구)사랑데 답함(나태주의 어쩌구)사랑데 답함(나태주의 어쩌구)"
+            android:textSize="20sp"
+            android:maxLines="2"
+            android:ellipsize="end"
             android:maxLength="30"
             android:visibility="visible"
             android:layout_marginEnd="20dp"
@@ -118,7 +119,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="11dp"
             android:src="@drawable/ic_record_pencil"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
             app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author" />
 
@@ -129,9 +130,8 @@
             android:layout_marginStart="3dp"
             android:layout_marginTop="10dp"
             android:fontFamily="@font/pretendard_regular"
-            android:text="기록 5개"
             android:textSize="8dp"
-            android:visibility="gone"
+            android:visibility="visible"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_note_ic"
             app:layout_constraintTop_toBottomOf="@id/tv_record_main_book_author" />
 
@@ -150,31 +150,31 @@
                 android:id="@+id/iv_record_star1"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star" />
+                android:background="@drawable/ic_record_specific_star" />
 
             <ImageView
                 android:id="@+id/iv_record_star2"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star" />
+                android:background="@drawable/ic_record_specific_star" />
 
             <ImageView
                 android:id="@+id/iv_record_star3"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star" />
+                android:background="@drawable/ic_record_specific_star" />
 
             <ImageView
                 android:id="@+id/iv_record_star4"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star" />
+                android:background="@drawable/ic_record_specific_star" />
 
             <ImageView
                 android:id="@+id/iv_record_star5"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
-                android:src="@drawable/ic_record_specific_star" />
+                android:background="@drawable/ic_record_specific_star" />
 
         </LinearLayout>
 

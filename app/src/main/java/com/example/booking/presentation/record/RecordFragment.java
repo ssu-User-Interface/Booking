@@ -62,7 +62,6 @@ public class RecordFragment extends Fragment {
             Toast.makeText(getContext(), "로그인 정보가 없습니다.", Toast.LENGTH_SHORT).show();
             return view;
         }
-
         // Firestore 초기화
         db = FirebaseFirestore.getInstance();
 
@@ -86,6 +85,14 @@ public class RecordFragment extends Fragment {
         booksReading = new ArrayList<>();
         booksRead = new ArrayList<>();
 
+        // 도서 추가 버튼 초기화 및 클릭 리스너 설정
+        Button addBookButton = view.findViewById(R.id.btn_main_record_add_book);
+        addBookButton.setOnClickListener(v -> {
+            // NavController를 사용하여 SearchFragment로 이동
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_recordFragment_to_searchFragment);
+        });
+
         // 데이터 로드 및 UI 업데이트
         String currentCategory = viewModel.getCurrentCategory(); // ViewModel에서 상태 가져오기
         loadBooksByCategory(currentCategory);
@@ -104,7 +111,7 @@ public class RecordFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 전달받은 currentCategory 복원
+        // 전달받은 카테고리 복원
         if (getArguments() != null) {
             String restoredCategory = getArguments().getString("currentCategory");
             if (restoredCategory != null) {
@@ -112,7 +119,7 @@ public class RecordFragment extends Fragment {
             }
         }
 
-        // ViewModel에서 상태 가져오기
+        // ViewModel에서 현재 카테고리 가져오기
         String currentCategory = viewModel.getCurrentCategory();
         loadBooksByCategory(currentCategory);
         setFont(getCategoryTextView(currentCategory));
