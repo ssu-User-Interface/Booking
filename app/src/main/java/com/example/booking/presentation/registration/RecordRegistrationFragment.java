@@ -49,6 +49,7 @@ public class RecordRegistrationFragment extends Fragment {
         EditText etLikePhrase = view.findViewById(R.id.et_record_like_phrase);
         EditText etMomo = view.findViewById(R.id.et_record_memo);
 
+
         Bundle bundle = getArguments();
         long elapsedTimeInMillis = 0;
 
@@ -161,7 +162,16 @@ public class RecordRegistrationFragment extends Fragment {
 
         // 독서 종료 버튼
         btnCompleteReadingActive.setOnClickListener(v -> {
+            String bookId = bundle!=null ? bundle.getString("bookId") : null;
+            if (bookId == null) {
+                Toast.makeText(getContext(), "Book ID를 설정할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             RecordRegistrationBottomSheetDialogFragment bottomSheetDialogFragment = new RecordRegistrationBottomSheetDialogFragment();
+            Bundle bundle2 = new Bundle();
+            bundle2.putString("bookId",bookId);
+            bottomSheetDialogFragment.setArguments(bundle2);
             bottomSheetDialogFragment.show(getParentFragmentManager(), "RecordRegistrationBottomSheetDialogFragment");
         });
 
