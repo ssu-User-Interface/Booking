@@ -122,6 +122,7 @@ public class RecordRegistrationBottomSheetDialogFragment extends BottomSheetDial
         bookData.put("review", viewModel.getReview() != null ? viewModel.getReview().getValue() : "");
         bookData.put("readingStatus", "read_books");
         bookData.put("readingPage", viewModel.getReadPages() != null ? viewModel.getReadPages().getValue() : 0);
+        bookData.put("endDate",new Date());
 
         Map<String, Object> recordData = new HashMap<>();
         recordData.put("myTitle", viewModel.getRecordTitle() != null ? viewModel.getRecordTitle().getValue() : "");
