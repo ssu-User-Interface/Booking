@@ -82,15 +82,18 @@
 
         <TextView
             android:id="@+id/tv_record_specific_book_title"
-            android:layout_width="wrap_content"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:fontFamily="@font/pretendard_bold"
-            android:text=""
             android:textColor="#000000"
-            android:textSize="30sp"
+            android:textSize="25sp"
+            android:text="사랑데 답함(나태주의 어쩌구)사랑데 답함(나태주의 어쩌구)사랑데 답함(나태주의 어쩌구)"
+            android:maxLength="30"
             android:visibility="visible"
+            android:layout_marginEnd="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/iv_record_specific_book"
             app:layout_constraintTop_toTopOf="parent" />
 

@@ -115,7 +115,6 @@
         android:layout_width="58dp"
         android:layout_height="75dp"
         android:layout_marginStart="20dp"
-        android:background="@drawable/img_book"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@id/view_timer_book_bg"
         app:layout_constraintStart_toStartOf="@id/view_timer_book_bg"
@@ -123,15 +122,18 @@
 
     <TextView
         android:id="@+id/tv_timer_book_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="15dp"
         android:layout_marginTop="15dp"
+        android:layout_marginEnd="15dp"
         android:fontFamily="@font/pretendard_bold"
-        android:text="원미동 사람들"
+        android:text="원미동 사람들원미동 사람들원미동 사람들원미동 사람들"
+        android:maxLength="25"
         android:textColor="#5B5C59"
         android:textSize="20sp"
         android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="@id/view_timer_book_bg"
         app:layout_constraintStart_toEndOf="@id/iv_timer_book"
         app:layout_constraintTop_toTopOf="@id/view_timer_book_bg" />
 

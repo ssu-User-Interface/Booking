@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.booking.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -172,6 +173,7 @@ public class HomeFragment extends Fragment {
                                 long readingPage = mostRecentDocument.getLong("readingPage") != null
                                         ? mostRecentDocument.getLong("readingPage")
                                         : 0;
+                                String coverUrl = mostRecentDocument.getString("image"); // 표지 이미지 URL 가져오기
 
                                 tvBookTitle.setText(title != null ? title : "제목 없음");
                                 tvReadingPage.setText(readingPage + "/" + totalPages + "p");
@@ -189,6 +191,14 @@ public class HomeFragment extends Fragment {
                                 } else {
                                     prg.setMax(1); // 0으로 설정 시 오류가 발생할 수 있으므로 기본값 설정
                                     prg.setProgress(0);
+                                }
+
+                                if (coverUrl != null && !coverUrl.isEmpty()) {
+                                    Glide.with(requireContext()) // Glide 사용
+                                            .load(coverUrl)
+                                            .into(ivBookImg);
+                                } else {
+                                    ivBookImg.setImageResource(R.drawable.img_book); // 표지가 없는 경우 기본 이미지 설정
                                 }
 
                                 // 읽고 있는 책 UI

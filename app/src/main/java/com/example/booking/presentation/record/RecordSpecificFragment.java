@@ -1,5 +1,6 @@
 package com.example.booking.presentation.record;
 
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,6 +102,24 @@ public class RecordSpecificFragment extends Fragment {
                     });
         }
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 뒤로가기 버튼 설정
+        ImageView backButton = view.findViewById(R.id.iv_record_specific_back_arrow);
+        backButton.setOnClickListener(v -> {
+            // 현재 카테고리를 번들로 전달
+            String currentCategory = requireArguments().getString("category", "will_read_books");
+            Bundle bundle = new Bundle();
+            bundle.putString("currentCategory", currentCategory);
+
+            // NavController로 이동
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_recordSpecificFragment_to_recordFragment, bundle);
+        });
     }
 
     private void loadBookDetails(String bookId) {
