@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.booking.R;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
@@ -168,10 +169,11 @@ public class HomeFragment extends Fragment {
                                 String title = mostRecentDocument.getString("title");
                                 long totalPages = mostRecentDocument.getLong("totalPages") != null
                                         ? mostRecentDocument.getLong("totalPages")
-                                        : 0;
+                                        : 350;
                                 long readingPage = mostRecentDocument.getLong("readingPage") != null
                                         ? mostRecentDocument.getLong("readingPage")
                                         : 0;
+                                String coverUrl = mostRecentDocument.getString("image"); // 표지 이미지 URL 가져오기
 
                                 tvBookTitle.setText(title != null ? title : "제목 없음");
                                 tvReadingPage.setText(readingPage + "/" + totalPages + "p");
@@ -182,6 +184,7 @@ public class HomeFragment extends Fragment {
                                     tvReadingPeriod.setText(startDate);
                                 }
 
+                                prg.setVisibility(View.VISIBLE);
                                 // ProgressBar 업데이트
                                 if (totalPages > 0) {
                                     prg.setMax((int) totalPages); // totalPages를 max로 설정
@@ -189,6 +192,14 @@ public class HomeFragment extends Fragment {
                                 } else {
                                     prg.setMax(1); // 0으로 설정 시 오류가 발생할 수 있으므로 기본값 설정
                                     prg.setProgress(0);
+                                }
+
+                                if (coverUrl != null && !coverUrl.isEmpty()) {
+                                    Glide.with(requireContext()) // Glide 사용
+                                            .load(coverUrl)
+                                            .into(ivBookImg);
+                                } else {
+                                    ivBookImg.setImageResource(R.drawable.img_book); // 표지가 없는 경우 기본 이미지 설정
                                 }
 
                                 // 읽고 있는 책 UI
@@ -247,6 +258,12 @@ public class HomeFragment extends Fragment {
 
                         // 책이 없을 경우 처리
                         if (!hasReadingBook) {
+                            // "읽는 책 없음" UI 표시
+                            ivBookIcon.setVisibility(View.VISIBLE);
+                            tvNoBook.setVisibility(View.VISIBLE);
+                            addBookButton.setVisibility(View.VISIBLE);
+
+                            // 기존 읽는 책 관련 UI 숨김
                             tvBookTitle.setVisibility(View.GONE);
                             viewLine.setVisibility(View.GONE);
                             tvReadingPeriod.setVisibility(View.GONE);
@@ -254,10 +271,6 @@ public class HomeFragment extends Fragment {
                             prg.setVisibility(View.GONE);
                             toTimerButton.setVisibility(View.GONE);
                             ivBookImg.setVisibility(View.GONE);
-
-                            ivBookIcon.setVisibility(View.VISIBLE);
-                            tvNoBook.setVisibility(View.VISIBLE);
-                            addBookButton.setVisibility(View.VISIBLE);
 
                             // 책 추가 버튼 클릭 이벤트
                             addBookButton.setOnClickListener(v -> {
@@ -280,9 +293,9 @@ public class HomeFragment extends Fragment {
 
     // Helper: 초를 HH:mm:ss로 변환
     private String formatSecondsToTime(int totalSeconds) {
-        int hours = totalSeconds / 3600;
-        int minutes = (totalSeconds % 3600) / 60;
-        int seconds = totalSeconds % 60;
+        int hours = (totalSeconds / 1000) / 3600;
+        int minutes = ((totalSeconds / 1000) % 3600) / 60;
+        int seconds = (totalSeconds / 1000) % 60;
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
 

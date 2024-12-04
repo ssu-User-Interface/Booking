@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,14 +22,17 @@ import com.bumptech.glide.Glide;
 import com.example.booking.R;
 import com.example.booking.data.model.Record;
 import com.example.booking.presentation.record.adapter.RecordAdapter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.sql.Time;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class RecordSpecificFragment extends Fragment {
 
@@ -100,8 +102,50 @@ public class RecordSpecificFragment extends Fragment {
 
                     });
         }
+
+        // RecyclerView 초기화
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_record_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recordAdapter);
+
+        // RecyclerView 스크롤 리스너 추가
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // btn_specific_record_start_timer 버튼 숨기기 로직
+                Button btnSpecificRecordStartTimer = view.findViewById(R.id.btn_specific_record_start_timer);
+                if (dy > 0) { // 스크롤 다운
+                    btnSpecificRecordStartTimer.setVisibility(View.GONE);
+                } else if (dy < 0) { // 스크롤 업
+                    btnSpecificRecordStartTimer.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // 뒤로가기 버튼 설정
+        ImageView backButton = view.findViewById(R.id.iv_record_specific_back_arrow);
+        backButton.setOnClickListener(v -> {
+            String currentCategory = requireArguments().getString("category", "will_read_books");
+            Log.d("BackButton", "Current category: " + currentCategory);
+
+            Bundle bundle = new Bundle();
+            bundle.putString("currentCategory", currentCategory);
+
+            // NavController로 이동
+            NavController navController = Navigation.findNavController(view);
+            navController.navigate(R.id.action_recordSpecificFragment_to_recordFragment, bundle);
+        });
+    }
+
 
     private void loadBookDetails(String bookId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -119,17 +163,49 @@ public class RecordSpecificFragment extends Fragment {
                         String image = snapshot.getString("image");
                         String readingStatus = snapshot.getString("readingStatus");
 
+                        // 추가 정보
+                        Long rating = snapshot.getLong("rating");
+                        String review = snapshot.getString("review");
+                        Timestamp startDate = snapshot.getTimestamp("startDate");
+                        Timestamp endDate = snapshot.getTimestamp("endDate");
+
                         updateBookDetailsUI(title, author, image);
 
                         if ("read_books".equals(readingStatus)) {
-                            readBooksVisibility();
+                            updateReadBooksUI(rating, review, startDate, endDate);
                         }
-
-
+                        // 기록 리스트 로드
                         loadRecordList(bookRef);
                     }
                 })
                 .addOnFailureListener(e -> Log.e("FirestoreError", "책 데이터 로드 실패: " + e.getMessage()));
+    }
+
+    private void updateReadBooksUI(Long rating, String review, Timestamp startDate, Timestamp endDate) {
+        icNote.setVisibility(View.VISIBLE);
+        tvNote.setVisibility(View.VISIBLE);
+        tvDate.setVisibility(View.VISIBLE);
+        tvReview.setVisibility(View.VISIBLE);
+        score.setVisibility(View.VISIBLE);
+
+        // 평점 설정
+        updateStarRating(rating);
+
+        // 한줄평 설정
+        if (review != null && !review.isEmpty()) {
+            tvReview.setText(review);
+        } else {
+            tvReview.setText("한줄평 없음");
+        }
+
+        // 읽은 기간 설정
+        if (startDate != null && endDate != null) {
+            String formattedStartDate = formatTimestamp(startDate);
+            String formattedEndDate = formatTimestamp(endDate);
+            tvDate.setText(String.format("%s ~ %s", formattedStartDate, formattedEndDate));
+        } else {
+            tvDate.setText("기간 정보 없음");
+        }
     }
 
     private void loadRecordList(DocumentReference bookRef) {
@@ -138,14 +214,18 @@ public class RecordSpecificFragment extends Fragment {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     recordList.clear();
+                    int recordCount = 0;
                     for (DocumentSnapshot recordSnapshot : querySnapshot) {
                         Record record = recordSnapshot.toObject(Record.class);
                         if (record != null) {
                             recordList.add(record);
+                            recordCount++;
                         }
                     }
                     recordAdapter.notifyDataSetChanged();
 
+
+                    tvNote.setText(String.format("기록 %d개", recordCount));
                     if (recordList.isEmpty()) {
                         emptyRecordList();
                     }
@@ -167,17 +247,43 @@ public class RecordSpecificFragment extends Fragment {
         }
     }
 
-    public void readBooksVisibility() {
-        icNote.setVisibility(View.VISIBLE);
-        tvNote.setVisibility(View.VISIBLE);
-        tvDate.setVisibility(View.VISIBLE);
-        tvReview.setVisibility(View.VISIBLE);
-        score.setVisibility(View.VISIBLE);
-    }
-
     public void emptyRecordList() {
         Logo.setVisibility(View.VISIBLE);
         status.setVisibility(View.VISIBLE);
         line.setVisibility(View.VISIBLE);
     }
+
+    private String formatTimestamp(Timestamp timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd", Locale.getDefault());
+        return sdf.format(timestamp.toDate());
+    }
+
+    private void updateStarRating(Long rating) {
+        // 별점이 없는 경우 처리
+        if (rating == null || rating < 1 || rating > 5) {
+            score.setVisibility(View.GONE);
+            return;
+        }
+
+        // 별점 관련 ImageView 가져오기
+        ImageView[] stars = {
+                getView().findViewById(R.id.iv_record_star1),
+                getView().findViewById(R.id.iv_record_star2),
+                getView().findViewById(R.id.iv_record_star3),
+                getView().findViewById(R.id.iv_record_star4),
+                getView().findViewById(R.id.iv_record_star5)
+        };
+
+        // 모든 별의 기본 상태 설정 (채워지지 않은 상태)
+        for (ImageView star : stars) {
+            star.setBackgroundResource(R.drawable.ic_record_specific_star); // 기본 별
+        }
+
+        // 왼쪽부터 채우기
+        int filledStars = rating.intValue();
+        for (int i = 0; i < filledStars; i++) {
+            stars[i].setBackgroundResource(R.drawable.ic_record_specific_star2); // 채워진 별
+        }
+    }
+
 }
