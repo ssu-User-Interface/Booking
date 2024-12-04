@@ -1,5 +1,6 @@
 package com.example.booking.presentation.record;
 
+import android.annotation.SuppressLint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.booking.R;
+import com.example.booking.data.model.Book;
 import com.example.booking.dto.response.BookSearchResponseDto;
 import com.example.booking.presentation.record.adapter.BookAdapter;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +49,8 @@ public class RecordFragment extends Fragment {
     private FirebaseFirestore db;
     private String userId;
 
+
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_record, container, false);
@@ -103,10 +107,12 @@ public class RecordFragment extends Fragment {
 
         // 어댑터 클릭 리스너 설정
         bookAdapter.setOnItemClickListener(book -> navigateToRecordSpecific(book, view));
+        bookAdapter.notifyDataSetChanged();
 
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -114,15 +120,29 @@ public class RecordFragment extends Fragment {
         // 전달받은 카테고리 복원
         if (getArguments() != null) {
             String restoredCategory = getArguments().getString("currentCategory");
+            Log.d("RecordFragment", "restored Category : "+ restoredCategory);
             if (restoredCategory != null) {
                 viewModel.setCurrentCategory(restoredCategory);
             }
         }
 
+        bookAdapter.notifyDataSetChanged();
         // ViewModel에서 현재 카테고리 가져오기
         String currentCategory = viewModel.getCurrentCategory();
         loadBooksByCategory(currentCategory);
         setFont(getCategoryTextView(currentCategory));
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        String currentCategory = viewModel.getCurrentCategory();
+        Log.d("RecordFragment", "onResume - Current category: " + currentCategory);
+
+        // 데이터 로드 및 어댑터 업데이트
+        loadBooksByCategory(currentCategory);
     }
 
     private void setupCategoryClickListeners() {
@@ -139,14 +159,26 @@ public class RecordFragment extends Fragment {
 
     private void loadBooksByCategory(String category) {
         List<BookSearchResponseDto.BookItemDto> bookList = getCategoryList(category);
+
+        // 로그 추가
+        Log.d("RecordFragment", "Starting Firestore query for category: " + category);
+
         db.collection("users").document(userId).collection("books")
                 .whereEqualTo("readingStatus", category)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    bookList.clear();
+                    // bookList 초기화 후 데이터 추가
                     List<BookSearchResponseDto.BookItemDto> sortedBooks = sortBooksByCreatedAt(querySnapshot);
+                    Log.d("RecordFragment", "Fetched books: " + sortedBooks.size());
+
+                    bookList.clear(); // Clear only after a successful response
                     bookList.addAll(sortedBooks);
+
+                    // 어댑터 업데이트
                     bookAdapter.updateBooks(bookList);
+                    recyclerView.scrollToPosition(0);
+
+                    Log.d("RecordFragment", "Books loaded: " + bookList.size());
                 })
                 .addOnFailureListener(e -> Log.e("RecordFragment", "Firestore 요청 실패", e));
     }

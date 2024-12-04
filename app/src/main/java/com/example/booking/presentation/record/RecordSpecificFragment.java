@@ -102,6 +102,28 @@ public class RecordSpecificFragment extends Fragment {
 
                     });
         }
+
+        // RecyclerView 초기화
+        RecyclerView recyclerView = view.findViewById(R.id.recyclerView_record_list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(recordAdapter);
+
+        // RecyclerView 스크롤 리스너 추가
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                // btn_specific_record_start_timer 버튼 숨기기 로직
+                Button btnSpecificRecordStartTimer = view.findViewById(R.id.btn_specific_record_start_timer);
+                if (dy > 0) { // 스크롤 다운
+                    btnSpecificRecordStartTimer.setVisibility(View.GONE);
+                } else if (dy < 0) { // 스크롤 업
+                    btnSpecificRecordStartTimer.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
         return view;
     }
 
@@ -123,6 +145,7 @@ public class RecordSpecificFragment extends Fragment {
             navController.navigate(R.id.action_recordSpecificFragment_to_recordFragment, bundle);
         });
     }
+
 
     private void loadBookDetails(String bookId) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
