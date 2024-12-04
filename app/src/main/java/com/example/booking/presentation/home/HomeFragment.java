@@ -293,9 +293,9 @@ public class HomeFragment extends Fragment {
 
     // Helper: 초를 HH:mm:ss로 변환
     private String formatSecondsToTime(int totalSeconds) {
-        int hours = totalSeconds / 3600;
-        int minutes = (totalSeconds % 3600) / 60;
-        int seconds = totalSeconds % 60;
+        int hours = (totalSeconds / 1000) / 3600;
+        int minutes = ((totalSeconds / 1000) % 3600) / 60;
+        int seconds = (totalSeconds / 1000) % 60;
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
