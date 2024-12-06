@@ -143,6 +143,9 @@
         <argument
             android:name="bookDescription"
             app:argType="string"/>
+        <argument
+            android:name="pageCount"
+            app:argType="integer" />
     </fragment>
     <dialog
         android:id="@+id/bookSearchSaveBottomSheetFragment"
@@ -167,6 +170,9 @@
         <argument
             android:name="bookDescription"
             app:argType="string" />
+        <argument
+            android:name="pageCount"
+            app:argType="integer" />
     </dialog>
 
     <!-- Timer Fragment -->

@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -36,7 +37,7 @@ import java.util.Map;
 
 public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment {
 
-    private Button btnToRead, btnReading, btnRead;
+    private Button btnToRead, btnReading, btnRead ;
     private TextView tvStartDay, tvAmount, tvPeriod, tvReview, tvScore;
     private EditText etStartDay, etAmount, etStartPeriod, etEndPeriod, etReview;
     private LinearLayout layoutPeriod, layoutScore;
@@ -50,6 +51,8 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
 
     private FirebaseFirestore db;
     private FirebaseAuth auth;
+
+    private BookSearchDetailViewModel viewModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,7 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
             Toast.makeText(getContext(), "로그인 정보가 없습니다. 다시 로그인해주세요.", Toast.LENGTH_SHORT).show();
         }
 
+        viewModel = new ViewModelProvider(requireActivity()).get(BookSearchDetailViewModel.class);
 
         BookSearchSaveBottomSheetFragmentArgs args = BookSearchSaveBottomSheetFragmentArgs.fromBundle(getArguments());
         bookTitle = args.getBookTitle();
@@ -73,7 +77,9 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         bookPublisher = args.getBookPublisher();
         bookImage = args.getBookImage();
         bookDescription = args.getBookDescription();
-        bookTotalPage = 250;
+        bookTotalPage = args.getPageCount();
+
+
     }
 
     @Override
@@ -138,6 +144,7 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
 
         return view;
     }
+
 
     private void setupDatePicker(EditText editText) {
         editText.setFocusable(false);
@@ -217,7 +224,8 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
                                             bookAuthor,
                                             bookPublisher,
                                             bookImage,
-                                            bookDescription
+                                            bookDescription,
+                                            bookTotalPage
                                     );
                     navController.navigate(action);
                 })
@@ -311,18 +319,7 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         ImageView backButton = view.findViewById(R.id.iv_back_arrow);
         NavController navController = NavHostFragment.findNavController(this);
 
-        backButton.setOnClickListener(v -> {
-            BookSearchSaveBottomSheetFragmentDirections.ActionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment action;
-            action = BookSearchSaveBottomSheetFragmentDirections
-                    .actionBookSearchSaveBottomSheetFragmentToBookSearchDetailFragment(
-                            "bookTitleExample",
-                            "bookAuthorExample",
-                            "bookPublisherExample",
-                            "bookImageExample",
-                            "bookDescriptionExample"
-                    );
-            navController.navigate(action);
-        });
+        backButton.setOnClickListener(v -> navController.popBackStack());
     }
 
 }

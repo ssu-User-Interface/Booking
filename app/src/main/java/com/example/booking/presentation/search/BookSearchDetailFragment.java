@@ -20,7 +20,7 @@ import com.example.booking.R;
 
 public class BookSearchDetailFragment extends Fragment {
 
-    private TextView tvTitle, tvAuthor, tvPublisher, tvDescription;
+    private TextView tvTitle, tvAuthor, tvPublisher, tvDescription, tvPageCount;
     private ImageView ivCover;
     private BookSearchDetailViewModel viewModel;
 
@@ -45,6 +45,7 @@ public class BookSearchDetailFragment extends Fragment {
         viewModel.setBookPublisher(args.getBookPublisher());
         viewModel.setBookImage(args.getBookImage());
         viewModel.setBookDescription(args.getBookDescription());
+        viewModel.setPageCount(args.getPageCount());
 
         observeViewModel();
 
@@ -65,7 +66,8 @@ public class BookSearchDetailFragment extends Fragment {
                             viewModel.getBookAuthor().getValue(),
                             viewModel.getBookPublisher().getValue(),
                             viewModel.getBookImage().getValue(),
-                            viewModel.getBookDescription().getValue()
+                            viewModel.getBookDescription().getValue(),
+                            viewModel.getPageCount().getValue()
                     );
             navController.navigate(action);
         });
@@ -75,6 +77,7 @@ public class BookSearchDetailFragment extends Fragment {
         tvTitle = view.findViewById(R.id.tv_book_search_detail_name);
         tvAuthor = view.findViewById(R.id.tv_book_search_detail_author);
         tvPublisher = view.findViewById(R.id.tv_book_search_detail_publisher);
+        tvPageCount = view.findViewById(R.id.tv_book_search_detail_page);
         tvDescription = view.findViewById(R.id.tv_book_search_detail_description);
         ivCover = view.findViewById(R.id.iv_book_search_detail_cover);
     }
@@ -89,5 +92,12 @@ public class BookSearchDetailFragment extends Fragment {
             }
         });
         viewModel.getBookDescription().observe(getViewLifecycleOwner(), description -> tvDescription.setText(description));
+        viewModel.getPageCount().observe(getViewLifecycleOwner(), pageCount -> {
+            if (pageCount != null && pageCount > 0) {
+                tvPageCount.setText(String.valueOf(pageCount));
+            } else {
+                tvPageCount.setText("365");
+            }
+        });
     }
 }

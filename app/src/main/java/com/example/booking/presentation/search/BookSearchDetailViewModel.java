@@ -5,11 +5,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class BookSearchDetailViewModel extends ViewModel {
-    private final MutableLiveData<String> bookTitle = new MutableLiveData<>();
-    private final MutableLiveData<String> bookAuthor = new MutableLiveData<>();
-    private final MutableLiveData<String> bookPublisher = new MutableLiveData<>();
-    private final MutableLiveData<String> bookImage = new MutableLiveData<>();
-    private final MutableLiveData<String> bookDescription = new MutableLiveData<>();
+    private final MutableLiveData<String> bookTitle = new MutableLiveData<>("");
+    private final MutableLiveData<String> bookAuthor = new MutableLiveData<>("");
+    private final MutableLiveData<String> bookPublisher = new MutableLiveData<>("");
+    private final MutableLiveData<String> bookImage = new MutableLiveData<>("");
+    private final MutableLiveData<String> bookDescription = new MutableLiveData<>("");
+    private final MutableLiveData<Integer> pageCount = new MutableLiveData<>(0);
 
     public LiveData<String> getBookTitle() {
         return bookTitle;
@@ -50,4 +51,9 @@ public class BookSearchDetailViewModel extends ViewModel {
     public void setBookDescription(String description) {
         bookDescription.setValue(description);
     }
+
+    public LiveData<Integer> getPageCount() {return pageCount;}
+
+    public void setPageCount(int pageCount) {this.pageCount.setValue(pageCount);}
+
 }
