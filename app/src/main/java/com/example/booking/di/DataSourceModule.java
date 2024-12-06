@@ -1,6 +1,8 @@
 package com.example.booking.di;
 
+import com.example.booking.datasource.AladinDataSource;
 import com.example.booking.datasource.NaverDataSource;
+import com.example.booking.datasourceImpl.AladinDataSourceImpl;
 import com.example.booking.datasourceImpl.NaverDataSourceImpl;
 
 import javax.inject.Singleton;
@@ -19,4 +21,11 @@ public class DataSourceModule {
     public NaverDataSource provideNaverDataSource(NaverDataSourceImpl naverDataSourceImpl) {
         return naverDataSourceImpl;
     }
+
+    @Provides
+    @Singleton
+    public AladinDataSource provideAladinDataSource(AladinDataSourceImpl aladinDataSourceImpl) {
+        return aladinDataSourceImpl;
+    }
+
 }

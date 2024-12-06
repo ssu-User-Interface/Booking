@@ -64,13 +64,13 @@ public class BookSearchFragment extends Fragment {
                 adapter.updateBooks(books);
             } else {
                 Toast.makeText(getContext(), "검색 결과가 없습니다.", Toast.LENGTH_SHORT).show();
-                adapter.updateBooks(new ArrayList<>()); // RecyclerView 초기화
+                adapter.updateBooks(new ArrayList<>());
             }
         });
 
         viewModel.getCurrentQuery().observe(getViewLifecycleOwner(), query -> {
             if (query != null) {
-                etBookSearch.setText(query); // 검색어 복원
+                etBookSearch.setText(query);
             }
         });
     }
@@ -93,7 +93,8 @@ public class BookSearchFragment extends Fragment {
                         bookItem.getAuthor(),
                         bookItem.getPublisher(),
                         bookItem.getImage(),
-                        bookItem.getDescription()
+                        bookItem.getDescription(),
+                        bookItem.getPageCount()
                 );
 
         navController.navigate(action);

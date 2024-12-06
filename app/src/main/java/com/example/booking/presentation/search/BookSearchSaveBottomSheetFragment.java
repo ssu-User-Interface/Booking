@@ -77,7 +77,7 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
         bookPublisher = args.getBookPublisher();
         bookImage = args.getBookImage();
         bookDescription = args.getBookDescription();
-        bookTotalPage = 250;
+        bookTotalPage = args.getPageCount();
 
 
     }
@@ -224,7 +224,8 @@ public class BookSearchSaveBottomSheetFragment extends BottomSheetDialogFragment
                                             bookAuthor,
                                             bookPublisher,
                                             bookImage,
-                                            bookDescription
+                                            bookDescription,
+                                            bookTotalPage
                                     );
                     navController.navigate(action);
                 })

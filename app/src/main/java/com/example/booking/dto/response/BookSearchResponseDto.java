@@ -1,10 +1,30 @@
 package com.example.booking.dto.response;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 import java.util.List;
 
 public class BookSearchResponseDto {
     private List<BookItemDto> items;
+    private int totalResults;
+    private int itemsPerPage;
+
+    public int getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
+    }
+
+    public int getItemsPerPage() {
+        return itemsPerPage;
+    }
+
+    public void setItemsPerPage(int itemsPerPage) {
+        this.itemsPerPage = itemsPerPage;
+    }
 
     public List<BookItemDto> getItems() {
         return items;
@@ -23,10 +43,9 @@ public class BookSearchResponseDto {
         private String publisher;
         private String pubdate;
         private String description;
-        private int pageCount; 
+        private int pageCount;
         private String readingStatus;
 
-        // 새로 추가된 필드
         private Date createdAt;
         private Date startDate;
         private Date endDate;
@@ -35,7 +54,7 @@ public class BookSearchResponseDto {
         private int rating;
         private String review;
 
-        // 기존 필드
+
         public void setId(String id) {
             this.id = id;
         }
@@ -103,9 +122,11 @@ public class BookSearchResponseDto {
         public void setPageCount(int pageCount) {
             this.pageCount = pageCount;
         }
+
         public String getDescription() {
             return description;
         }
+
         public void setDescription(String description) {
             this.description = description;
         }
@@ -114,7 +135,6 @@ public class BookSearchResponseDto {
             this.readingStatus = readingStatus;
         }
 
-        // 추가된 필드의 getter와 setter
         public Date getCreatedAt() {
             return createdAt;
         }
@@ -170,6 +190,7 @@ public class BookSearchResponseDto {
         public void setReview(String review) {
             this.review = review;
         }
+
 
         public BookItemDto() {
             // Firebase에서 객체 변환 시 필요
