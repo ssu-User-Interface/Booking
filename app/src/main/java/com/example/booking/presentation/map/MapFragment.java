@@ -81,13 +81,23 @@ public class MapFragment extends Fragment {
 
             // 사용자 위치 마커 추가
             if (startPosition != null) {
+                // 검색된 위치로 카메라 이동
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newCenterPosition(startPosition);
+                kakaoMap.moveCamera(cameraUpdate);
+
                 LabelLayer layer = kakaoMap.getLabelManager().getLayer();
                 centerLabel = layer.addLabel(LabelOptions.from("centerLabel", startPosition)
                         .setStyles(LabelStyle.from(R.drawable.blue_dot).setAnchorPoint(0.5f, 0.5f))
                         .setRank(1));
-                TrackingManager trackingManager = kakaoMap.getTrackingManager();
-                trackingManager.startTracking(centerLabel);
-                startLocationUpdates();
+//                TrackingManager trackingManager = kakaoMap.getTrackingManager();
+//                trackingManager.startTracking(centerLabel);
+//                startLocationUpdates();
+
+                // 현재 위치 업데이트 필요 시 시작
+                if (isFirstLoad) {
+                    startLocationUpdates();
+                    isFirstLoad = false;
+                }
             }
             // 지도 클릭 리스너 추가
             kakaoMap.setOnMapClickListener((kakaoMap, latLng, pointF, layer) -> {
@@ -143,11 +153,6 @@ public class MapFragment extends Fragment {
             }
         }
 
-//        if (startPosition == null) {
-//            // 번들 값이 없을 때만 현재 위치를 가져옵니다.
-//            getStartLocation();
-//        }
-
         locationCallback = new LocationCallback() {
             @Override
             public void onLocationResult(@NonNull LocationResult locationResult) {
@@ -164,15 +169,6 @@ public class MapFragment extends Fragment {
         } else {
             requestPermissions(locationPermissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
-
-//        if (getArguments() != null) {
-//            String placeName = getArguments().getString("placeName");
-//            String placeAddress = getArguments().getString("placeAddress");
-//
-//            // 데이터를 UI에 표시하거나 로직 처리
-//            Log.d("MapFragment", "Place Name: " + placeName);
-//            Log.d("MapFragment", "Place Address: " + placeAddress);
-//        }
 
         return view;
     }

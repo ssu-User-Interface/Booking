@@ -84,7 +84,7 @@ public class MapSearchFragment extends Fragment {
             bundle_toMap.putDouble("longitude", place.getLongitude());
             Log.d("MapSearchFragment", "Latitude: " + place.getLatitude() + ", Longitude: " + place.getLongitude()+place.getAddress()+place.getPlaceAddress());
             navController.navigate(R.id.action_mapSearchFragment_to_mapFragment,bundle_toMap);
-
+            navController.popBackStack(R.id.mapFragment,false);
         });
 
         return view;
