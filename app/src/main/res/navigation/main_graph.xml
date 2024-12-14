@@ -33,7 +33,8 @@
         android:id="@+id/mapFragment"
         android:name="com.example.booking.presentation.map.MapFragment"
         android:label="MapFragment"
-        tools:layout="@layout/fragment_map">
+        tools:layout="@layout/fragment_map"
+        app:launchSingleTop = "true">
         <action
             android:id="@+id/action_mapFragment_to_mapSearchFragment"
             app:destination="@id/mapSearchFragment" />

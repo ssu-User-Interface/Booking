@@ -54,7 +54,6 @@ public class MapSearchFragment extends Fragment {
 
         // 네비게이션 가져오기
         NavController navController = Navigation.findNavController(container);
-
         // 버튼 설정 및 클릭 리스너 구현
         ImageView ivBackArrow = view.findViewById(R.id.iv_back_arrow);
         ivBackArrow.setOnClickListener(v -> {
@@ -83,9 +82,11 @@ public class MapSearchFragment extends Fragment {
             bundle_toMap.putString("placeAddress", place.getPlaceAddress());
             bundle_toMap.putDouble("latitude",place.getLatitude());
             bundle_toMap.putDouble("longitude", place.getLongitude());
-
-            navController.navigate(R.id.mapFragment, bundle_toMap);
+            Log.d("MapSearchFragment", "Latitude: " + place.getLatitude() + ", Longitude: " + place.getLongitude()+place.getAddress()+place.getPlaceAddress());
+            navController.navigate(R.id.action_mapSearchFragment_to_mapFragment,bundle_toMap);
+            navController.popBackStack(R.id.mapFragment,false);
         });
+
         return view;
     }
 

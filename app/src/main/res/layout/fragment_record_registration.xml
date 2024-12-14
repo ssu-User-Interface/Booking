@@ -80,7 +80,6 @@
                 android:layout_width="90dp"
                 android:layout_height="130dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/img_book"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fragment_top" />
 

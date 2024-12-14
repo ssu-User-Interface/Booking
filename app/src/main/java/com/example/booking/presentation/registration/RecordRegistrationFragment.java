@@ -34,6 +34,7 @@ import java.util.Map;
 
 public class RecordRegistrationFragment extends Fragment {
     private RecordRegistrationViewModel viewModel;
+    private Long totalPage = 0L; // Firestore에서 가져올 totalPage
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,7 +61,6 @@ public class RecordRegistrationFragment extends Fragment {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm", Locale.getDefault());
         String formattedDate = dateFormat.format(date);
         tvRecordDate.setText(formattedDate);
-
 
         Bundle bundle = getArguments();
         long elapsedTimeInMillis = 0;
@@ -138,8 +138,6 @@ public class RecordRegistrationFragment extends Fragment {
                 bundle.putString("placeAddress",placeAddress);
             }
         }
-
-        TextView tvTotalPages = view.findViewById(R.id.tv_record_registration_total_page); // 전체 페이지 표시 텍스트
         Button btnCompleteReadingActive = view.findViewById(R.id.btn_complete_reading_activate);
         Button btnCompleteReadingDeactivate = view.findViewById(R.id.btn_complete_reading_deactivate);
 
@@ -147,10 +145,6 @@ public class RecordRegistrationFragment extends Fragment {
         // 기본적으로 활성화 버튼 숨김, 비활성화 버튼 표시
         btnCompleteReadingActive.setVisibility(View.GONE);
         btnCompleteReadingDeactivate.setVisibility(View.VISIBLE);
-
-        // 전체 페이지 값 가져오기 (예: TextView에 표시된 값)
-        String totalPagesText = tvTotalPages.getText().toString();
-        int totalPages = totalPagesText.isEmpty() ? 0 : Integer.parseInt(totalPagesText);
 
         // EditText의 값이 변경될 때 리스너 설정
         etReadPages.addTextChangedListener(new SimpleTextWatcher() {
@@ -160,7 +154,7 @@ public class RecordRegistrationFragment extends Fragment {
                 int enteredPages = enteredPagesText.isEmpty() ? 0 : Integer.parseInt(enteredPagesText);
 
                 // 읽은 페이지 값과 전체 페이지 값 비교
-                if (enteredPages == totalPages) {
+                if (enteredPages == totalPage) {
                     btnCompleteReadingActive.setVisibility(View.VISIBLE); // 활성화 버튼 표시
                     btnCompleteReadingDeactivate.setVisibility(View.GONE); // 비활성화 버튼 숨김
                 } else {
@@ -364,20 +358,25 @@ public class RecordRegistrationFragment extends Fragment {
             if (snapshot.exists()) {
                 String title = snapshot.getString("title");
                 String image = snapshot.getString("image");
+                Long fetchedTotalPage = snapshot.getLong("totalPage");
+
+                totalPage = fetchedTotalPage;
 
                 // Update UI with book details
-                updateBookDetailsUI(title, image);
+                updateBookDetailsUI(title, image,totalPage);
             } else {
                 Log.e("TimerFragment", "Book not found for bookId: " + bookId);
             }
         }).addOnFailureListener(e -> Log.e("TimerFragment", "Failed to load book details", e));
     }
 
-    private void updateBookDetailsUI(String title, String image) {
+    private void updateBookDetailsUI(String title, String image, Long totalPage) {
         TextView bookTitleTextView = getView().findViewById(R.id.tv_record_registration_book_title);
         ImageView bookImageView = getView().findViewById(R.id.iv_record_registration_book);
+        TextView bookTotalPage = getView().findViewById(R.id.tv_record_registration_total_page);
 
         bookTitleTextView.setText(title != null ? title : "제목 없음");
+        bookTotalPage.setText(totalPage!=null ? String.valueOf(totalPage):"에러");
 
         if (image != null) {
             Glide.with(this).load(image).into(bookImageView);
