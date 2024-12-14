@@ -4,8 +4,10 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -33,6 +35,7 @@ public class BookSearchFragment extends Fragment {
 
     private EditText etBookSearch;
     private ImageView ivSearchButton;
+    private Button filterButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -50,12 +53,14 @@ public class BookSearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_book_search);
         etBookSearch = view.findViewById(R.id.et_book_search);
         ivSearchButton = view.findViewById(R.id.iv_book_search_icon);
+        filterButton = view.findViewById(R.id.bt_book_search_filter_button);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new BookSearchRVA(new ArrayList<>(), book -> openBookDetailFragment(requireView(), book));
         recyclerView.setAdapter(adapter);
 
         ivSearchButton.setOnClickListener(v -> performSearch());
+        filterButton.setOnClickListener(v -> showSortMenu(v));
     }
 
     private void initObserver() {
@@ -73,15 +78,42 @@ public class BookSearchFragment extends Fragment {
                 etBookSearch.setText(query);
             }
         });
+
+        viewModel.getCurrentSort().observe(getViewLifecycleOwner(), sort -> {
+            if ("sim".equals(sort)) {
+                filterButton.setText("정확도순");
+            } else if ("date".equals(sort)) {
+                filterButton.setText("출간일순");
+            }
+        });
+    }
+
+    private void showSortMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.getMenu().add("정확도순").setOnMenuItemClickListener(item -> {
+            filterButton.setText("정확도순");
+            performSearch("sim");
+            return true;
+        });
+        popupMenu.getMenu().add("출간일순").setOnMenuItemClickListener(item -> {
+            filterButton.setText("출간일순");
+            performSearch("date");
+            return true;
+        });
+        popupMenu.show();
     }
 
     private void performSearch() {
+        performSearch("sim");
+    }
+
+    private void performSearch(String sort) {
         String query = etBookSearch.getText().toString().trim();
         if (query.isEmpty()) {
             Toast.makeText(getContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
             return;
         }
-        viewModel.searchBooks(query);
+        viewModel.searchBooks(query, sort);
     }
 
     private void openBookDetailFragment(View view, BookSearchResponseDto.BookItemDto bookItem) {

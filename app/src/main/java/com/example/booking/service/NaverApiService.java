@@ -9,6 +9,7 @@ import retrofit2.http.Query;
 public interface NaverApiService {
     @GET("v1/search/book.json")
     Call<BookSearchResponseDto> searchBooks(
-            @Query("query") String query
+            @Query("query") String query,
+            @Query("sort") String sort
     );
 }
