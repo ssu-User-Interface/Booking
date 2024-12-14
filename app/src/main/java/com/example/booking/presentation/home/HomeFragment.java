@@ -169,7 +169,7 @@ public class HomeFragment extends Fragment {
                                 String title = mostRecentDocument.getString("title");
                                 long totalPages = mostRecentDocument.getLong("totalPages") != null
                                         ? mostRecentDocument.getLong("totalPages")
-                                        : 350;
+                                        : 365;
                                 long readingPage = mostRecentDocument.getLong("readingPage") != null
                                         ? mostRecentDocument.getLong("readingPage")
                                         : 0;

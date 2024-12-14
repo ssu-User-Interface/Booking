@@ -47,7 +47,7 @@
         android:id="@+id/bt_book_search_filter_button"
         android:layout_width="85dp"
         android:layout_height="30dp"
-        android:text="책 제목"
+        android:text="정확도순"
         android:textColor="@color/black"
         android:fontFamily="@font/pretendard_regular"
         android:background="@drawable/ic_book_search_filter_bg"

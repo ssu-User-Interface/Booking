@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/sort_accuracy"
+        android:title="정확도순" />
+    <item
+        android:id="@+id/sort_date"
+        android:title="출간일순" />
+</menu>

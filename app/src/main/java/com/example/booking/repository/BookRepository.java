@@ -20,8 +20,8 @@ public class BookRepository {
         this.aladinDataSource = aladinDataSource;
     }
 
-    public BookSearchResponseDto fetchBooks(String query) throws Exception {
-        BookSearchResponseDto naverResponse = naverDataSource.fetchBooks(query);
+    public BookSearchResponseDto fetchBooks(String query, String sort) throws Exception {
+        BookSearchResponseDto naverResponse = naverDataSource.fetchBooks(query, sort);
 
         List<BookSearchResponseDto.BookItemDto> items = naverResponse.getItems();
         for (BookSearchResponseDto.BookItemDto item : items) {

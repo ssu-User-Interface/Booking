@@ -16,7 +16,7 @@ public class NaverDataSourceImpl implements NaverDataSource {
     }
 
     @Override
-    public BookSearchResponseDto fetchBooks(String query) throws Exception {
-        return naverService.searchBooks(query).execute().body();
+    public BookSearchResponseDto fetchBooks(String query, String sort) throws Exception {
+        return naverService.searchBooks(query, sort).execute().body();
     }
 }

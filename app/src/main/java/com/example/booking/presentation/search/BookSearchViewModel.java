@@ -20,6 +20,9 @@ public class BookSearchViewModel extends ViewModel {
     private final BookRepository repository;
     private final MutableLiveData<List<BookSearchResponseDto.BookItemDto>> books = new MutableLiveData<>();
     private final MutableLiveData<String> currentQuery = new MutableLiveData<>(); // 검색 쿼리 상태
+    private final MutableLiveData<String> currentSort = new MutableLiveData<>("sim"); // 기본 정렬: 정확도순
+
+
 
     @Inject
     public BookSearchViewModel(BookRepository repository) {
@@ -34,11 +37,19 @@ public class BookSearchViewModel extends ViewModel {
         return currentQuery;
     }
 
-    public void searchBooks(String query) {
+    public LiveData<String> getCurrentSort() {
+        return currentSort;
+    }
+
+    public void setSort(String sort) {
+        currentSort.setValue(sort);
+    }
+
+    public void searchBooks(String query, String sort) {
         currentQuery.setValue(query);
         new Thread(() -> {
             try {
-                BookSearchResponseDto response = repository.fetchBooks(query);
+                BookSearchResponseDto response = repository.fetchBooks(query, sort);
                 books.postValue(response.getItems());
             } catch (Exception e) {
                 e.printStackTrace();
