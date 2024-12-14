@@ -27,6 +27,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.sql.Time;
 import java.text.SimpleDateFormat;
@@ -94,13 +95,13 @@ public class RecordSpecificFragment extends Fragment {
 
             Button startButton = view.findViewById(R.id.btn_specific_record_start_timer);
             startButton.setOnClickListener(v ->
-                    {
-                        Bundle timerBundle = new Bundle();
-                        timerBundle.putString("bookId", bookId);
+            {
+                Bundle timerBundle = new Bundle();
+                timerBundle.putString("bookId", bookId);
 
-                        navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment, timerBundle);
+                navController.navigate(R.id.action_recordSpecificFragment_to_timerFragment, timerBundle);
 
-                    });
+            });
         }
 
         // RecyclerView 초기화
@@ -167,6 +168,8 @@ public class RecordSpecificFragment extends Fragment {
                         Long rating = snapshot.getLong("rating");
                         String review = snapshot.getString("review");
                         Timestamp startDate = snapshot.getTimestamp("startDate");
+                        Log.d("Firestore", "startDate: " + (startDate != null ? startDate.toDate() : null));
+
                         Timestamp endDate = snapshot.getTimestamp("endDate");
 
                         updateBookDetailsUI(title, author, image);
@@ -198,9 +201,11 @@ public class RecordSpecificFragment extends Fragment {
             tvReview.setText("한줄평 없음");
         }
 
+
         // 읽은 기간 설정
         if (startDate != null && endDate != null) {
             String formattedStartDate = formatTimestamp(startDate);
+
             String formattedEndDate = formatTimestamp(endDate);
             tvDate.setText(String.format("%s ~ %s", formattedStartDate, formattedEndDate));
         } else {
@@ -210,7 +215,7 @@ public class RecordSpecificFragment extends Fragment {
 
     private void loadRecordList(DocumentReference bookRef) {
         bookRef.collection("records")
-                .orderBy("recordDate", com.google.firebase.firestore.Query.Direction.DESCENDING) // 최신순으로 정렬
+                .orderBy("recordDate", Query.Direction.DESCENDING) // 최신순으로 정렬
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     recordList.clear();
