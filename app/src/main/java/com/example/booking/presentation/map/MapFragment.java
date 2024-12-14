@@ -37,11 +37,16 @@ import com.kakao.vectormap.KakaoMap;
 import com.kakao.vectormap.KakaoMapReadyCallback;
 import com.kakao.vectormap.LatLng;
 import com.kakao.vectormap.MapView;
+import com.kakao.vectormap.camera.CameraUpdate;
 import com.kakao.vectormap.label.Label;
 import com.kakao.vectormap.label.LabelLayer;
 import com.kakao.vectormap.label.LabelOptions;
 import com.kakao.vectormap.label.LabelStyle;
 import com.kakao.vectormap.label.TrackingManager;
+import com.kakao.vectormap.camera.CameraUpdate;
+import com.kakao.vectormap.camera.CameraUpdateFactory;
+import com.kakao.vectormap.camera.CameraAnimation;
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -59,12 +64,15 @@ public class MapFragment extends Fragment {
     private LocationCallback locationCallback;
     private KakaoMap kakaoMap;
     private final Map<Label, String> labelDataMap = new HashMap<>();
+    private boolean isFirstLoad = true; // 첫 시작 여부 확인
+    private View myLocationButton; // 내 위치 버튼
 
 
     private final KakaoMapReadyCallback readyCallback = new KakaoMapReadyCallback() {
+
         @Override
         public void onMapReady(@NonNull KakaoMap map) {
-            Log.d("MapFragment", "onMapReady called"); // 디버깅 로그 추가
+            Log.d("MapFragment", "onMapReady called");
 
             progressBar.setVisibility(View.GONE);
             kakaoMap = map;
@@ -115,9 +123,30 @@ public class MapFragment extends Fragment {
             navController.navigate(R.id.action_mapFragment_to_mapSearchFragment);
         });
 
+        myLocationButton = view.findViewById(R.id.ic_my_location);
+        myLocationButton.setOnClickListener(v -> moveToCurrentLocation());
+
         // FusedLocationProviderClient 초기화
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
         locationRequest = new LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 2000L).build();
+
+        // 인자로 전달받은 위도, 경도 값 처리
+        Bundle args = getArguments();
+        if (args != null) {
+            double latitude = args.getDouble("latitude", 0.0);
+            double longitude = args.getDouble("longitude", 0.0);
+            Log.d("MapFragment", "Received Latitude: " + latitude + ", Longitude: " + longitude);
+
+            if (latitude != 0.0 && longitude != 0.0) {
+                startPosition = LatLng.from(latitude, longitude); // 번들 값으로 startPosition 설정
+                mapView.start(readyCallback); // 번들 값으로 즉시 지도 시작
+            }
+        }
+
+//        if (startPosition == null) {
+//            // 번들 값이 없을 때만 현재 위치를 가져옵니다.
+//            getStartLocation();
+//        }
 
         locationCallback = new LocationCallback() {
             @Override
@@ -136,14 +165,14 @@ public class MapFragment extends Fragment {
             requestPermissions(locationPermissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
 
-        if (getArguments() != null) {
-            String placeName = getArguments().getString("placeName");
-            String placeAddress = getArguments().getString("placeAddress");
-
-            // 데이터를 UI에 표시하거나 로직 처리
-            Log.d("MapFragment", "Place Name: " + placeName);
-            Log.d("MapFragment", "Place Address: " + placeAddress);
-        }
+//        if (getArguments() != null) {
+//            String placeName = getArguments().getString("placeName");
+//            String placeAddress = getArguments().getString("placeAddress");
+//
+//            // 데이터를 UI에 표시하거나 로직 처리
+//            Log.d("MapFragment", "Place Name: " + placeName);
+//            Log.d("MapFragment", "Place Address: " + placeAddress);
+//        }
 
         return view;
     }
@@ -159,22 +188,41 @@ public class MapFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        fusedLocationClient.removeLocationUpdates(locationCallback);
+        if (locationCallback != null) {
+            fusedLocationClient.removeLocationUpdates(locationCallback);
+        }
     }
 
     @SuppressLint("MissingPermission")
     private void getStartLocation() {
-        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
-                .addOnSuccessListener(requireActivity(), location -> {
-                    if (location != null) {
-                        startPosition = LatLng.from(location.getLatitude(), location.getLongitude());
-                        mapView.start(readyCallback);
-                    }
-                });
+        if(isFirstLoad) {
+            fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                    .addOnSuccessListener(requireActivity(), location -> {
+                        if (location != null) {
+                            startPosition = LatLng.from(location.getLatitude(), location.getLongitude());
+                            mapView.start(readyCallback);
+                            isFirstLoad = false;
+                        }
+                    });
+        } else {
+            mapView.start(readyCallback);
+        }
     }
 
     @SuppressLint("MissingPermission")
     private void startLocationUpdates() {
+        if (locationCallback == null) {
+            locationCallback = new LocationCallback() {
+                @Override
+                public void onLocationResult(@NonNull LocationResult locationResult) {
+                    for (android.location.Location location : locationResult.getLocations()) {
+                        if (centerLabel != null) {
+                            centerLabel.moveTo(LatLng.from(location.getLatitude(), location.getLongitude()));
+                        }
+                    }
+                }
+            };
+        }
         requestingLocationUpdates = true;
         fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.getMainLooper());
     }
@@ -194,6 +242,18 @@ public class MapFragment extends Fragment {
                 showPermissionDeniedDialog();
             }
         }
+    }
+
+    @SuppressLint("MissingPermission")
+    private void moveToCurrentLocation() {
+        fusedLocationClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
+                .addOnSuccessListener(requireActivity(), location -> {
+                    if (location != null && kakaoMap != null) {
+                        LatLng currentLocation = LatLng.from(location.getLatitude(), location.getLongitude());
+                        CameraUpdate cameraUpdate = CameraUpdateFactory.newCenterPosition(currentLocation);
+                        kakaoMap.moveCamera(cameraUpdate);
+                    }
+                });
     }
 
     private void showPermissionDeniedDialog() {
